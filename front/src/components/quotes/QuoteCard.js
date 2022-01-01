@@ -36,8 +36,10 @@ const QuoteCard = (props) => {
     return (
       <QuoteEditCard
         quote={quote}
-        book={book}
-        author={author}
+        defaultBook={book || quote.book}
+        defaultAuthor={author || quote.author}
+        // defaultBook={book || quote.book}
+        // defaultAuthor={author || quote.author}
         handleDelete={handleDelete}
         handleCancel={() => setActiveQuote(null)}
         handleUpdate={handleUpdate}

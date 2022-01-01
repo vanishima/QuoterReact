@@ -27,7 +27,7 @@ export function isoDateWithoutTimezone(rawDate) {
   const date = new Date(rawDate);
   let timestamp = date.getTime() - date.getTimezoneOffset() * 60000;
   let correctDate = new Date(timestamp);
-  return correctDate.toISOString().slice(0, -8);
+  return correctDate.toISOString().slice(0, -5);
 }
 
 export function getPinyin(value) {

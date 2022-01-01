@@ -102,7 +102,7 @@ const AuthorDetail = (props) => {
 
             <div>
               <h3>Quotes by author</h3>
-              {quotes && (
+              {author && (
                 <QuotesList
                   quotes={quotes}
                   author={author}
@@ -112,7 +112,7 @@ const AuthorDetail = (props) => {
             </div>
           </div>
           <div className="col-4">
-            <FormCreateBookInAuthor author={author} handleSubmit={createBook}/>
+            <FormCreateBookInAuthor author={author} handleSubmit={createBook} />
           </div>
         </div>
       </div>

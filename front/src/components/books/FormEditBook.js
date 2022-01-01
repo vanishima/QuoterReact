@@ -21,12 +21,14 @@ const FormEditBook = (props) => {
 
   useEffect(() => {
     // set values according to book
-    if (book) setTitle(book.title);
-    if (book.introduction) setIntroduction(book.introduction);
-    if (book.keywords) setKeywords(book.keywords.join(" "));
-    if (book.url) setUrl(book.url);
-    if (book.cover) setUrl(book.cover);
-    if (book.coverUrl) setCoverUrl(book.coverUrl);
+    if (book) {
+      setTitle(book.title);
+      if (book.introduction) setIntroduction(book.introduction);
+      if (book.keywords) setKeywords(book.keywords.join(" "));
+      if (book.url) setUrl(book.url);
+      if (book.cover) setUrl(book.cover);
+      if (book.coverUrl) setCoverUrl(book.coverUrl);
+    }
   }, [book]);
 
   const navigate = useNavigate();

@@ -17,7 +17,10 @@ async function drawBook(setBook, setQuotes) {
   const result = await booksAPI.getBookById(book_id);
   if (result.ok) {
     setBook(result.book);
-    setQuotes(result.book.quotes);
+    if (result.book && result.book.quotes) {
+      result.book.quotes = result.book.quotes.sort((a, b) => b.date - a.date);
+      setQuotes(result.book.quotes);
+    }
   } else {
     alert(result.msg);
   }
@@ -57,7 +60,12 @@ const BookDetail = (props) => {
 
           <div className="col-4">
             {book ? (
-              <FormCreateQuoteInBook author={book.author} book={book} quotes={quotes} setQuotes={setQuotes}/>
+              <FormCreateQuoteInBook
+                author={book.author}
+                book={book}
+                quotes={quotes}
+                setQuotes={setQuotes}
+              />
             ) : (
               <div>Loading...</div>
             )}

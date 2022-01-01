@@ -4,11 +4,7 @@ import { useState } from "react";
 import QuoteCard from "./QuoteCard";
 
 // API
-import {
-  getTimeDistance,
-  getTagsArray,
-  isoDateWithoutTimezone,
-} from "../../api/utilsAPI";
+import { getTimeDistance, getTagsArray } from "../../api/utilsAPI";
 import QuoteEditCard from "./QuoteEditCard";
 
 import quotesAPI from "../../api/quotesAPI";
@@ -20,7 +16,7 @@ const QuotesList = (props) => {
   const [showTag, setShowTag] = useState(true);
   const [showMemo, setShowMemo] = useState(true);
   const [activeQuote, setActiveQuote] = useState(null);
-  const [reset, setReset] = useState(false);
+  const [reset, setReset] = useState(true);
   const user = JSON.parse(localStorage.getItem("user"));
 
   const handleDelete = async (quote) => {
@@ -41,7 +37,6 @@ const QuotesList = (props) => {
   };
 
   const handleCreate = async (newQuote, setNewQuote) => {
-    // const newQuote = { ...{ text: "" }, quote };
     console.group("handleCreate");
     // process output
     if (newQuote.tags) {
@@ -123,19 +118,21 @@ const QuotesList = (props) => {
         return quote;
       });
       setQuotes(updatedQuotes);
-      setReset(false);
+      // setReset(false);
     }
   };
 
   return (
     <div>
       <QuoteEditCard
-        defaultAuthor={author}
-        defaultBbook={book}
         handleUpdate={handleUpdate}
         handleCreate={handleCreate}
         reset={reset}
         setReset={setReset}
+        defaultAuthor={author}
+        defaultBook={book}
+        isAuthorFixed={author}
+        isBookFixed={book}
       />
       {quotes && quotes[0] && (
         <div>

@@ -14,7 +14,7 @@ const FormEditMemo = ({ memo, deleteMemo, handleChange }) => {
   const [id, setId] = useState(0);
   const [text, setText] = useState("");
   const [date, setDate] = useState(isoDateWithoutTimezone(memo.date));
-  const [isNotSaved, setIsNotSaved] = useState(true);
+  const [isNotSaved, setIsNotSaved] = useState(false);
 
   useEffect(() => {
     if (memo) drawMemo(memo);

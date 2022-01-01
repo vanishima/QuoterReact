@@ -60,12 +60,14 @@ function booksAPI() {
       keywords: "",
       introduction: "",
     };
+    console.log("ready to feed to backend with newBook", newBook);
 
     const result = await Books.updateBook(newBook);
     if (result.ok) {
       newBook.label = newBook.title;
       newBook.value = getPinyin(book_title);
       newBook._id = result._id;
+      console.log("newBook created", newBook);
       return newBook;
     } else {
       alert(result.msg);

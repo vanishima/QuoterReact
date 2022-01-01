@@ -18,31 +18,31 @@ import authorsAPI from "../../api/authorsAPI";
 import booksAPI from "../../api/booksAPI";
 
 function getEmptyQuote(quote) {
-  if (quote) {
-    return {
-      _id: quote._id,
-      title: quote.title,
-      text: quote.text,
-      tags: typeof quote.tags !== "string" ? quote.tags.join(" ") : quote.tags,
-      date: isoDateWithoutTimezone(quote.date),
-      memo: quote.memo || [],
-      privacy_level: 1,
-      user: quote.user,
-    };
-  }
   return {
-    _id: "",
-    title: "",
-    text: "",
-    tags: "",
-    date: isoDateWithoutTimezone(new Date()),
-    memo: [],
+    _id: quote ? quote._id : "",
+    title: quote ? quote.title : "",
+    text: quote ? quote.text : "",
+    tags: quote && quote.tags ? quote.tags.join(" ") : "",
+    date: isoDateWithoutTimezone(quote ? quote.date : new Date()),
+    memo: quote && quote.memo ? quote.memo : [],
     privacy_level: 1,
+    user: quote ? quote.user : {},
   };
 }
 
 function createSelectItem(item, key) {
   return Object.assign(item, { label: item[key], value: getPinyin(item[key]) });
+}
+
+function createSelectItemWithVal(item, val) {
+  if (val) {
+    return Object.assign(item, { label: val, value: getPinyin(val) });
+  } else {
+    return Object.assign(item, {
+      label: "unknown",
+      value: getPinyin("unknown"),
+    });
+  }
 }
 
 function getEmptyMemo() {
@@ -58,7 +58,7 @@ function getMemoList(quote) {
   return [];
 }
 
-async function drawAuthors(setAuthors, author, setAuthor) {
+async function drawAuthors(setAuthors) {
   const result = await authorsAPI.getAuthors();
   if (result.ok) {
     setAuthors(
@@ -66,13 +66,12 @@ async function drawAuthors(setAuthors, author, setAuthor) {
         return createSelectItem(author, "name");
       })
     );
-    if (!author) setAuthor(createSelectItem(result.authors[0], "name"));
   } else {
     alert(result.msg);
   }
 }
 
-async function drawBooks(setBooks, author_id = "undefined", book, setBook) {
+async function drawBooks(setBooks, author_id = "undefined") {
   const result = await booksAPI.getBooks(author_id);
   if (result.ok) {
     setBooks(
@@ -80,7 +79,6 @@ async function drawBooks(setBooks, author_id = "undefined", book, setBook) {
         return createSelectItem(book, "title");
       })
     );
-    if (!book) setBook(createSelectItem(result.books[0], "title"));
   } else {
     alert(result.msg);
   }
@@ -89,8 +87,10 @@ async function drawBooks(setBooks, author_id = "undefined", book, setBook) {
 const QuoteEditCard = (props) => {
   const {
     quote,
-    defaultAuthor = {},
-    defaultBook = {},
+    defaultAuthor,
+    isAuthorFixed,
+    defaultBook,
+    isBookFixed,
     handleDelete,
     handleUpdate,
     handleCreate,
@@ -107,30 +107,84 @@ const QuoteEditCard = (props) => {
   const [book, setBook] = useState(defaultBook);
   const [books, setBooks] = useState([]);
 
-  useEffect(() => {
-    if (reset) {
-      setBooks([]);
-      setAuthors([]);
-      setBook(defaultBook);
-      setAuthor(defaultAuthor);
-      setNewQuote(getEmptyQuote(quote));
-      setMemoList(getMemoList(quote));
-      setReset(false);
-    }
-    if (authors.length < 1) drawAuthors(setAuthors, author, setAuthor);
-    if (!author) {
-      drawBooks(setBooks, "undefined", book, setBook);
-    } else {
-      drawBooks(setBooks, author._id, book, setBook);
+  // const [isAuthorNeedChange, setIsAuthorNeedChange]=useState(false);
+  // const [isBookNeedChange setIsBookNeedChange] = useState(false);
+
+  const reloadAuthors = async () => {
+    if (isAuthorFixed) {
+      setAuthor(createSelectItem(defaultAuthor, "name"));
+      return;
     }
 
-    if (quote && newQuote.text === "") {
+    const result = await authorsAPI.getAuthors();
+    if (result.ok) {
+      // set Authors list
+      setAuthors(
+        result.authors.map((author) => {
+          return createSelectItem(author, "name");
+        })
+      );
+      // set default author
+      setAuthor(
+        defaultAuthor ? createSelectItem(defaultAuthor, "name") : authors[0]
+      );
+    } else {
+      alert(result.msg);
+    }
+  };
+
+  const reloadBooks = async () => {
+    if (isBookFixed) {
+      setBook(createSelectItem(defaultBook, "title"));
+      return;
+    }
+    const curr_author = author || defaultAuthor;
+    console.log("curr_author", curr_author);
+    const result = await booksAPI.getBooks(
+      curr_author ? curr_author._id : "undefined"
+    );
+    console.log(result);
+    if (result.ok) {
+      console.log("ready to set books to new");
+      setBooks(
+        result.books
+          .filter((book) => typeof book.title === "string")
+          .map((book) => {
+            return createSelectItem(book, "title");
+          })
+      );
+
+      // set default book
+
+      setBook(defaultBook ? createSelectItem(defaultBook, "title") : books[0]);
+    } else {
+      alert(result.msg);
+    }
+    console.groupEnd();
+  };
+
+  const loadQuoteCard = async () => {
+    if (author) {
+      console.log("only reload books based on chosen author");
+      reloadAuthors();
+      reloadBooks();
+    } else {
       setNewQuote(getEmptyQuote(quote));
       setMemoList(getMemoList(quote));
-      setAuthor(createSelectItem(quote.author, "name"));
-      setAuthor(createSelectItem(quote.book, "title"));
+      reloadAuthors();
+      reloadBooks();
     }
-  }, [quote, author, reset]);
+
+    // new empty quote
+    if (reset) {
+      setReset(false);
+    }
+  };
+
+  useEffect(() => {
+    console.log("##### QuoteEditCard EFFECT");
+    loadQuoteCard();
+  }, [quote, reset, defaultAuthor, defaultBook, author]);
 
   const createBookOption = async (book_title) => {
     console.log("ready to create book", book_title, "with", author);
@@ -138,24 +192,14 @@ const QuoteEditCard = (props) => {
   };
 
   const packageQuote = () => {
-    // console.group("before packageQuote", newQuote.memo);
-    // console.log("memoList",memoList);
     newQuote.memo = memoList;
-    newQuote.author = { _id: author._id, name: author.name };
-    newQuote.book = {_id: book._id, title: book.title};
-    // console.groupEnd("after packageQuote", newQuote.memo);
-    // newQuote.memo = memoList;
+    if (!newQuote.author) {
+      newQuote.author = { _id: author._id, name: author.name };
+    }
+    const curr_book = book || defaultBook;
+    if (!newQuote.book)
+      newQuote.book = { _id: curr_book._id, title: curr_book.title };
     return newQuote;
-  };
-
-  const updateMemo = (memo) => {
-    const updatedMemoList = newQuote.memo.map((el) => {
-      if (el._id === memo._id) {
-        return memo;
-      }
-      return el;
-    });
-    setNewQuote({ ...newQuote, memo: updatedMemoList });
   };
 
   return (
@@ -191,6 +235,7 @@ const QuoteEditCard = (props) => {
                 setOptions={setAuthors}
                 setValue={setAuthor}
                 defaultValue={author}
+                isFixed={isAuthorFixed}
               />
             </div>
             <div className="mb-2 col-6" style={{ border: "none" }}>
@@ -204,6 +249,7 @@ const QuoteEditCard = (props) => {
                 setOptions={setBooks}
                 setValue={setBook}
                 defaultValue={book}
+                isFixed={isBookFixed}
               />
             </div>
           </div>
@@ -229,10 +275,7 @@ const QuoteEditCard = (props) => {
           </div>
 
           {memoList && (
-            <FormEditMemoList
-              memoList={memoList}
-              setMemoList={setMemoList}
-            />
+            <FormEditMemoList memoList={memoList} setMemoList={setMemoList} />
           )}
         </div>
         <div className="button-group right">
@@ -251,16 +294,7 @@ const QuoteEditCard = (props) => {
           <button
             className="me-2 btn btn-outline-success"
             onClick={() => {
-              // console.log("add empty memo to", memoList);
-              // const newMemo = getEmptyMemo();
-              // const newMemoList = newQuote.memo;
-              // newMemoList.push(newMemo);
-              // setMemoList((current) => [...current, newMemo]);
               setMemoList([...memoList, getEmptyMemo()]);
-              // console.log("newMemoList", newMemoList);
-              // setNewQuote({ ...newQuote, memo: newMemoList });
-              // console.log(memoList);
-              // console.log("newQuote.memo", newQuote.memo);
             }}
           >
             Add Memo
@@ -296,54 +330,13 @@ const QuoteEditCard = (props) => {
   );
 };
 
-// {<div className="row memo-container" key={memo._id}>
-//   <InlineLabelEditTextarea
-//     className=" col-6 memo-text"
-//     showBorder={true}
-//     label={`Memo${i + 1}`}
-//     value={memo.text}
-//     onChange={(event) => {
-//       const updatedMemo = memoList.map((m) => {
-//         if (m._id === memo._id) {
-//           return { ...m, text: event.target.value };
-//         }
-//         return m;
-//       });
-//       setMemoList({ ...memoList, memo: updatedMemo });
-//       // setNewQuote({ ...newQuote, memo: event.target.value });
-//     }}
-//   />
-//   <InlineLabelEditDate
-//     className=" col-5 memo-date"
-//     label="Date"
-//     value={isoDateWithoutTimezone(memo.date)}
-//     onChange={(event) => {
-//       const updatedMemo = memoList.map((m) => {
-//         if (m._id === memo._id) {
-//           return { ...m, date: event.target.value };
-//         }
-//         return m;
-//       });
-//       setMemoList({ ...memoList, memo: updatedMemo });
-//     }}
-//   />
-//   <button
-//     className="btn btn-danger col-1 memo-delete-btn"
-//     onClick={(e) => {
-//       console.log("delete memo", i);
-//       setMemoList(removeItem(memoList, i));
-//       console.log(memoList);
-//     }}
-//   >
-//     X
-//   </button>
-// </div>}
-
 QuoteEditCard.propTypes = {
   props: PropTypes.shape({
     quote: PropTypes.object,
-    author: PropTypes.object,
-    book: PropTypes.object,
+    defaultAuthor: PropTypes.object,
+    defaultBook: PropTypes.object,
+    isAuthorFixed: PropTypes.bool,
+    isBookFixed: PropTypes.bool,
     handleDelete: PropTypes.func,
     handleUpdate: PropTypes.func.isRequired,
     handleCreate: PropTypes.func.isRequired,

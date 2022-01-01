@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { useNavigate } from "react-router-dom";
 
 import { getTagsArray, isoDateWithoutTimezone } from "../../api/utilsAPI";
 import quotesAPI from "../../api/quotesAPI";
 
 const FormCreateQuoteInBook = (props) => {
   const { book, author, quotes, setQuotes } = props;
-  const navigate = useNavigate();
 
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
