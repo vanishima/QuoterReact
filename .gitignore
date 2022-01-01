@@ -6,9 +6,12 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
+<<<<<<< HEAD
 # db
 db/myMongoDB.js
 
+=======
+>>>>>>> 476108a808bd5b721441df42bc1110f210026a44
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
@@ -104,4 +107,8 @@ dist
 .dynamodb/
 
 # TernJS port file
+<<<<<<< HEAD
 .tern-port
+=======
+.tern-port
+>>>>>>> 476108a808bd5b721441df42bc1110f210026a44
