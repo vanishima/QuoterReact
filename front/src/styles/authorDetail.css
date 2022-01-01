@@ -1,0 +1,18 @@
+#intro-input{
+  height: 200px;
+}
+
+.book-card {
+  font-size: 18px;
+}
+
+.book-card-title{
+  font-size: 22px;
+  font-weight: bold;
+  color: var(--pink);
+}
+
+.book-card .card-body {
+  margin: 3%;
+  padding: 5%;
+}

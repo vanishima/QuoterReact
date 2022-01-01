@@ -1,0 +1,101 @@
+/* Define theme colors */
+:root {
+  --orange: #ff6f69;
+  --pink: #d06dab;
+  --brown: #663e3d;
+  --purple: #9173b4;
+  --primary: #6b5b95;
+  --darkPurple: #6b5b95;
+  --darkGrey: #40434e;
+  --darkRed: #a03d50;
+  --darkBlue: #193478;
+  --lightGrey: #DADADC;
+  --lightPurple: #E1DDED;
+}
+
+main {
+  margin: 1% 3%;
+}
+
+.none-style {
+  text-decoration: none;
+  color: #000000;
+}
+
+.non-link {
+  text-decoration: none;
+  color: #000000;
+}
+
+.content-page {
+  margin: 2% 0;
+  /*padding: 10px;*/
+}
+
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+/* User navbar */
+
+.user-navbar .nav-link {
+  font-size: 24px;
+  color: #000;
+}
+
+.nav-item {
+  border-radius: 25px;
+  width: fit-content;
+  padding: 10px 15px;
+  /*  paddng-left: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-right: 8px;*/
+}
+
+.nav-link:hover > .nav-item {
+  color: #fff;
+  background-color: var(--purple);
+}
+
+.nav-item.active {
+  background-color: var(--lightPurple);
+  /*color: #FFF;*/
+  font-weight: bold;
+}
+
+.user-dashboard {
+  margin-bottom: 0;
+  position: relative;
+  align-items: stretch;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.fixed-position{
+  position: absolute;
+}
+
+/* Progress bar */
+.progress-bar {
+  height: 5px;
+  background: var(--primary);
+  margin-top: 10px;
+}
+
+/* Book cover */
+.img-book-cover{
+  width: 50%;
+}
+
+img.card-img{
+  width: 100%;
+}

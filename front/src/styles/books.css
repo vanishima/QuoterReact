@@ -1,0 +1,73 @@
+.book-introduction{
+  white-space: pre-line;
+}
+
+#text-input{
+  height: 150px;
+}
+
+.inline-edit {
+  background-color: transparent;
+  border: 0;
+  padding: 8px;
+}
+
+.inline-edit:hover {
+  background-color: var(--lightPurple);
+  cursor: pointer;
+}
+
+/* Book list */
+.book-list-section{
+  width: 250px;
+}
+
+.book-list{
+  height: 81vh;
+  overflow-y: auto;
+}
+
+.quote-list-section {
+  /*height: 87vh;*/
+  /*overflow-y: auto;*/
+}
+
+/* Book quote card */
+.book-quote-button{
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  border-bottom: 0.6px dashed var(--lightPurple);
+  background: none;
+  width: 100%;
+  padding: 0.6rem;
+}
+
+.book-quote-button:hover {
+  background-color: var(--lightPurple);
+}
+
+.book-quote-button.active {
+  background-color: var(--lightPurple);
+}
+
+.book-quote-img{
+  width: 50%;
+}
+
+.book-quote-button h3{
+  font-size: 18px;
+  color: var(--pink);
+  font-weight: bold;
+}
+
+.book-quote-button .subtitle{
+  color: var(--darkGrey);
+}
+
+/* Create new book */
+.dropdown-book-create{
+  width: 300px;
+  padding: 1rem;
+  border-radius: 25px;
+}

@@ -1,0 +1,51 @@
+.author-link{
+  font-size: 20px;
+  color: var(--purple);
+}
+
+.author-category-link {
+  height: 35px;
+  color: #FFF;
+  border-radius: 5px;
+  padding: 5px;
+  background-color: var(--purple);
+}
+
+.author-category-link:hover{
+  color: #FFF;
+  background-color: var(--darkPurple);
+}
+
+.form-create-author{
+  /*max-width: 600px;*/
+  border-radius: 20px;
+  padding: 15px;
+}
+
+.form-create-author h2{
+  font-size: 20px;
+  color: var(--purple);
+  font-weight: bold;
+}
+
+/* Book card */
+
+.book-image-card{
+  border: none;
+  border-radius: 20px;
+  font-size: 20px;
+  background: none;
+}
+
+.book-card{
+  border-radius: 40px;
+  padding: 0.5rem;
+}
+
+.book-card:hover{
+  background-color: var(--lightGrey);
+}
+
+.book-card-intro{
+  color: #000;
+}
