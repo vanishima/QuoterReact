@@ -157,12 +157,23 @@ const QuoteEditCard = (props) => {
     console.groupEnd();
   };
 
+  const chooseAuthor = () => {
+    // find the correct author
+    const temp_author = authors.filter(
+      (author) => author._id === book.author._id
+    )[0];
+    console.log("correct author is", temp_author);
+    setAuthor(temp_author);
+  };
+
   const loadQuoteCard = async () => {
     if (isAuthorChanged) {
       console.log("author changed", author);
       reloadBooks();
+      setIsAuthorChanged(false);
     } else if (isBookChanged) {
-      console.log("book changed", book);
+      chooseAuthor();
+      setIsBookChanged(false);
     } else {
       setNewQuote(getEmptyQuote(quote));
       setMemoList(getMemoList(quote));
@@ -184,7 +195,6 @@ const QuoteEditCard = (props) => {
     reset,
     defaultAuthor,
     defaultBook,
-    author,
     isAuthorChanged,
     isBookChanged,
   ]);
