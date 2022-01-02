@@ -18,8 +18,10 @@ async function drawBook(setBook, setQuotes) {
   if (result.ok) {
     setBook(result.book);
     if (result.book && result.book.quotes) {
-      result.book.quotes = result.book.quotes.sort((a, b) => b.date - a.date);
-      setQuotes(result.book.quotes);
+      const sortedQuotes = result.book.quotes.sort(
+        (a, b) => new Date(b.date) - new Date(a.date)
+      );
+      setQuotes(sortedQuotes);
     }
   } else {
     alert(result.msg);

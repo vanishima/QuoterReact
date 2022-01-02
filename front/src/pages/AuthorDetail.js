@@ -22,7 +22,12 @@ async function drawAuthor(setAuthor, setBooks, setQuotes) {
   console.log("drawAuthor result", result);
   if (result.ok) {
     setAuthor(result.author);
-    if (result.author.quotes) setQuotes(result.author.quotes);
+    if (result.author.quotes) {
+      const sortedQuotes = result.author.quotes.sort(
+        (a, b) => new Date(b.date) - new Date(a.date)
+      );
+      setQuotes(sortedQuotes);
+    }
     if (result.author.books) setBooks(result.author.books);
   } else {
     alert(result.msg);
@@ -57,11 +62,10 @@ const AuthorDetail = (props) => {
     const result = await booksAPI.updateBook(book);
 
     if (!result.ok) {
-      // navigate(0);
+      alert(result.msg);
     } else {
       book._id = result._id;
       setBooks([...books, book]);
-      // navigate("/book?id=" + result._id);
     }
   };
 
