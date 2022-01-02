@@ -3,8 +3,15 @@ import PropTypes from "prop-types";
 import AsyncCreatableSelect from "react-select/async-creatable";
 
 const CreatableSelectModel = (props) => {
-  const { options, setValue, setOptions, createOption, defaultValue, isFixed } =
-    props;
+  const {
+    options,
+    setValue,
+    setOptions,
+    createOption,
+    defaultValue,
+    isFixed,
+    setIsChanged,
+  } = props;
 
   useEffect(() => {}, [options, defaultValue]);
 
@@ -37,6 +44,7 @@ const CreatableSelectModel = (props) => {
       console.log("created newOption", newOption);
       setOptions([newOption, ...options]);
     }
+    if (setIsChanged) setIsChanged(true);
     setValue(newOption);
   };
 
@@ -63,6 +71,7 @@ CreatableSelectModel.propTypes = {
     createOption: PropTypes.func.isRequired,
     defaultValue: PropTypes.object,
     isFixed: PropTypes.bool,
+    setIsChanged: PropTypes.func,
   }),
 };
 

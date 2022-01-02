@@ -102,17 +102,20 @@ const QuoteEditCard = (props) => {
   const [newQuote, setNewQuote] = useState(getEmptyQuote(quote));
   const [memoList, setMemoList] = useState(getMemoList(quote));
 
-  const [author, setAuthor] = useState(defaultAuthor);
+  const [author, setAuthor] = useState(
+    defaultAuthor ? createSelectItem(defaultAuthor, "name") : {}
+  );
   const [authors, setAuthors] = useState([]);
-  const [book, setBook] = useState(defaultBook);
+  const [book, setBook] = useState(
+    defaultBook ? createSelectItem(defaultBook, "title") : {}
+  );
   const [books, setBooks] = useState([]);
 
-  // const [isAuthorNeedChange, setIsAuthorNeedChange]=useState(false);
-  // const [isBookNeedChange setIsBookNeedChange] = useState(false);
+  const [isAuthorChanged, setIsAuthorChanged] = useState(false);
+  const [isBookChanged, setIsBookChanged] = useState(false);
 
   const reloadAuthors = async () => {
     if (isAuthorFixed) {
-      setAuthor(createSelectItem(defaultAuthor, "name"));
       return;
     }
 
@@ -124,10 +127,6 @@ const QuoteEditCard = (props) => {
           return createSelectItem(author, "name");
         })
       );
-      // set default author
-      setAuthor(
-        defaultAuthor ? createSelectItem(defaultAuthor, "name") : authors[0]
-      );
     } else {
       alert(result.msg);
     }
@@ -135,10 +134,9 @@ const QuoteEditCard = (props) => {
 
   const reloadBooks = async () => {
     if (isBookFixed) {
-      setBook(createSelectItem(defaultBook, "title"));
       return;
     }
-    const curr_author = author || defaultAuthor;
+    const curr_author = author ? author : defaultAuthor;
     console.log("curr_author", curr_author);
     const result = await booksAPI.getBooks(
       curr_author ? curr_author._id : "undefined"
@@ -153,10 +151,6 @@ const QuoteEditCard = (props) => {
             return createSelectItem(book, "title");
           })
       );
-
-      // set default book
-
-      setBook(defaultBook ? createSelectItem(defaultBook, "title") : books[0]);
     } else {
       alert(result.msg);
     }
@@ -164,10 +158,11 @@ const QuoteEditCard = (props) => {
   };
 
   const loadQuoteCard = async () => {
-    if (author) {
-      console.log("only reload books based on chosen author");
-      reloadAuthors();
+    if (isAuthorChanged) {
+      console.log("author changed", author);
       reloadBooks();
+    } else if (isBookChanged) {
+      console.log("book changed", book);
     } else {
       setNewQuote(getEmptyQuote(quote));
       setMemoList(getMemoList(quote));
@@ -184,7 +179,15 @@ const QuoteEditCard = (props) => {
   useEffect(() => {
     console.log("##### QuoteEditCard EFFECT");
     loadQuoteCard();
-  }, [quote, reset, defaultAuthor, defaultBook, author]);
+  }, [
+    quote,
+    reset,
+    defaultAuthor,
+    defaultBook,
+    author,
+    isAuthorChanged,
+    isBookChanged,
+  ]);
 
   const createBookOption = async (book_title) => {
     console.log("ready to create book", book_title, "with", author);
@@ -197,8 +200,9 @@ const QuoteEditCard = (props) => {
       newQuote.author = { _id: author._id, name: author.name };
     }
     const curr_book = book || defaultBook;
-    if (!newQuote.book)
+    if (!newQuote.book) {
       newQuote.book = { _id: curr_book._id, title: curr_book.title };
+    }
     return newQuote;
   };
 
@@ -236,6 +240,7 @@ const QuoteEditCard = (props) => {
                 setValue={setAuthor}
                 defaultValue={author}
                 isFixed={isAuthorFixed}
+                setIsChanged={setIsAuthorChanged}
               />
             </div>
             <div className="mb-2 col-6" style={{ border: "none" }}>
@@ -250,6 +255,7 @@ const QuoteEditCard = (props) => {
                 setValue={setBook}
                 defaultValue={book}
                 isFixed={isBookFixed}
+                setIsChanged={setIsBookChanged}
               />
             </div>
           </div>
