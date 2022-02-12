@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
+import { useAuth } from "contexts/AuthContext";
+
 // API
 import myAuth from "../../api/authAPI";
+import { useEffect } from "react";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -10,6 +13,8 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { signup } = useAuth();
 
   const handleSubmit = async evt => {
     evt.preventDefault();
@@ -22,19 +27,19 @@ const SignUp = () => {
       password: password,
     };
     console.log("Attemp to register", user);
+    await signup(user);
+    // const result = await myAuth.register(user);
 
-    const result = await myAuth.register(user);
-
-    if (!result.ok) {
-      setMessage(
-        <p className="justify-content-right" style={{ color: "red" }}>
-          *{result.msg}
-        </p>
-      );
-    } else {
-      alert("Register successful. Welcome to Quoter!");
-      document.location.href = "/";
-    }
+    // if (!result.ok) {
+    //   setMessage(
+    //     <p className="justify-content-right" style={{ color: "red" }}>
+    //       *{result.msg}
+    //     </p>
+    //   );
+    // } else {
+    //   alert("Register successful. Welcome to Quoter!");
+    //   document.location.href = "/";
+    // }
     setIsSubmitting(false);
   };
 

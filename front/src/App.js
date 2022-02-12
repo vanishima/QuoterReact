@@ -3,6 +3,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 import { Routes, Route } from "react-router-dom";
+import { AuthProvider } from "contexts/AuthContext";
+
 import NewUser from "components/authentication/NewUser";
 import MyQuotes from "pages/MyQuotes";
 import CommentPage from "pages/CommentPage";
@@ -15,8 +17,8 @@ import QuotesPage from "pages/QuotesPage";
 
 function App() {
   return (
-    <div>
-      <div className="App"></div>
+    <AuthProvider>
+      {/* <div className="App"></div> */}
       <Routes>
         <Route path="/quotes" element={<QuotesPage />} />
         <Route path="/login" element={<NewUser />} />
@@ -28,7 +30,7 @@ function App() {
         <Route path="/quote-detail" element={<QuoteDetail />} />
         <Route path="/books" element={<Books />} />
       </Routes>
-    </div>
+    </AuthProvider>
   );
 }
 

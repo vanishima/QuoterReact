@@ -14,7 +14,7 @@ const { ObjectId } = require("mongodb");
 //* Register */
 router.post("/register", async (req, res) => {
   console.log(">>>>> POST register", req.body);
-  const { name, email, password } = req.body;
+  const { name, email, password } = req.body.user;
 
   // Simple validation
   if (!name || !email || !password) {
@@ -50,7 +50,7 @@ router.post("/register", async (req, res) => {
 
     // create token
     const token = jwt.sign({ id: savedUser._id }, JWT_SECRET, {
-      expiresIn: "10d", 
+      expiresIn: "10d",
       // "2h": it will be expired after 10 hours
       //expiresIn: "20d" // it will be expired after 20 days
       //expiresIn: 120 // it will be expired after 120ms
