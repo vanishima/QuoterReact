@@ -7,26 +7,29 @@ import {
   InlineLabelEditText,
   InlineLabelEditTextarea,
   InlineLabelEditDate,
-} from "../utils/InlineEdit";
-import CreatableSelectModel from "../utils/CreatableSelectModel";
-import FormEditMemoList from "../memos/FormEditMemoList";
-// import ModalDeleteConfirmation from "../utils/ModalDeleteConfirmation";
+} from "../../utils/InlineEdit";
+import CreatableSelectModel from "../../utils/CreatableSelectModel";
+import FormEditMemoList from "../../memos/FormEditMemoList";
 
 // API
-import { isoDateWithoutTimezone, getPinyin } from "../../api/utilsAPI";
-import authorsAPI from "../../api/authorsAPI";
-import booksAPI from "../../api/booksAPI";
+import { isoDateWithoutTimezone, getPinyin, getTagsArray } from "api/utilsAPI";
+import authorsAPI from "api/authorsAPI";
+import booksAPI from "api/booksAPI";
+
+const user = JSON.parse(localStorage.getItem("user"));
 
 function getEmptyQuote(quote) {
   return {
     _id: quote ? quote._id : "",
+    user: quote ? quote.user : { _id: user._id, name: user.name },
+    book: quote && quote.book ? quote.book : {},
+    author: quote && quote.author ? quote.author : {},
     title: quote ? quote.title : "",
     text: quote ? quote.text : "",
     tags: quote && quote.tags ? quote.tags.join(" ") : "",
     date: isoDateWithoutTimezone(quote ? quote.date : new Date()),
     memo: quote && quote.memo ? quote.memo : [],
     privacy_level: 1,
-    user: quote ? quote.user : {},
   };
 }
 
@@ -34,20 +37,10 @@ function createSelectItem(item, key) {
   return Object.assign(item, { label: item[key], value: getPinyin(item[key]) });
 }
 
-function createSelectItemWithVal(item, val) {
-  if (val) {
-    return Object.assign(item, { label: val, value: getPinyin(val) });
-  } else {
-    return Object.assign(item, {
-      label: "unknown",
-      value: getPinyin("unknown"),
-    });
-  }
-}
-
 function getEmptyMemo() {
   return {
     _id: +new Date(),
+    user: { _id: user._id, name: user.name },
     text: "",
     date: isoDateWithoutTimezone(new Date()),
   };
@@ -58,35 +51,9 @@ function getMemoList(quote) {
   return [];
 }
 
-async function drawAuthors(setAuthors) {
-  const result = await authorsAPI.getAuthors();
-  if (result.ok) {
-    setAuthors(
-      result.authors.map((author) => {
-        return createSelectItem(author, "name");
-      })
-    );
-  } else {
-    alert(result.msg);
-  }
-}
-
-async function drawBooks(setBooks, author_id = "undefined") {
-  const result = await booksAPI.getBooks(author_id);
-  if (result.ok) {
-    setBooks(
-      result.books.map((book) => {
-        return createSelectItem(book, "title");
-      })
-    );
-  } else {
-    alert(result.msg);
-  }
-}
-
-const QuoteEditCard = (props) => {
+const QuoteEditCard = props => {
   const {
-    quote,
+    defaultQuote,
     defaultAuthor,
     isAuthorFixed,
     defaultBook,
@@ -99,8 +66,8 @@ const QuoteEditCard = (props) => {
     setReset,
   } = props;
 
-  const [newQuote, setNewQuote] = useState(getEmptyQuote(quote));
-  const [memoList, setMemoList] = useState(getMemoList(quote));
+  const [newQuote, setNewQuote] = useState(getEmptyQuote(defaultQuote));
+  const [memoList, setMemoList] = useState(getMemoList(defaultQuote));
 
   const [author, setAuthor] = useState(
     defaultAuthor ? createSelectItem(defaultAuthor, "name") : {}
@@ -118,12 +85,13 @@ const QuoteEditCard = (props) => {
     if (isAuthorFixed) {
       return;
     }
+    console.log("reloadAuthors");
 
     const result = await authorsAPI.getAuthors();
     if (result.ok) {
       // set Authors list
       setAuthors(
-        result.authors.map((author) => {
+        result.authors.map(author => {
           return createSelectItem(author, "name");
         })
       );
@@ -136,33 +104,34 @@ const QuoteEditCard = (props) => {
     if (isBookFixed) {
       return;
     }
+    console.log("reloadBooks");
     const curr_author = author ? author : defaultAuthor;
     console.log("curr_author", curr_author);
     const result = await booksAPI.getBooks(
-      curr_author ? curr_author._id : "undefined"
+      curr_author && curr_author.name ? curr_author._id : "undefined"
     );
-    console.log(result);
+    // console.log(result);
     if (result.ok) {
-      console.log("ready to set books to new");
+      // console.log("ready to set books to new");
       setBooks(
         result.books
-          .filter((book) => typeof book.title === "string")
-          .map((book) => {
+          .filter(book => typeof book.title === "string")
+          .map(book => {
             return createSelectItem(book, "title");
           })
       );
     } else {
       alert(result.msg);
     }
-    console.groupEnd();
+    // console.groupEnd();
   };
 
   const chooseAuthor = () => {
     // find the correct author
     const temp_author = authors.filter(
-      (author) => author._id === book.author._id
+      author => author._id === book.author._id
     )[0];
-    console.log("correct author is", temp_author);
+    // console.log("correct author is", temp_author);
     setAuthor(temp_author);
   };
 
@@ -172,11 +141,12 @@ const QuoteEditCard = (props) => {
       reloadBooks();
       setIsAuthorChanged(false);
     } else if (isBookChanged) {
+      console.log("book changed", book);
       chooseAuthor();
       setIsBookChanged(false);
     } else {
-      setNewQuote(getEmptyQuote(quote));
-      setMemoList(getMemoList(quote));
+      setNewQuote(getEmptyQuote(defaultQuote));
+      setMemoList(getMemoList(defaultQuote));
       reloadAuthors();
       reloadBooks();
     }
@@ -191,7 +161,7 @@ const QuoteEditCard = (props) => {
     console.log("##### QuoteEditCard EFFECT");
     loadQuoteCard();
   }, [
-    quote,
+    defaultQuote,
     reset,
     defaultAuthor,
     defaultBook,
@@ -199,20 +169,25 @@ const QuoteEditCard = (props) => {
     isBookChanged,
   ]);
 
-  const createBookOption = async (book_title) => {
+  const createBookOption = async book_title => {
     console.log("ready to create book", book_title, "with", author);
     return await booksAPI.quickCreateBook(book_title, author);
   };
 
+  const createAuthorOption = async author_name => {
+    const newAuthor = await authorsAPI.quickCreateAuthor(author_name);
+    console.log("newauthor", newAuthor);
+    return newAuthor;
+  };
+
   const packageQuote = () => {
-    newQuote.memo = memoList;
-    if (!newQuote.author) {
-      newQuote.author = { _id: author._id, name: author.name };
-    }
+    newQuote.tags = getTagsArray(newQuote.tags);
+    newQuote.memo = memoList.filter(memo => memo.text.length > 0);
+    newQuote.author = { _id: author._id, name: author.name };
     const curr_book = book || defaultBook;
-    if (!newQuote.book) {
-      newQuote.book = { _id: curr_book._id, title: curr_book.title };
-    }
+    newQuote.book = { _id: curr_book._id, title: curr_book.title };
+
+    // console.log("newQUote", newQuote);
     return newQuote;
   };
 
@@ -221,7 +196,7 @@ const QuoteEditCard = (props) => {
       <div className="card-header">
         <InlineEditText
           value={newQuote.title}
-          onChange={(event) => {
+          onChange={event => {
             setNewQuote({ ...newQuote, title: event.target.value });
           }}
         />
@@ -232,7 +207,7 @@ const QuoteEditCard = (props) => {
             label="Quote Text"
             fontSize={18}
             value={newQuote.text}
-            onChange={(event) => {
+            onChange={event => {
               setNewQuote({ ...newQuote, text: event.target.value });
             }}
           />
@@ -244,7 +219,7 @@ const QuoteEditCard = (props) => {
               </label>
               <CreatableSelectModel
                 id="book-select-author"
-                createOption={authorsAPI.quickCreateBook}
+                createOption={createAuthorOption}
                 options={authors}
                 setOptions={setAuthors}
                 setValue={setAuthor}
@@ -275,7 +250,7 @@ const QuoteEditCard = (props) => {
               className=" col-6"
               label="Tags"
               value={newQuote.tags}
-              onChange={(event) => {
+              onChange={event => {
                 setNewQuote({ ...newQuote, tags: event.target.value });
               }}
             />
@@ -284,54 +259,55 @@ const QuoteEditCard = (props) => {
               className=" col-6"
               label="Date"
               value={newQuote.date}
-              onChange={(event) => {
+              onChange={event => {
                 setNewQuote({ ...newQuote, date: event.target.value });
               }}
             />
           </div>
 
-          {memoList && (
-            <FormEditMemoList memoList={memoList} setMemoList={setMemoList} />
-          )}
+          <div className="memos">
+            <hr />
+            <div className="row">
+              <div className="col-auto">Memos</div>
+              <button
+                className="me-2 btn btn-outline-success col-auto p-1"
+                onClick={() => {
+                  setMemoList([...memoList, getEmptyMemo()]);
+                }}
+              >
+                Add Memo
+              </button>
+            </div>
+
+            {memoList && (
+              <FormEditMemoList memoList={memoList} setMemoList={setMemoList} />
+            )}
+          </div>
         </div>
         <div className="button-group right">
           <button
             className="me-2 btn btn-outline-primary"
             onClick={() => {
-              if (quote) {
-                handleUpdate(packageQuote(), setNewQuote);
+              if (defaultQuote) {
+                handleUpdate(packageQuote());
               } else {
-                handleCreate(packageQuote(), setNewQuote);
+                handleCreate(packageQuote());
               }
             }}
           >
             Save
           </button>
-          <button
-            className="me-2 btn btn-outline-success"
-            onClick={() => {
-              setMemoList([...memoList, getEmptyMemo()]);
-            }}
-          >
-            Add Memo
-          </button>
-          {quote && (
+
+          {defaultQuote && (
             <button
               className="me-2 col-auto btn btn-outline-danger"
-              onClick={() => handleDelete(quote)}
-              // data-bs-toggle="modal"
-              // data-bs-target={`#deleteModal-${quote._id}`}
+              onClick={() => handleDelete(defaultQuote)}
             >
               Delete
             </button>
           )}
-          {/*<ModalDeleteConfirmation
-            id={quote._id}
-            handleDelete={handleDelete}
-            message={"Are you sure you want to delete this quote?"}
-            previewText={text}
-          />*/}
-          {quote && (
+
+          {defaultQuote && (
             <button
               id="btnCreateQuote"
               className="me-2 btn btn-outline-secondary"
@@ -348,7 +324,7 @@ const QuoteEditCard = (props) => {
 
 QuoteEditCard.propTypes = {
   props: PropTypes.shape({
-    quote: PropTypes.object,
+    defaultQuote: PropTypes.object,
     defaultAuthor: PropTypes.object,
     defaultBook: PropTypes.object,
     isAuthorFixed: PropTypes.bool,

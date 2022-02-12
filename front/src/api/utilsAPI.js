@@ -13,9 +13,9 @@ export function getRelativeTime(date) {
 }
 
 export function getTagsArray(tags) {
-  if (tags) {
+  if (tags.length > 0) {
     let arr = tags.split(" ");
-    return arr.filter((i) => i !== "");
+    return arr.filter(i => i !== "");
   } else {
     return [];
   }
@@ -31,5 +31,13 @@ export function isoDateWithoutTimezone(rawDate) {
 }
 
 export function getPinyin(value) {
-  return pinyin(value, { removeTone: true, removeSpace: true, keepRest: true });
+  if (value) {
+    return pinyin(value, {
+      removeTone: true,
+      removeSpace: true,
+      keepRest: true,
+    });
+  } else {
+    return "";
+  }
 }

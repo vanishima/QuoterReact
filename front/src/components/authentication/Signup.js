@@ -4,19 +4,22 @@ import { Link } from "react-router-dom";
 // API
 import myAuth from "../../api/authAPI";
 
-const SignUpForm = () => {
+const SignUp = () => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async (evt) => {
+  const handleSubmit = async evt => {
     evt.preventDefault();
+
+    setIsSubmitting(true);
 
     const user = {
       email: email,
       name: name,
-      password: password
+      password: password,
     };
     console.log("Attemp to register", user);
 
@@ -30,8 +33,9 @@ const SignUpForm = () => {
       );
     } else {
       alert("Register successful. Welcome to Quoter!");
-      document.location.href = "/my-quotes";
+      document.location.href = "/";
     }
+    setIsSubmitting(false);
   };
 
   return (
@@ -49,12 +53,12 @@ const SignUpForm = () => {
             placeholder="Enter your username"
             name="name"
             value={name}
-            onChange={(e) => {
+            onChange={e => {
               setName(e.target.value);
             }}
           />
         </div>
-        
+
         <div className="formField">
           <label className="formFieldLabel" htmlFor="email">
             E-Mail Address
@@ -66,7 +70,7 @@ const SignUpForm = () => {
             placeholder="Enter your email"
             name="email"
             value={email}
-            onChange={(e) => {
+            onChange={e => {
               setEmail(e.target.value);
             }}
           />
@@ -83,14 +87,16 @@ const SignUpForm = () => {
             placeholder="Enter your password"
             name="password"
             value={password}
-            onChange={(e) => {
+            onChange={e => {
               setPassword(e.target.value);
             }}
           />
         </div>
 
         <div className="formField">
-          <button className="formFieldButton">Sign Up</button>{" "}
+          <button className="formFieldButton" disabled={isSubmitting}>
+            Sign Up
+          </button>{" "}
           <Link to="/sign-in" className="formFieldLink">
             I'm already member
           </Link>
@@ -100,4 +106,4 @@ const SignUpForm = () => {
   );
 };
 
-export default SignUpForm;
+export default SignUp;

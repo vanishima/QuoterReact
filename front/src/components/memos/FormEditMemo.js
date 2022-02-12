@@ -31,9 +31,9 @@ const FormEditMemo = ({ memo, deleteMemo, handleChange }) => {
   };
 
   return (
-    <div className="row">
+    <div className="memo-edit">
       <InlineLabelEditTextarea
-        className=" col-5 memo-text"
+        className=" memo-text"
         showBorder={true}
         label={`Memo${memo._id}`}
         value={text}
@@ -42,36 +42,40 @@ const FormEditMemo = ({ memo, deleteMemo, handleChange }) => {
           setIsNotSaved(true);
         }}
       />
-      <InlineLabelEditDate
-        className=" col-5 memo-date"
-        label="Date"
-        value={date}
-        onChange={(event) => {
-          setDate(event.target.value);
-          setIsNotSaved(true);
-        }}
-      />
-      <button
-        className="btn btn-danger col-1 memo-action-btn"
-        onClick={(e) => {
-          console.log("delete memo", id);
-          deleteMemo(id);
-        }}
-      >
-        X
-      </button>
-      {isNotSaved && (
+      <div className="row">
+        <InlineLabelEditDate
+          className=" col-6 memo-date"
+          label="Date"
+          value={date}
+          onChange={(event) => {
+            setDate(event.target.value);
+            setIsNotSaved(true);
+          }}
+        />
         <button
-          className="btn btn-primary col-1 memo-action-btn"
+          className="btn btn-outline-danger col-1 memo-action-btn me-2"
           onClick={(e) => {
-            console.log("save memo", id);
-            handleChange(packageMemo());
-            setIsNotSaved(false);
+            console.log("delete memo", id);
+            deleteMemo(id);
           }}
         >
-          √
+          X
         </button>
-      )}
+        {isNotSaved && (
+          <button
+            className="btn btn-outline-primary col-1 memo-action-btn me-2"
+            onClick={(e) => {
+              console.log("save memo", id);
+              handleChange(packageMemo());
+              setIsNotSaved(false);
+            }}
+          >
+            √
+          </button>
+        )}
+      </div>
+
+      <hr />
     </div>
   );
 };

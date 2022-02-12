@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import SignInForm from "./SignInForm";
-import SignUpForm from "./SignUpForm";
-import "../../styles/newUser.css";
+import Login from "./Login";
+import Signup from "./Signup";
+import "./styles/newUser.css";
 
 // https://codesandbox.io/u/gabrielaEmendez
 
 const NewUser = () => {
-  const [showSignUp, setShowSignUp] = useState(true);
+  const [showSignUp, setShowSignUp] = useState(false);
   const pageSwitcher = () => {
     setShowSignUp(!showSignUp);
   };
@@ -53,7 +53,7 @@ const NewUser = () => {
             Sign Up
           </button>
         </div>
-        {showSignUp ? <SignUpForm /> : <SignInForm />}
+        {showSignUp ? <Signup /> : <Login />}
       </div>
     </div>
   );

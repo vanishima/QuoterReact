@@ -1,8 +1,9 @@
-import {useState, useEffect} from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 // Element
-import Layout from "../components/Layout";
-import Search from "../components/Search";
+import Layout from "../components/common/Layout";
+import Search from "../components/common/Search";
 import AuthorsList from "../components/authors/AuthorsList";
 import FormCreateAuthor from "../components/authors/FormCreateAuthor";
 import DashboardAuthors from "../components/DashboardAuthors";
@@ -13,13 +14,28 @@ import authorsAPI from "../api/authorsAPI";
 
 import "../styles/authors.css";
 
-async function drawAuthors(setQuotes) {
-  const result = await authorsAPI.getAuthors();
-  if (result.ok) {
-    setQuotes(result.authors);
-  } else {
-    alert(result.msg);
-  }
+async function drawAuthors(setAuthors) {
+  const options = {
+    headers: {
+      // "Access-Control-Allow-Origin": "*",
+      "x-auth-token": localStorage.getItem("token"),
+    },
+    mode: "cors",
+  };
+  axios
+    .get("/authors", options)
+    .then(res => {
+      setAuthors(res.data.authors);
+    })
+    .catch(err => {
+      alert(err.msg);
+    });
+  // const result = await authorsAPI.getAuthors();
+  // if (result.ok) {
+  //   setAuthors(result.authors);
+  // } else {
+  //   alert(result.msg);
+  // }
 }
 
 const Authors = () => {
@@ -30,7 +46,7 @@ const Authors = () => {
     drawAuthors(setAuthors);
   }, []);
 
-  const createAuthor = async(name, category, url)=>{
+  const createAuthor = async (name, category, url) => {
     console.log("ready to create author", name, category, url);
     const newAuthor = {
       url: url,
@@ -41,7 +57,7 @@ const Authors = () => {
     console.log("newAuthor", newAuthor);
 
     const result = await authorsAPI.updateAuthor(newAuthor);
-    console.log("result",result);
+    console.log("result", result);
     if (result.ok) {
       newAuthor._id = result._id;
       newAuthor.books = [];
@@ -50,14 +66,13 @@ const Authors = () => {
       // in Authors page
       if (url.pathname === "/author") {
         setAuthors([newAuthor, ...authors]);
-      // in AuthorDetail page
+        // in AuthorDetail page
       } else {
         setAuthors([newAuthor, ...authors]);
         // navigate("/author?id=" + result._id); // creating new author
       }
     }
-
-  }
+  };
 
   return (
     <Layout>
@@ -65,21 +80,18 @@ const Authors = () => {
         <div className="row">
           <div className="col-8">
             <Search />
-            
-            <AuthorsList authors={authors}/>
+
+            <AuthorsList authors={authors} />
           </div>
-          
+
           <div className="col-4">
-            <DashboardBooks/>
-            <DashboardAuthors/>
+            <DashboardBooks />
+            <DashboardAuthors />
             <div className="card">
-              <FormCreateAuthor createAuthor={createAuthor}/>
+              <FormCreateAuthor createAuthor={createAuthor} />
             </div>
-            
           </div>
-          
         </div>
-        
       </div>
     </Layout>
   );

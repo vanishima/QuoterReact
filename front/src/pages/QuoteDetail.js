@@ -1,11 +1,11 @@
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from "react";
 
 // API
 import quotesAPI from "../api/quotesAPI";
 
 // Element
-import Layout from "../components/Layout";
-import FormEditQuote from "../components/quotes/FormEditQuote";
+import Layout from "../components/common/Layout";
+import FormEditQuote from "../components/quotes/forms/FormEditQuote";
 
 async function drawQuote(setQuote) {
   const url = new URL(window.location);
@@ -18,17 +18,19 @@ async function drawQuote(setQuote) {
 const QuoteDetail = props => {
   const [quote, setQuote] = useState(null);
 
- useEffect(() => {
+  useEffect(() => {
     drawQuote(setQuote);
   }, []);
 
   return (
     <Layout currPage={"/my-quotes"}>
-      {quote && <div className="content-page">
-        <FormEditQuote quote={quote}/>
-      </div>}
+      {quote && (
+        <div className="content-page">
+          <FormEditQuote quote={quote} />
+        </div>
+      )}
     </Layout>
-  )
-}
+  );
+};
 
-export default QuoteDetail
+export default QuoteDetail;

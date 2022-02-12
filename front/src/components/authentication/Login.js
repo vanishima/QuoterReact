@@ -3,13 +3,16 @@ import { Link } from "react-router-dom";
 // API
 import myAuth from "../../api/authAPI";
 
-const SignInForm = (props) => {
+const Login = props => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async (evt) => {
+  const handleSubmit = async evt => {
     evt.preventDefault();
+
+    setIsSubmitting(true);
 
     const user = {
       name: name,
@@ -28,8 +31,9 @@ const SignInForm = (props) => {
       );
     } else {
       alert("Login successful. Welcome back!");
-      document.location.href = "/my-quotes";
+      document.location.href = "/";
     }
+    setIsSubmitting(false);
   };
 
   return (
@@ -48,7 +52,7 @@ const SignInForm = (props) => {
             placeholder="Enter your username"
             name="name"
             value={name}
-            onChange={(e) => {
+            onChange={e => {
               setName(e.target.value);
             }}
           />
@@ -66,14 +70,16 @@ const SignInForm = (props) => {
             placeholder="Enter your password"
             name="password"
             value={password}
-            onChange={(e) => {
+            onChange={e => {
               setPassword(e.target.value);
             }}
           />
         </div>
 
         <div className="formField">
-          <button className="formFieldButton">Sign in</button>
+          <button className="formFieldButton" disabled={isSubmitting}>
+            Sign in
+          </button>
           <Link to="/" className="formFieldLink">
             Create an Account
           </Link>
@@ -83,4 +89,4 @@ const SignInForm = (props) => {
   );
 };
 
-export default SignInForm;
+export default Login;

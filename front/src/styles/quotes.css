@@ -1,34 +1,51 @@
 /* Quote scroll */
-.quotes-scroll{
+.quotes-scroll {
   /*height: 90vh;
   overflow-y: auto;*/
 }
 
-/* Quote Card */ 
+/* Quote Card */
 
-.dropdown-toggle{
-  background-color: #FFF;
+.dropdown-toggle {
+  background-color: #fff;
 }
 
-.quote-dropdown .danger:hover{
-  background-color: #C14242;
-  color: #FFF;
+.quote-dropdown .danger:hover {
+  background-color: #c14242;
+  color: #fff;
 }
 
-.quote-dropdown{
+.quote-dropdown {
   display: none;
 }
 
-.quote-card:hover .quote-dropdown{
-  display: block;
+.quotes {
+  align-items: center;
 }
 
-.quote-card{
+.quote {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.quote .quote-card {
+  width: clamp(600px, 700px, 800px);
+  margin: 0 5px;
   border-radius: 35px;
   font-family: "Georgia";
 }
 
-.quote-card .card-header{
+.quote-card {
+  border-radius: 35px;
+  font-family: "Georgia";
+}
+
+.quote-card:hover .quote-dropdown {
+  display: block;
+}
+
+.quote-card .card-header {
   border-top-left-radius: 35px;
   border-top-right-radius: 35px;
   font-weight: bold;
@@ -48,15 +65,15 @@
 }
 
 /* Edit more */
-.quote-card-body{
+.quote-card-body {
   padding-bottom: 1rem;
 }
 
-.edit .quoteDetails{
+.edit .quoteDetails {
   padding: 0.7rem;
 }
 
-.memo-action-btn{
+.memo-action-btn {
   align-self: center;
   width: auto;
   height: 60%;
@@ -69,7 +86,7 @@ input.smallText {
   line-height: 14px;
 }
 
-.blockquote-footer a{
+.blockquote-footer a {
   color: var(--darkPurple);
   font-weight: bold;
 }
@@ -83,7 +100,7 @@ input.smallText {
 }
 
 /* Search */
-.search{
+.search {
   border-radius: 15px;
 }
 
@@ -94,7 +111,7 @@ input.smallText {
   border-radius: 30px;
 }
 
-.dashboard-card  ul{
+.dashboard-card ul {
   border-radius: 20px;
 }
 
@@ -102,6 +119,6 @@ input.smallText {
   font-size: 22px;
 }
 
-.dashboard-card .list-item-title{
+.dashboard-card .list-item-title {
   font-size: 18px;
 }

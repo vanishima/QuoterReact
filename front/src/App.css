@@ -9,8 +9,22 @@
   --darkGrey: #40434e;
   --darkRed: #a03d50;
   --darkBlue: #193478;
-  --lightGrey: #DADADC;
-  --lightPurple: #E1DDED;
+  --lightGrey: #dadadc;
+  --lightPurple: #e1dded;
+}
+
+.theme-dark {
+  --text-primary: #fff;
+  --text-secondary: var(--lightGrey);
+  --text-footer: #fff;
+  --background: var(--darkGrey);
+}
+
+.theme-light {
+  --text-primary: #000;
+  --text-secondary: var(--darkPurple);
+  --text-footer: var(--darkGrey);
+  --background: var(--lightPurple);
 }
 
 main {
@@ -80,7 +94,7 @@ main {
   flex-shrink: 0;
 }
 
-.fixed-position{
+.fixed-position {
   position: absolute;
 }
 
@@ -92,10 +106,10 @@ main {
 }
 
 /* Book cover */
-.img-book-cover{
+.img-book-cover {
   width: 50%;
 }
 
-img.card-img{
+img.card-img {
   width: 100%;
 }

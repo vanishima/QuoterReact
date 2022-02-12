@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 // import {useNavigate} from "react-router-dom";
 
 // Element
-import Layout from "../components/Layout";
+import Layout from "../components/common/Layout";
 import FormCreateBookInAuthor from "../components/books/FormCreateBookInAuthor";
 import FormCreateAuthor from "../components/authors/FormCreateAuthor";
 import BooksList from "../components/books/BooksList";
-import QuotesList from "../components/quotes/QuotesList";
+import QuotesList from "../components/quotes/Quotes/QuotesList";
 
 // API
 import authorsAPI from "../api/authorsAPI";
@@ -34,7 +34,7 @@ async function drawAuthor(setAuthor, setBooks, setQuotes) {
   }
 }
 
-const AuthorDetail = (props) => {
+const AuthorDetail = props => {
   const [author, setAuthor] = useState();
   const [books, setBooks] = useState([]);
   const [quotes, setQuotes] = useState([]);

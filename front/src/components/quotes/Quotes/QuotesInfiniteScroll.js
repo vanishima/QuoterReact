@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from "react";
 
 // Element
-import QuotesList from "../components/quotes/QuotesList";
-import FilterBar from "../components/FilterBar";
+import QuotesList from "components/quotes/Quotes/QuotesList";
+import FilterBar from "components/quotes/Toolbar/FilterBar";
 
-import useInfiniteScroll from "../components/utils/useInfiniteScroll";
-
-import "../styles/quotes.css";
+import useInfiniteScroll from "components/utils/useInfiniteScroll";
 
 // API
-import quotesAPI from "../api/quotesAPI";
+import quotesAPI from "api/quotesAPI";
 
-const MyQuotesInfiniteScroll = () => {
+const QuotesInfiniteScroll = () => {
   const [quotes, setQuotes] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
 
@@ -36,7 +34,7 @@ const MyQuotesInfiniteScroll = () => {
   );
 
   useEffect(() => {
-    console.log("### MyQuotesInfiniteScroll EFFECT ###");
+    console.log("### QuotesInfiniteScroll EFFECT ###");
     loadMoreItems();
   }, [pageSize, sortOrder]);
 
@@ -51,9 +49,9 @@ const MyQuotesInfiniteScroll = () => {
         setQuotes(result.quotes);
         setRefresh(false);
       } else {
-        setQuotes((current) => [...current, ...result.quotes]);
+        setQuotes(current => [...current, ...result.quotes]);
       }
-      setPage((prevPageNumber) => prevPageNumber + 1);
+      setPage(prevPageNumber => prevPageNumber + 1);
       setHasMore(result.lastPage > page);
       setIsFetching(false);
     } else {
@@ -83,4 +81,4 @@ const MyQuotesInfiniteScroll = () => {
   );
 };
 
-export default MyQuotesInfiniteScroll;
+export default QuotesInfiniteScroll;

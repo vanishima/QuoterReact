@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 
 // Element
-import Layout from "../components/Layout";
-import QuotesList from "../components/quotes/QuotesList";
-import FormCreateQuoteInBook from "../components/quotes/FormCreateQuoteInBook";
+import Layout from "../components/common/Layout";
+import QuotesList from "../components/quotes/Quotes/QuotesList";
+import FormCreateQuoteInBook from "../components/quotes/forms/FormCreateQuoteInBook";
 import FormEditBook from "../components/books/FormEditBook";
 
 // API
@@ -28,7 +28,7 @@ async function drawBook(setBook, setQuotes) {
   }
 }
 
-const BookDetail = (props) => {
+const BookDetail = props => {
   const [book, setBook] = useState("");
   const [quotes, setQuotes] = useState([]);
 
@@ -40,36 +40,21 @@ const BookDetail = (props) => {
     <Layout currPage={"/books"}>
       <div className="content-page">
         <div className="row">
-          <div className="col-8">
-            <FormEditBook book={book} />
+          <FormEditBook book={book} />
 
-            <hr />
+          <hr />
 
-            <div>
-              <div className="row">
-                <h3 className="col-auto">Quotes</h3>
-              </div>
-              {book && (
-                <QuotesList
-                  quotes={quotes}
-                  author={book.author}
-                  book={book}
-                  setQuotes={setQuotes}
-                />
-              )}
+          <div>
+            <div className="row">
+              <h3 className="col-auto">Quotes</h3>
             </div>
-          </div>
-
-          <div className="col-4">
-            {book ? (
-              <FormCreateQuoteInBook
+            {book && (
+              <QuotesList
+                quotes={quotes}
                 author={book.author}
                 book={book}
-                quotes={quotes}
                 setQuotes={setQuotes}
               />
-            ) : (
-              <div>Loading...</div>
             )}
           </div>
         </div>

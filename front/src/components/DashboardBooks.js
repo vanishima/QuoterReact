@@ -21,7 +21,7 @@ async function drawBooks(setBooks, sortOrder, limit) {
 const DashboardBooks = () => {
   const [books, setBooks] = useState([]);
   const [sortOrder, setSortOrder] = useState("recent");
-  const [limit, setLimit] = useState(5);
+  const [limit, setLimit] = useState(10);
   const [mode, setMode] = useState("viewing");
 
   const limit_options = [5, 10, 15];
@@ -39,13 +39,13 @@ const DashboardBooks = () => {
   const createBook = async (book) => {
     console.log("ready to create book", book);
     book.date = new Date();
-    const result = await(booksAPI.updateBook(book));
-    if (result.ok){
+    const result = await booksAPI.updateBook(book);
+    if (result.ok) {
       book._id = result._id;
       setBooks([book, ...books]);
       setMode("viewing");
     }
-  }
+  };
 
   return (
     <div className="dashboard-card card mb-3">
@@ -77,22 +77,24 @@ const DashboardBooks = () => {
           setLimit={setLimit}
         />
 
-        {mode === "viewing" && <ul className="list-group">
-          {books.map((b, i) => (
-            <li key={i} className="list-group-item">
-              <a href={`/book?id=${b._id}`} className="non-link">
-                <div className="greyText">{getTimeDistance(b.date)}</div>
-                <div className="bold list-item-title">
-                  {b.title}{" "}
-                  <span className="badge rounded-pill bg-secondary">
-                    {b.count}
-                  </span>
-                </div>
-              </a>
-            </li>
-          ))}
-        </ul>}
-        {mode === "editing" && <FormCreateBook createBook={createBook}/>}
+        {mode === "viewing" && (
+          <ul className="list-group">
+            {books.map((b, i) => (
+              <li key={i} className="list-group-item">
+                <a href={`/book?id=${b._id}`} className="non-link">
+                  <div className="greyText">{getTimeDistance(b.date)}</div>
+                  <div className="bold list-item-title">
+                    {b.title}{" "}
+                    <span className="badge rounded-pill bg-secondary">
+                      {b.count}
+                    </span>
+                  </div>
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
+        {mode === "editing" && <FormCreateBook createBook={createBook} />}
       </div>
     </div>
   );

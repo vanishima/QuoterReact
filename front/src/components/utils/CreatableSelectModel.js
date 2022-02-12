@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import PropTypes from "prop-types";
 import AsyncCreatableSelect from "react-select/async-creatable";
 
-const CreatableSelectModel = (props) => {
+const CreatableSelectModel = props => {
   const {
     options,
     setValue,
@@ -17,7 +17,7 @@ const CreatableSelectModel = (props) => {
 
   const filterOptions = (inputValue: string) => {
     if (options.length > 0) {
-      return options.filter((i) =>
+      return options.filter(i =>
         i.value.toLowerCase().includes(inputValue.toLowerCase())
       );
     }
@@ -25,7 +25,7 @@ const CreatableSelectModel = (props) => {
   };
 
   const promiseOptions = (inputValue: string) =>
-    new Promise((resolve) => {
+    new Promise(resolve => {
       setTimeout(() => {
         resolve(filterOptions(inputValue));
       }, 1000);
@@ -35,13 +35,13 @@ const CreatableSelectModel = (props) => {
     console.log("handleChange", newValue);
     let newOption;
     if (!newValue.__isNew__) {
-      console.log("options", options);
-      console.log("already exists", newValue);
+      // console.log("options", options);
+      // console.log("already exists", newValue);
       newOption = newValue;
     } else {
-      console.log("create newValue", newValue);
+      // console.log("create newValue", newValue);
       newOption = await createOption(newValue.label);
-      console.log("created newOption", newOption);
+      // console.log("created newOption", newOption);
       setOptions([newOption, ...options]);
     }
     if (setIsChanged) setIsChanged(true);

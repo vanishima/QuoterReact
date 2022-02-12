@@ -1,15 +1,17 @@
 import PropTypes from "prop-types";
 import { Dropdown } from "react-bootstrap";
+import { connect } from "react-redux";
 
 // Elements
-import TextIndentation from "../utils/TextIndentation";
+import TextIndentation from "../../utils/TextIndentation";
 import QuoteEditCard from "./QuoteEditCard";
-import ModalDeleteConfirmation from "../utils/ModalDeleteConfirmation";
+// import QuoteEditCardUseReducer from "./QuoteEditCardUseReducer";
+import QuoteImageModal from "../Quoteimage/QuoteImageModal";
 
 // API
-import { getRelativeTime } from "../../api/utilsAPI";
+import { getRelativeTime } from "../../../api/utilsAPI";
 
-const QuoteCard = (props) => {
+const QuoteCard = props => {
   const {
     quote,
     book,
@@ -17,16 +19,13 @@ const QuoteCard = (props) => {
     showDate,
     showTag,
     showMemo,
+    showTitle,
     handleDelete,
     handleUpdate,
     activeQuote,
     setActiveQuote,
   } = props;
 
-  // const isReplying =
-  //   activeComment &&
-  //   activeComment.type === "replying" &&
-  //   activeComment.id === comment.id;
   const isEditing =
     activeQuote &&
     activeQuote.type === "editing" &&
@@ -35,11 +34,9 @@ const QuoteCard = (props) => {
   if (isEditing)
     return (
       <QuoteEditCard
-        quote={quote}
+        defaultQuote={quote}
         defaultBook={book || quote.book}
         defaultAuthor={author || quote.author}
-        // defaultBook={book || quote.book}
-        // defaultAuthor={author || quote.author}
         handleDelete={handleDelete}
         handleCancel={() => setActiveQuote(null)}
         handleUpdate={handleUpdate}
@@ -49,13 +46,12 @@ const QuoteCard = (props) => {
 
   return (
     <div className="quote-card card mb-3">
-      {quote.title && <div className="card-header">{quote.title}</div>}
+      {showTitle && quote.title && (
+        <div className="card-header">{quote.title}</div>
+      )}
       <div className="quote-card-body card-body row">
         <div className="col-11 quoteDetails">
           <blockquote className="blockquote">
-            {/*<div className="blockquote-text">
-              
-            </div>*/}
             <TextIndentation rawText={quote.text} />
 
             {(!author || !book) && (
@@ -114,7 +110,7 @@ const QuoteCard = (props) => {
 
           {showMemo && Array.isArray(quote.memo) && (
             <div className="memos">
-              {quote.memo.map((m) => (
+              {quote.memo.map(m => (
                 <div key={m._id}>
                   - {m.text} ({getRelativeTime(m.date)})
                 </div>
@@ -141,18 +137,15 @@ const QuoteCard = (props) => {
               </Dropdown.Item>
               <Dropdown.Item
                 as="button"
-                onClick={() =>
-                  setActiveQuote({ id: quote._id, type: "commenting" })
-                }
+                data-bs-toggle="modal"
+                data-bs-target={`#quoteImageModal-${quote._id}`}
               >
-                Comment
+                Image
               </Dropdown.Item>
               <Dropdown.Item
                 className="danger"
                 as="button"
                 onClick={() => handleDelete(quote)}
-                // data-bs-toggle="modal"
-                // data-bs-target={`#deleteModal-${quote._id}`}
               >
                 Delete
               </Dropdown.Item>
@@ -161,12 +154,7 @@ const QuoteCard = (props) => {
         </div>
       </div>
 
-      <ModalDeleteConfirmation
-        id={quote._id}
-        handleDelete={handleDelete}
-        message={"Are you sure you want to delete this quote?"}
-        previewText={quote.text}
-      />
+      <QuoteImageModal quote={quote} />
     </div>
   );
 };
@@ -186,4 +174,21 @@ QuoteCard.propTypes = {
   }),
 };
 
-export default QuoteCard;
+const mapStateToProps = (state, ownProps) => ({
+  showDate: state.display.showDate,
+  showTag: state.display.showTag,
+  showMemo: state.display.showMemo,
+  showTitle: state.display.showTitle,
+  ...ownProps,
+  // quote: ownProps.quote,
+  // book: ownProps.book,
+  // author: ownProps.author,
+  // handleDelete: ownProps.handleDelete,
+  // handleUpdate: ownProps.handleUpdate,
+  // activeQuote: ownProps.activeQuote,
+  // setActiveQuote: ownProps.setActiveQuote,
+});
+
+export default connect(mapStateToProps)(QuoteCard);
+
+// export default QuoteCard;

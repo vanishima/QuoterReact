@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 export const InlineEditText = ({
+  name = "",
   id,
   value = "",
   setValue,
@@ -17,6 +18,7 @@ export const InlineEditText = ({
 
   return (
     <input
+      name={name}
       id={id}
       className={classNames}
       type="text"
@@ -28,6 +30,7 @@ export const InlineEditText = ({
 };
 
 export const InlineLabelEditText = ({
+  name = "",
   className = "",
   label,
   value = "",
@@ -44,6 +47,7 @@ export const InlineLabelEditText = ({
   return (
     <div className={classNames}>
       <InlineEditText
+        name={name}
         id={input_id}
         value={value}
         setValue={setValue}
@@ -55,6 +59,7 @@ export const InlineLabelEditText = ({
 };
 
 export const InlineLabelEditDate = ({
+  name = "date",
   className = "",
   label,
   value = new Date(),
@@ -74,7 +79,7 @@ export const InlineLabelEditDate = ({
         className="form-control inline-edit"
         type="datetime-local"
         id="date-input"
-        name="date"
+        name={name}
         value={value}
         min="1990-01-01T00:00"
         max="2099-12-31T23:55"
@@ -86,6 +91,7 @@ export const InlineLabelEditDate = ({
 };
 
 export const InlineLabelEditTextarea = ({
+  name = "",
   className = "",
   label,
   value = "",
@@ -117,6 +123,7 @@ export const InlineLabelEditTextarea = ({
   return (
     <div className={classNames}>
       <textarea
+        name={name}
         className="form-control inline-edit"
         type="text"
         id={input_id}
@@ -129,33 +136,8 @@ export const InlineLabelEditTextarea = ({
   );
 };
 
-export const InlineEditImage = ({
-  value = "",
-  setFile,
-  setFilename,
-  setEdited,
-}) => {
-  const onChange = (event) => {
-    setFile(event.target.files[0]);
-    console.log("FILE:", event.target.files[0]);
-    setFilename(event.target.files[0].name);
-    if (setEdited) setEdited(true);
-  };
-
-  return (
-    <div>
-      <label htmlFor="/">
-        <input
-          type="file"
-          className="form-control inline-edit"
-          onChange={onChange}
-        />
-      </label>
-    </div>
-  );
-};
-
 export const InlineEditTextarea = ({
+  name = "",
   value = "",
   setValue,
   height,
@@ -182,6 +164,7 @@ export const InlineEditTextarea = ({
 
   return (
     <textarea
+      name={name}
       className="form-control inline-edit"
       type="text"
       aria-label="Field name"

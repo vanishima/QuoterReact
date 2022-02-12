@@ -5,11 +5,10 @@ import { useNavigate } from "react-router-dom";
 // Element
 // import { InlineEditText } from "../utils/InlineEdit";
 
-import { getTagsArray, isoDateWithoutTimezone } from "../../api/utilsAPI";
-import quotesAPI from "../../api/quotesAPI";
+import { getTagsArray, isoDateWithoutTimezone } from "../../../api/utilsAPI";
+import quotesAPI from "../../../api/quotesAPI";
 
-
-const FormCreateQuoteInBook = (props) => {
+const FormCreateQuoteInBook = props => {
   const { quote } = props;
   const navigate = useNavigate();
 
@@ -28,7 +27,7 @@ const FormCreateQuoteInBook = (props) => {
 
   console.log("date", date);
 
-  const handleSubmit = async (evt) => {
+  const handleSubmit = async evt => {
     evt.preventDefault();
 
     const newQuote = {
@@ -62,7 +61,7 @@ const FormCreateQuoteInBook = (props) => {
     navigate(0);
   };
 
-  const handleDelete = async (evt) => {
+  const handleDelete = async evt => {
     evt.preventDefault();
     console.log("delete clicked");
     await quotesAPI.deleteQuote(quote);
@@ -104,7 +103,7 @@ const FormCreateQuoteInBook = (props) => {
             className="form-control"
             type="text"
             value={title}
-            onChange={(e) => {
+            onChange={e => {
               setTitle(e.target.value);
             }}
           />
@@ -119,7 +118,7 @@ const FormCreateQuoteInBook = (props) => {
             required
             name="text"
             value={text}
-            onChange={(e) => {
+            onChange={e => {
               setText(e.target.value);
             }}
           ></textarea>
@@ -135,7 +134,7 @@ const FormCreateQuoteInBook = (props) => {
             value={date}
             min="1990-01-01T00:00"
             max="2099-12-31T23:55"
-            onChange={(e) => {
+            onChange={e => {
               setDate(e.target.value);
             }}
           ></input>
@@ -148,7 +147,7 @@ const FormCreateQuoteInBook = (props) => {
             className="form-control"
             id="tags-input"
             value={tags}
-            onChange={(e) => {
+            onChange={e => {
               setTags(e.target.value);
             }}
           />
@@ -161,7 +160,7 @@ const FormCreateQuoteInBook = (props) => {
             className="form-control"
             id="privacySelect"
             value={privacy}
-            onChange={(e) => {
+            onChange={e => {
               setPrivacy(e.target.value);
             }}
           >
@@ -178,7 +177,7 @@ const FormCreateQuoteInBook = (props) => {
             className="form-control"
             name="memo"
             value={memo}
-            onChange={(e) => {
+            onChange={e => {
               setMemo(e.target.value);
             }}
           ></textarea>

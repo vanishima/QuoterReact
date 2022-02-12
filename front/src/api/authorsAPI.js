@@ -1,4 +1,4 @@
-import {getPinyin} from "./utilsAPI";
+import { getPinyin } from "./utilsAPI";
 
 const FRONTEND =
   process.env.NODE_ENV === "production"
@@ -16,14 +16,14 @@ function authorsAPI() {
       },
       mode: "cors",
     });
-    console.log("resRaw", resRaw);
+    // console.log("resRaw", resRaw);
     const res = await resRaw.json();
 
     if (!resRaw.ok) {
       console.log("FAILED", res.msg);
       return { ok: false, authors: [], msg: res.msg };
     } else {
-      console.log("SUCCESS", res.authors.length);
+      // console.log("SUCCESS", res.authors.length);
       res.ok = true;
       return res;
     }
@@ -37,14 +37,14 @@ function authorsAPI() {
       },
       mode: "cors",
     });
-    console.log("resRaw", resRaw);
+    // console.log("resRaw", resRaw);
     const res = await resRaw.json();
 
     if (!resRaw.ok) {
       console.log("FAILED", res.msg);
       return { ok: false, author: {}, msg: res.msg };
     } else {
-      console.log("SUCCESS", res);
+      // console.log("SUCCESS", res);
       res.ok = true;
       return res;
     }
@@ -59,14 +59,14 @@ function authorsAPI() {
       },
       mode: "cors",
     });
-    console.log("resRaw", resRaw);
+    // console.log("resRaw", resRaw);
     const res = await resRaw.json();
 
     if (!resRaw.ok) {
       console.log("FAILED", res.msg);
       return { ok: false, authors: [], msg: res.msg };
     } else {
-      console.log("SUCCESS", res.authors.length);
+      // console.log("SUCCESS", res.authors.length);
       res.ok = true;
       return res;
     }

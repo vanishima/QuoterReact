@@ -20,7 +20,7 @@ async function drawAuthors(setAuthors, sortOrder, limit) {
 const DashBoardAuthors = () => {
   const [authors, setAuthors] = useState([]);
   const [sortOrder, setSortOrder] = useState("recent");
-  const [limit, setLimit] = useState(5);
+  const [limit, setLimit] = useState(10);
   const [mode, setMode] = useState("viewing");
 
   const limit_options = [5, 10, 15];

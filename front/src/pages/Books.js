@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 
 // Element
-import Layout from "../components/Layout";
-import Search from "../components/Search";
+import Layout from "../components/common/Layout";
+import Search from "../components/common/Search";
 import BookCardQuotes from "../components/books/BookCardQuotes";
-import QuotesList from "../components/quotes/QuotesList";
+import QuotesList from "../components/quotes/Quotes/QuotesList";
 
 // API
 import quotesAPI from "../api/quotesAPI";
@@ -42,7 +42,7 @@ const Books = () => {
             </div>
             <div className="book-list">
               {books &&
-                books.map((b) => (
+                books.map(b => (
                   <div key={b._id}>
                     <BookCardQuotes
                       showImage={true}

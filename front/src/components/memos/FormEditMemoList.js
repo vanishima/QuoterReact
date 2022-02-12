@@ -27,8 +27,6 @@ const FormEditMemoList = ({ memoList, setMemoList }) => {
 
   return (
     <div className="memos-container">
-      <hr />
-      Memos
       {memoList &&
         memoList.map((memo, i) => (
           <FormEditMemo

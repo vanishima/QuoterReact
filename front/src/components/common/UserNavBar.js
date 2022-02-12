@@ -1,8 +1,7 @@
-import React, {useEffect} from "react";
-import authAPI from "../api/authAPI";
+import React, { useEffect } from "react";
+import authAPI from "api/authAPI";
 
 const UserNavBar = () => {
-
   useEffect(() => {
     authAPI.verifyAuth();
   }, []);
@@ -22,7 +21,7 @@ const UserNavBar = () => {
     <div className="flex-column">
       <nav className="flex-column nav user-navbar">
         <a
-          href="/my-quotes"
+          href="/"
           className={`nav-link ${currPage === "/my-quotes" ? "active" : ""}`}
         >
           <div
@@ -44,7 +43,9 @@ const UserNavBar = () => {
           </div>
         </a>
         <a href="/comments" className="nav-link">
-          <div className={`nav-item ${currPage === "/comments" ? "active" : ""}`}>
+          <div
+            className={`nav-item ${currPage === "/comments" ? "active" : ""}`}
+          >
             Comments
           </div>
         </a>
