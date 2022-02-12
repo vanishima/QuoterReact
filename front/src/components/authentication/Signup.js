@@ -1,20 +1,17 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { useAuth } from "contexts/AuthContext";
 
-// API
-import myAuth from "../../api/authAPI";
-import { useEffect } from "react";
-
-const SignUp = () => {
+const Signup = () => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
+  // const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { signup } = useAuth();
+  const { signup, message } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async evt => {
     evt.preventDefault();
@@ -27,26 +24,22 @@ const SignUp = () => {
       password: password,
     };
     console.log("Attemp to register", user);
-    await signup(user);
-    // const result = await myAuth.register(user);
-
-    // if (!result.ok) {
-    //   setMessage(
-    //     <p className="justify-content-right" style={{ color: "red" }}>
-    //       *{result.msg}
-    //     </p>
-    //   );
-    // } else {
-    //   alert("Register successful. Welcome to Quoter!");
-    //   document.location.href = "/";
-    // }
+    const message = await signup(user);
     setIsSubmitting(false);
+    console.log("message", message);
+    if (!message) {
+      navigate("/");
+    }
   };
 
   return (
     <div className="formCenter">
       <form onSubmit={handleSubmit} className="formFields">
-        {message}
+        {message && (
+          <p className="justify-content-right" style={{ color: "red" }}>
+            *{message}
+          </p>
+        )}
         <div className="formField">
           <label className="formFieldLabel" htmlFor="name">
             Full Name
@@ -111,4 +104,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default Signup;

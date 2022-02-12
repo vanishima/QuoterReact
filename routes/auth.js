@@ -14,7 +14,7 @@ const { ObjectId } = require("mongodb");
 //* Register */
 router.post("/register", async (req, res) => {
   console.log(">>>>> POST register", req.body);
-  const { name, email, password } = req.body.user;
+  const { name, email, password } = req.body;
 
   // Simple validation
   if (!name || !email || !password) {

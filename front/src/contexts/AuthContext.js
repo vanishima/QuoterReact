@@ -1,7 +1,12 @@
 import React, { useEffect, useState, useContext } from "react";
-import useFetch from "hooks/useFetch";
+import myAxios from "hooks/myAxios";
 
 const AuthContext = React.createContext();
+
+export const FRONTEND =
+  process.env.NODE_ENV === "production"
+    ? process.env.REACT_APP_FRONTEND_PREFIX
+    : "";
 
 export const useAuth = () => {
   return useContext(AuthContext);
@@ -10,35 +15,34 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState();
   const [token, setToken] = useState();
-  const [loading, setLoading] = useState(true);
-  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const signup = user => {
+  const signup = async user => {
     console.log("signup", user);
-    // const [{ response, error, isLoading }, doFetch] =
-    //   useFetch("/auth/register");
-    // doFetch({
-    //   method: "POST",
-    //   data: { user: user },
-    //   mode: "cors",
-    // });
-    // console.log("context signup", response, error, isLoading);
+    setLoading(true);
 
-    // if (error) {
-    //   setMessage(error.msg);
-    // } else {
-    //   setCurrentUser(response.user);
-    //   setToken(response.token);
-    // }
+    const resRaw = await fetch(FRONTEND + "/auth/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      mode: "cors",
+      body: JSON.stringify(user),
+    });
+    const res = await resRaw.json();
 
-    // return
-
+    if (!resRaw.ok) {
+      return res.msg;
+    } else {
+      console.log("call succeeded:", res);
+      setCurrentUser(JSON.stringify(res.user));
+      setToken(res.token);
+    }
     setLoading(false);
   };
 
   const value = {
     currentUser,
-    message,
     signup,
   };
 
