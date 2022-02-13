@@ -1,9 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
-
+import { useNavigate, useLocation } from "react-router-dom";
+import axios from "api/axios";
 import { useAuth } from "contexts/AuthContext";
 
+const REGISTER_URL = "/auth/register";
+
 const Signup = () => {
+  const { auth, setAuth } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
+
   const userRef = useRef();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
@@ -11,8 +18,7 @@ const Signup = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { signup } = useAuth();
-  const navigate = useNavigate();
+  console.log("Signup", auth);
 
   // put focus on userRef
   useEffect(() => {
@@ -34,13 +40,33 @@ const Signup = () => {
       name: name,
       password: password,
     };
+
     console.log("Attemp to register", user);
-    const message = await signup(user);
-    setIsSubmitting(false);
-    console.log("message", message);
-    if (!message) {
-      navigate("/");
+
+    try {
+      const response = await axios.post(REGISTER_URL, JSON.stringify(user), {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      });
+      console.log(JSON.stringify(response?.data));
+
+      const accessToken = response?.data?.token;
+      // const roles = response?.data?.roles;
+
+      setAuth({ user: response.data.user, token: accessToken });
+
+      setName("");
+      setEmail("");
+      setPassword("");
+      navigate(from, { replace: true });
+    } catch (err) {
+      if (!err?.response) {
+        setErrorMessage("No Server Response");
+      } else if (err.response?.status === 400) {
+        setErrorMessage(err.response.data.msg);
+      }
     }
+    setIsSubmitting(false);
   };
 
   return (
@@ -109,10 +135,7 @@ const Signup = () => {
         <div className="formField">
           <button className="formFieldButton" disabled={isSubmitting}>
             Sign Up
-          </button>{" "}
-          {/* <Link to="/sign-in" className="formFieldLink">
-            I'm already member
-          </Link> */}
+          </button>
         </div>
       </form>
     </section>

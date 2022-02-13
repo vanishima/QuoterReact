@@ -1,7 +1,6 @@
 import React from "react";
 
 // Element
-import Layout from "../components/common/Layout";
 import QuotesInfiniteScroll from "components/quotes/Quotes/QuotesInfiniteScroll";
 import DashboardBooks from "../components/DashboardBooks";
 import DashboardAuthors from "../components/DashboardAuthors";
@@ -12,7 +11,7 @@ import "../styles/quotes.css";
 
 const MyQuotes = () => {
   return (
-    <Layout currPage={"/my-quotes"}>
+    <div>
       <div className="content-page">
         <div className="row">
           <div className="col-2">
@@ -29,7 +28,7 @@ const MyQuotes = () => {
           </div>
         </div>
       </div>
-    </Layout>
+    </div>
   );
 };
 

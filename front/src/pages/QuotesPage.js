@@ -6,8 +6,6 @@ import Masonry from "react-masonry-css";
 // Bring in the asynchronous fetchQuotes action
 import { fetchQuotes } from "actions/quotesActions";
 
-import PinterestLayout from "components/quotes/PinterestLayout";
-
 import "styles/quotesGrid.css";
 
 const QuotesPage = ({ dispatch, quotes, loading, hasErrors }) => {
@@ -26,14 +24,13 @@ const QuotesPage = ({ dispatch, quotes, loading, hasErrors }) => {
     if (loading) return <p>Loading quotes</p>;
     if (hasErrors) return <p>Unable to display quotes.</p>;
     console.log("renderQuotes quotes:", quotes);
-    // return <PinterestLayout quotes={quotes} />;
     return (
       <Masonry
         breakpointCols={3}
         className="my-masonry-grid"
         columnClassName="my-masonry-grid_column"
       >
-        {quotes.map((quote) => (
+        {quotes.map(quote => (
           <div key={quote.id} quote={quote}>
             {quote.text}
           </div>
@@ -46,12 +43,11 @@ const QuotesPage = ({ dispatch, quotes, loading, hasErrors }) => {
     <section>
       <h1>Quotes</h1>
       {renderQuotes()}
-      <PinterestLayout />
     </section>
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   quotes: state.quotes.quotes,
   loading: state.quotes.loading,
   hasErrors: state.quotes.hasErrors,

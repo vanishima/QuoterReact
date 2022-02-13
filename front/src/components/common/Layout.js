@@ -1,28 +1,10 @@
 import React from "react";
-import Footer from "./Footer";
-import UserNavBar from "./UserNavBar";
-import Header from "components/common/Header";
+import { Outlet } from "react-router-dom";
 
-const Layout = ({ children }) => {
-  // border-end
-
+const Layout = () => {
   return (
-    <div>
-      <Header />
-      <main>
-        {children}
-        {/* <div className="row">
-          <div className="col-2">
-            <h1>
-              <div>Quoter</div>
-            </h1>
-            <UserNavBar />
-          </div>
-
-          <div className="col-10">{children}</div>
-        </div> */}
-      </main>
-      <Footer />
+    <div className="App">
+      <Outlet />
     </div>
   );
 };

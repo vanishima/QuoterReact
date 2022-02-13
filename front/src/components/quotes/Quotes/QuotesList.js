@@ -8,7 +8,6 @@ import QuotesListToolbar from "components/quotes/QuotesListToolbar/QuotesListToo
 
 // API
 import { getTimeDistance } from "../../../api/utilsAPI";
-import QuoteEditCard from "../QuoteCard/QuoteEditCard";
 import QuoteEditCardUseReducer from "../QuoteCard/QuoteEditCardUseReducer";
 
 import quotesAPI from "../../../api/quotesAPI";
@@ -166,16 +165,6 @@ const QuotesList = props => {
         isAuthorFixed={author}
         isBookFixed={book}
       />
-      {/* <QuoteEditCard
-        handleUpdate={handleUpdate}
-        handleCreate={handleCreate}
-        reset={reset}
-        setReset={setReset}
-        defaultAuthor={author}
-        defaultBook={book}
-        isAuthorFixed={author}
-        isBookFixed={book}
-      />*/}
       {renderQuotesStatus()}
       <QuotesListToolbar />
       {renderQuotes()}
@@ -189,4 +178,3 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 export default connect(mapStateToProps)(QuotesList);
-// export default QuotesList;
