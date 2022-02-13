@@ -73,7 +73,7 @@ router.post("/register", async (req, res) => {
 
 /* Login */
 router.post("/login", async function (req, res) {
-  console.log(">>>>> POST /auth/login");
+  console.log(">>>>> POST /auth/login", req.body);
   const { name, password } = req.body;
 
   // Simple validation

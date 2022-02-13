@@ -1,17 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { useAuth } from "contexts/AuthContext";
 
 const Signup = () => {
+  const userRef = useRef();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
-  // const [message, setMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { signup, message } = useAuth();
+  const { signup } = useAuth();
   const navigate = useNavigate();
+
+  // put focus on userRef
+  useEffect(() => {
+    userRef.current.focus();
+  }, []);
+
+  // clear error errorMessage when user changes input
+  useEffect(() => {
+    setErrorMessage("");
+  }, [name, password]);
 
   const handleSubmit = async evt => {
     evt.preventDefault();
@@ -33,16 +44,16 @@ const Signup = () => {
   };
 
   return (
-    <div className="formCenter">
+    <section className="formCenter">
+      {errorMessage && (
+        <p className="justify-content-right" style={{ color: "red" }}>
+          *{errorMessage}
+        </p>
+      )}
       <form onSubmit={handleSubmit} className="formFields">
-        {message && (
-          <p className="justify-content-right" style={{ color: "red" }}>
-            *{message}
-          </p>
-        )}
         <div className="formField">
           <label className="formFieldLabel" htmlFor="name">
-            Full Name
+            Username
           </label>
           <input
             type="text"
@@ -54,6 +65,8 @@ const Signup = () => {
             onChange={e => {
               setName(e.target.value);
             }}
+            ref={userRef}
+            required
           />
         </div>
 
@@ -71,6 +84,7 @@ const Signup = () => {
             onChange={e => {
               setEmail(e.target.value);
             }}
+            required
           />
         </div>
 
@@ -88,6 +102,7 @@ const Signup = () => {
             onChange={e => {
               setPassword(e.target.value);
             }}
+            required
           />
         </div>
 
@@ -95,12 +110,12 @@ const Signup = () => {
           <button className="formFieldButton" disabled={isSubmitting}>
             Sign Up
           </button>{" "}
-          <Link to="/sign-in" className="formFieldLink">
+          {/* <Link to="/sign-in" className="formFieldLink">
             I'm already member
-          </Link>
+          </Link> */}
         </div>
       </form>
-    </div>
+    </section>
   );
 };
 

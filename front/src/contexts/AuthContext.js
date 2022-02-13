@@ -1,7 +1,6 @@
-import React, { useEffect, useState, useContext } from "react";
-import myAxios from "hooks/myAxios";
+import React, { createContext, useEffect, useState, useContext } from "react";
 
-const AuthContext = React.createContext();
+const AuthContext = createContext();
 
 export const FRONTEND =
   process.env.NODE_ENV === "production"
@@ -13,6 +12,7 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
+  const [auth, setAuth] = useState({});
   const [currentUser, setCurrentUser] = useState();
   const [token, setToken] = useState();
   const [loading, setLoading] = useState(false);
@@ -41,8 +41,13 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   };
 
+  const login = async user => {
+    console.log("login");
+  };
+
   const value = {
-    currentUser,
+    auth,
+    setAuth,
     signup,
   };
 
