@@ -1,6 +1,11 @@
 import { formatDistance, subDays, format } from "date-fns";
 import pinyin from "chinese-to-pinyin";
 
+export const FRONTEND =
+  process.env.NODE_ENV === "production"
+    ? process.env.REACT_APP_FRONTEND_PREFIX
+    : "";
+
 export function getTimeDistance(date) {
   return formatDistance(subDays(new Date(date), 0), new Date(), {
     addSuffix: true,

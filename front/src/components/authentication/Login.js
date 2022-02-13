@@ -1,45 +1,39 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-// API
-import myAuth from "../../api/authAPI";
+import { Link, useNavigate } from "react-router-dom";
+import { connect } from "react-redux";
+import { useDispatch } from "react-redux";
+import { login } from "reducers/user/actions";
 
-const Login = props => {
+const Login = ({ user, token, error, loading }) => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleSubmit = async evt => {
     evt.preventDefault();
-
-    setIsSubmitting(true);
 
     const user = {
       name: name,
       password: password,
     };
-
     console.log("Attemp to login", user);
-    // Attemp to login
-    const result = await myAuth.login(user);
 
-    if (!result.ok) {
-      setMessage(
-        <p className="justify-content-right" style={{ color: "red" }}>
-          *{result.msg}
-        </p>
-      );
-    } else {
-      alert("Login successful. Welcome back!");
-      document.location.href = "/";
+    console.log("Attemp to register", user);
+    dispatch(login(user));
+    if (!error) {
+      navigate("/quotes");
     }
-    setIsSubmitting(false);
   };
 
   return (
     <div className="formCenter">
       <form className="formFields" onSubmit={handleSubmit}>
-        {message}
+        {error && (
+          <p className="justify-content-right" style={{ color: "red" }}>
+            *{error}
+          </p>
+        )}
         <div className="formField">
           <label htmlFor="name" className="formFieldLabel">
             Username
@@ -77,7 +71,7 @@ const Login = props => {
         </div>
 
         <div className="formField">
-          <button className="formFieldButton" disabled={isSubmitting}>
+          <button className="formFieldButton" disabled={loading}>
             Sign in
           </button>
           <Link to="/" className="formFieldLink">
@@ -89,4 +83,11 @@ const Login = props => {
   );
 };
 
-export default Login;
+const mapStateToProps = state => ({
+  user: state.user.user,
+  token: state.user.token,
+  loading: state.user.loading,
+  error: state.user.error,
+});
+
+export default connect(mapStateToProps)(Login);

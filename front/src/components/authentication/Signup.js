@@ -1,20 +1,21 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { connect } from "react-redux";
+import { useDispatch } from "react-redux";
+import { signup } from "reducers/user/actions";
+import { useEffect } from "react";
 
-// API
-import myAuth from "../../api/authAPI";
-
-const SignUp = () => {
+const Signup = ({ user, token, error, loading }) => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
+  console.log("Signup", user, token, error, loading);
+
+  const dispatch = useDispatch();
 
   const handleSubmit = async evt => {
     evt.preventDefault();
-
-    setIsSubmitting(true);
 
     const user = {
       email: email,
@@ -22,26 +23,25 @@ const SignUp = () => {
       password: password,
     };
     console.log("Attemp to register", user);
-
-    const result = await myAuth.register(user);
-
-    if (!result.ok) {
-      setMessage(
-        <p className="justify-content-right" style={{ color: "red" }}>
-          *{result.msg}
-        </p>
-      );
-    } else {
-      alert("Register successful. Welcome to Quoter!");
-      document.location.href = "/";
-    }
-    setIsSubmitting(false);
+    dispatch(signup(user));
   };
+
+  useEffect(() => {
+    if (token) {
+      console.log("got token??", token);
+      navigate("/quotes");
+    }
+  }, [token, navigate]);
 
   return (
     <div className="formCenter">
+      Redux
       <form onSubmit={handleSubmit} className="formFields">
-        {message}
+        {error && (
+          <p className="justify-content-right" style={{ color: "red" }}>
+            *{error}
+          </p>
+        )}
         <div className="formField">
           <label className="formFieldLabel" htmlFor="name">
             Full Name
@@ -94,7 +94,7 @@ const SignUp = () => {
         </div>
 
         <div className="formField">
-          <button className="formFieldButton" disabled={isSubmitting}>
+          <button className="formFieldButton" disabled={loading}>
             Sign Up
           </button>{" "}
           <Link to="/sign-in" className="formFieldLink">
@@ -106,4 +106,11 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+const mapStateToProps = state => ({
+  user: state.user.user,
+  token: state.user.token,
+  loading: state.user.loading,
+  error: state.user.error,
+});
+
+export default connect(mapStateToProps)(Signup);

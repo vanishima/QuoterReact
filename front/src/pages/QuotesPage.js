@@ -10,14 +10,15 @@ import PinterestLayout from "components/quotes/PinterestLayout";
 
 import "styles/quotesGrid.css";
 
-const QuotesPage = ({ dispatch, quotes, loading, hasErrors }) => {
+const QuotesPage = ({ dispatch, quotes, loading, hasErrors, user, token }) => {
   console.log("quotes", quotes);
   console.log("loading", loading);
+  console.log("user token", user, token);
 
   useEffect(() => {
     console.log("### QuotesPage EFFECT");
-    dispatch(fetchQuotes(7, 1));
-  }, [dispatch]);
+    dispatch(fetchQuotes(token, 7, 1));
+  }, [dispatch, token]);
 
   console.log("quotes", quotes);
 
@@ -33,7 +34,7 @@ const QuotesPage = ({ dispatch, quotes, loading, hasErrors }) => {
         className="my-masonry-grid"
         columnClassName="my-masonry-grid_column"
       >
-        {quotes.map((quote) => (
+        {quotes.map(quote => (
           <div key={quote.id} quote={quote}>
             {quote.text}
           </div>
@@ -51,10 +52,12 @@ const QuotesPage = ({ dispatch, quotes, loading, hasErrors }) => {
   );
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   quotes: state.quotes.quotes,
   loading: state.quotes.loading,
   hasErrors: state.quotes.hasErrors,
+  user: state.user.user,
+  token: state.user.token,
 });
 
 export default connect(mapStateToProps)(QuotesPage);

@@ -6,7 +6,7 @@ import "./styles/newUser.css";
 // https://codesandbox.io/u/gabrielaEmendez
 
 const NewUser = () => {
-  const [showSignUp, setShowSignUp] = useState(false);
+  const [showSignUp, setShowSignUp] = useState(true);
   const pageSwitcher = () => {
     setShowSignUp(!showSignUp);
   };

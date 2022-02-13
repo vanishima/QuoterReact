@@ -1,4 +1,3 @@
-import useFetch from "hooks/useFetch";
 import axios from "axios";
 
 const FRONTEND =
@@ -24,24 +23,25 @@ export const getQuotes = () => ({
   type: ACTIONS.GET_QUOTES,
 });
 
-export const getQuotesSuccess = (data) => ({
+export const getQuotesSuccess = data => ({
   type: ACTIONS.GET_QUOTES_SUCCESS,
   payload: data,
 });
 
-export const getQuotesFailure = (err) => ({
+export const getQuotesFailure = err => ({
   type: ACTIONS.GET_QUOTES_FAILURE,
   payload: err,
 });
 
 // combine them all in an asynchronous thunk
 export function fetchQuotes(
+  token,
   pageSize,
   page,
   bookid = "undefined",
   sortorder = "latest"
 ) {
-  return async (dispatch) => {
+  return async dispatch => {
     dispatch(getQuotes());
     console.log("fetchQuotes", pageSize, page, bookid, sortorder);
 
@@ -57,12 +57,17 @@ export function fetchQuotes(
       sortorder;
 
     axios
-      .get(url, OPTIONS_SIMPLE)
-      .then(async (res) => {
+      .get(url, {
+        headers: {
+          "x-auth-token": token,
+        },
+        mode: "cors",
+      })
+      .then(async res => {
         dispatch(getQuotesSuccess(res.data));
         console.log("got data", res.data);
       })
-      .catch((err) => {
+      .catch(err => {
         console.log("failure", err);
         dispatch(getQuotesFailure(err));
       });
