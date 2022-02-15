@@ -1,9 +1,15 @@
 import { FRONTEND } from "api/utilsAPI";
 import axios from "axios";
 
+const BASIC_OPTIONS = {
+  headers: {
+    "Content-Type": "application/json",
+  },
+  mode: "cors",
+};
+
 export const ACTIONS = {
   LOADING: "LOADING",
-  CREATE_USER: "CREATE_USER",
   FETCH_USER_SUCCESS: "FETCH_USER_SUCCESS",
   FETCH_USER_FAILURE: "FETCH_USER_FAILURE",
   LOG_OUT: "LOG_OUT",
@@ -30,16 +36,7 @@ export const signup = user => {
     dispatch(loading());
 
     return await axios
-      .post(
-        FRONTEND + "/auth/register",
-        { user: user },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          mode: "cors",
-        }
-      )
+      .post(FRONTEND + "/auth/register", { user: user }, BASIC_OPTIONS)
       .then(res => {
         console.log("got response", res);
         dispatch(fetchUserSuccess(res.data));
@@ -56,16 +53,7 @@ export const login = user => {
     dispatch(loading());
 
     return await axios
-      .post(
-        FRONTEND + "/auth/login",
-        { user: user },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          mode: "cors",
-        }
-      )
+      .post(FRONTEND + "/auth/login", { user: user }, BASIC_OPTIONS)
       .then(res => {
         console.log("got response", res);
         dispatch(fetchUserSuccess(res.data));

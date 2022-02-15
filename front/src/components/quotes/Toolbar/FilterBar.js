@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import QuotesFilters from "components/quotes/QuotesListToolbar/QuotesFilters";
 
-const FilterBar = (props) => {
+const FilterBar = props => {
   const {
     setPage,
     setRefresh,
@@ -18,7 +18,7 @@ const FilterBar = (props) => {
   return (
     <div className="btn-group mb-2" role="group">
       FilterBar
-      {sort_options.map((option) => (
+      {sort_options.map(option => (
         <button
           key={option.value}
           type="button"
@@ -47,12 +47,12 @@ const FilterBar = (props) => {
       )}
       {limit && (
         <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-          {limit_options.map((option) => (
+          {limit_options.map(option => (
             <li key={option}>
               <button
                 value={option}
                 className="dropdown-item"
-                onClick={(evt) => {
+                onClick={evt => {
                   setLimit(evt.target.value);
                   if (setRefresh) setRefresh(true);
                   if (setPage) setPage(1);

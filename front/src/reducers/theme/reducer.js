@@ -1,4 +1,4 @@
-import { ACTIONS } from "actions/quoteDisplayActions";
+import { ACTIONS } from "./actions";
 
 export const initialState = {
   showDate: true,
@@ -8,7 +8,7 @@ export const initialState = {
   showTiles: true,
 };
 
-export default function displayReducer(state = initialState, action) {
+export default function themeReducer(state = initialState, action) {
   switch (action.type) {
     case ACTIONS.SHOW_DATE:
       return { ...state, showDate: !state.showDate };

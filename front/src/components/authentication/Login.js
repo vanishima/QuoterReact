@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import { useDispatch } from "react-redux";
 import { login } from "reducers/user/actions";
 
-const Login = ({ user, token, error, loading }) => {
+const Login = ({ token, error, loading }) => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
@@ -18,13 +18,15 @@ const Login = ({ user, token, error, loading }) => {
       password: password,
     };
     console.log("Attemp to login", user);
-
-    console.log("Attemp to register", user);
     dispatch(login(user));
-    if (!error) {
+  };
+
+  useEffect(() => {
+    if (token) {
+      console.log("got token");
       navigate("/quotes");
     }
-  };
+  }, [token, navigate]);
 
   return (
     <div className="formCenter">
@@ -84,7 +86,6 @@ const Login = ({ user, token, error, loading }) => {
 };
 
 const mapStateToProps = state => ({
-  user: state.user.user,
   token: state.user.token,
   loading: state.user.loading,
   error: state.user.error,

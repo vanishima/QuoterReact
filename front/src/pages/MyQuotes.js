@@ -1,14 +1,14 @@
 import React from "react";
 
 // Element
-import Layout from "../components/common/Layout";
-import QuotesInfiniteScroll from "components/quotes/Quotes/QuotesInfiniteScroll";
+import Layout from "components/common/Layout";
+import QuotesInfiniteScroll from "components/quotes/Quotes/QuotesInfiniteScroll/QuotesInfiniteScroll";
 import DashboardBooks from "../components/DashboardBooks";
 import DashboardAuthors from "../components/DashboardAuthors";
 import Search from "../components/common/Search";
 import QuotesSideBar from "components/quotes/QuotesSideBar/QuotesSideBar";
 
-import "../styles/quotes.css";
+// import "../styles/quotes.css";
 
 const MyQuotes = () => {
   return (

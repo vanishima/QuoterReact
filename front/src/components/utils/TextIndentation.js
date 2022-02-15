@@ -1,13 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const TextIndentation = ({ rawText }) => {
+const TextIndentation = ({ rawText, className = "" }) => {
   const lines = rawText.split("\n");
 
   return (
-    <div className="indented-text">
+    <div className={`${className}`}>
       {lines.map((l, i) => (
-        <p key={i} style={{ textIndent: "40px" }}>
+        <p key={i} style={{ textIndent: "2rem" }}>
           {l}
         </p>
       ))}
@@ -17,6 +17,7 @@ const TextIndentation = ({ rawText }) => {
 
 TextIndentation.propTypes = {
   rawText: PropTypes.string,
+  className: PropTypes.string,
 };
 
 export default TextIndentation;

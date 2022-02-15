@@ -1,4 +1,4 @@
-import { ACTIONS } from "actions/quotesActions";
+import { ACTIONS } from "./quoteActions";
 import { isoDateWithoutTimezone } from "api/utilsAPI";
 
 export const initialState = {

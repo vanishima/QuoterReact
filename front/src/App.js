@@ -3,6 +3,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 import { Routes, Route } from "react-router-dom";
+
+import RequireAuth from "components/authentication/RequireAuth";
+
 import NewUser from "components/authentication/NewUser";
 import MyQuotes from "pages/MyQuotes";
 import CommentPage from "pages/CommentPage";
@@ -18,15 +21,20 @@ function App() {
     <div>
       <div className="App"></div>
       <Routes>
-        <Route path="/quotes" element={<QuotesPage />} />
+        {/* Public routes */}
         <Route path="/login" element={<NewUser />} />
-        <Route path="/comments" element={<CommentPage />} />
-        <Route path="/authors" element={<Authors />} />
-        <Route path="/" element={<MyQuotes />} />
-        <Route path="/author" element={<AuthorDetail />} />
-        <Route path="/book" element={<BookDetail />} />
-        <Route path="/quote-detail" element={<QuoteDetail />} />
-        <Route path="/books" element={<Books />} />
+
+        {/* Require Auth */}
+        <Route element={<RequireAuth />}>
+          <Route path="/quotes" element={<QuotesPage />} />
+          <Route path="/comments" element={<CommentPage />} />
+          <Route path="/authors" element={<Authors />} />
+          <Route path="/" element={<MyQuotes />} />
+          <Route path="/author" element={<AuthorDetail />} />
+          <Route path="/book" element={<BookDetail />} />
+          <Route path="/quote-detail" element={<QuoteDetail />} />
+          <Route path="/books" element={<Books />} />
+        </Route>
       </Routes>
     </div>
   );

@@ -156,7 +156,7 @@ const QuotesList = props => {
 
   return (
     <div>
-      <QuoteEditCardUseReducer
+      {/* <QuoteEditCardUseReducer
         handleUpdate={handleUpdate}
         handleCreate={handleCreate}
         reset={reset}
@@ -165,7 +165,7 @@ const QuotesList = props => {
         defaultBook={book}
         isAuthorFixed={author}
         isBookFixed={book}
-      />
+      /> */}
       {/* <QuoteEditCard
         handleUpdate={handleUpdate}
         handleCreate={handleCreate}

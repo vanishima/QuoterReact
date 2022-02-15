@@ -2,7 +2,7 @@ import React, { useReducer } from "react";
 import PropTypes from "prop-types";
 
 // Elements
-import useInfiniteScroll from "./useInfiniteScroll";
+import useInfiniteScroll from "hooks/useInfiniteScroll";
 import QuotesList from "../quotes/Quotes/QuotesList";
 
 // Styles

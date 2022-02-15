@@ -8,17 +8,15 @@ import "./styles/quotesSideBar.css";
 
 const QuotesSideBar = () => {
   return (
-    <div>
-      <div className="nav">
-        <input className="dropdown" type="checkbox" id="menu" />
-        <label htmlFor="menu" id="nav-icon">
-          &#9776;
-        </label>
+    <div className="nav">
+      <input className="dropdown" type="checkbox" id="menu" />
+      <label htmlFor="menu" id="nav-icon">
+        &#9776;
+      </label>
 
-        <div className="multi-level">
-          <BookList />
-          <TagList />
-        </div>
+      <div className="multi-level">
+        <BookList />
+        <TagList />
       </div>
     </div>
   );

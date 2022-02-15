@@ -1,16 +1,20 @@
 import { React } from "react";
+import { connect } from "react-redux";
 import { Navbar, Container, Nav, Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import authAPI from "api/authAPI";
+import { useNavigate } from "react-router-dom";
+import { logout } from "reducers/user/actions";
 
 import "components/common/styles/header.css";
 
-const Header = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
+const Header = ({ currentUser }) => {
+  const navigate = useNavigate();
+  console.log("Header", currentUser);
 
   const logoutClick = () => {
-    authAPI.logout();
-    document.location.href = "/";
+    logout();
+    navigate("/login");
+    // authAPI.logout();
+    // document.location.href = "/";
   };
 
   const url = new URL(window.location);
@@ -21,9 +25,6 @@ const Header = () => {
       <Navbar bg="light" expand="lg">
         <Container>
           <Navbar.Brand>
-            {/* <Link className="none-style" to="/">
-              Quoter
-            </Link> */}
             <h1 className="nav-title">Quoter</h1>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -38,10 +39,11 @@ const Header = () => {
           </Navbar.Collapse>
 
           <Navbar.Collapse className="justify-content-end">
-            {user ? (
+            {currentUser ? (
               <div>
                 <Navbar.Text className="me-2">
-                  Welcome, <a href="./user">{user.name}</a>
+                  Welcome,{" "}
+                  <a href={`/user/${currentUser.id}`}>{currentUser.name}</a>
                 </Navbar.Text>
                 <Button
                   className="me-2"
@@ -65,4 +67,9 @@ const Header = () => {
   );
 };
 
-export default Header;
+const mapStateToProps = state => ({
+  // currentUser: state.user.currentUser,
+  currentUser: localStorage.getItem("currentUser"),
+});
+
+export default connect(mapStateToProps)(Header);

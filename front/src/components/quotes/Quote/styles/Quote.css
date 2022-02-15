@@ -1,0 +1,38 @@
+.quote {
+  min-width: 200px;
+  max-width: 500px;
+  border-radius: 20px;
+  font-size: 18px;
+  font-family: "Georgia";
+}
+
+.card-header {
+  border-top-left-radius: 35px;
+  border-top-right-radius: 35px;
+  font-weight: bold;
+  font-size: 20px;
+  padding-left: 2rem;
+}
+
+.blockquote-footer {
+  font-size: 14px;
+  color: var(--darkGrey);
+}
+
+.tag {
+  border: 1px solid var(--darkPurple);
+  font-size: 14px;
+  color: var(--darkPurple);
+  padding: 2px;
+  border-radius: 10%;
+  margin: 2px;
+}
+
+.tag:hover {
+  background-color: var(--darkPurple);
+  color: white;
+}
+
+.quote-date {
+  font-size: 14px;
+}

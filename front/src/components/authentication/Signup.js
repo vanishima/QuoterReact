@@ -5,12 +5,11 @@ import { useDispatch } from "react-redux";
 import { signup } from "reducers/user/actions";
 import { useEffect } from "react";
 
-const Signup = ({ user, token, error, loading }) => {
+const Signup = ({ token, error, loading }) => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  console.log("Signup", user, token, error, loading);
 
   const dispatch = useDispatch();
 
@@ -107,7 +106,7 @@ const Signup = ({ user, token, error, loading }) => {
 };
 
 const mapStateToProps = state => ({
-  user: state.user.user,
+  currentUser: state.user.currentUser,
   token: state.user.token,
   loading: state.user.loading,
   error: state.user.error,
