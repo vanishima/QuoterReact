@@ -12,7 +12,7 @@ import QuotesList from "../components/quotes/Quotes/QuotesList";
 import authorsAPI from "../api/authorsAPI";
 import booksAPI from "../api/booksAPI";
 
-import "../styles/authorDetail.css";
+// import "../styles/authorDetail.css";
 
 async function drawAuthor(setAuthor, setBooks, setQuotes) {
   const url = new URL(window.location);

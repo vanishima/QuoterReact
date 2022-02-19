@@ -21,50 +21,24 @@ const QuotesInfiniteScroll = ({
 }) => {
   const { pageSize, page } = searchParams;
 
-  console.log("quotes", quotes);
-  console.log("loading", loading);
+  // console.log("QuotesInfiniteScroll", pageSize, page, hasMore);
 
-  // const limit_options = [10, 15, 20];
-  // const sort_options = [
-  //   { value: "latest", name: "Latest" },
-  //   { value: "recent", name: "Recent" },
-  // ];
+  // console.log("quotes", quotes);
+  // console.log("loading", loading);
+
+  const loadMoreItems = () => {
+    dispatch(fetchQuotes(pageSize, page, refresh));
+  };
 
   const [lastElementRef] = useInfiniteScroll(
-    hasMore ? dispatch(fetchQuotes(pageSize, page, refresh)) : () => {},
+    hasMore ? loadMoreItems : () => {},
     loading
   );
 
   useEffect(() => {
     console.log("### QuotesInfiniteScroll EFFECT ###");
-    dispatch(fetchQuotes(pageSize, page, refresh));
+    loadMoreItems();
   }, []);
-  // dispatch, pageSize, page, refresh
-  // useEffect(() => {
-  //   console.log("### QuotesInfiniteScroll EFFECT ###");
-  //   fetchQuotes(token);
-  // }, [pageSize, sortOrder]);
-
-  // async function loadMoreItems() {
-  //   setIsFetching(true);
-
-  //   // fetch the latest
-  //   const result = await quotesAPI.getAll(pageSize, page, sortOrder);
-  //   if (result.ok) {
-  //     if (refresh) {
-  //       console.log("REFERSHING...");
-  //       setQuotes(result.quotes);
-  //       setRefresh(false);
-  //     } else {
-  //       setQuotes(current => [...current, ...result.quotes]);
-  //     }
-  //     setPage(prevPageNumber => prevPageNumber + 1);
-  //     setHasMore(result.lastPage > page);
-  //     setIsFetching(false);
-  //   } else {
-  //     alert(result.msg);
-  //   }
-  // }
 
   if (error) {
     return (

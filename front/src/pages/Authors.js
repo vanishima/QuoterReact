@@ -12,7 +12,7 @@ import DashboardBooks from "../components/DashboardBooks";
 // API
 import authorsAPI from "../api/authorsAPI";
 
-import "../styles/authors.css";
+// import "../styles/authors.css";
 
 async function drawAuthors(setAuthors) {
   const options = {

@@ -9,7 +9,7 @@ import QuotesList from "../components/quotes/Quotes/QuotesList";
 // API
 import quotesAPI from "../api/quotesAPI";
 
-import "../styles/books.css";
+// import "../styles/books.css";
 
 async function drawBooks(setBooks, setSelected) {
   const result = await quotesAPI.getBooksDashboard("recent", 0, true);

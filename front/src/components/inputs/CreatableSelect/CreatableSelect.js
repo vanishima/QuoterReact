@@ -2,11 +2,11 @@ import { useEffect } from "react";
 import PropTypes from "prop-types";
 import AsyncCreatableSelect from "react-select/async-creatable";
 
-const CreatableSelectV2 = props => {
-  const { options, changeOption, createOption, value, isFixed } = props;
+const CreatableSelect = props => {
+  const { className, options, changeOption, createOption, value, isDisabled } =
+    props;
 
   useEffect(() => {}, [options, value]);
-  // console.log(options);
 
   const filterOptions = inputValue => {
     if (options.length > 0) {
@@ -35,21 +35,20 @@ const CreatableSelectV2 = props => {
   };
 
   return (
-    <div>
-      <AsyncCreatableSelect
-        isDisabled={isFixed}
-        cacheOptions
-        defaultOptions={options}
-        loadOptions={promiseOptions}
-        onChange={handleChange}
-        defaultValue={value}
-        value={value}
-      />
-    </div>
+    <AsyncCreatableSelect
+      className={className}
+      isDisabled={isDisabled}
+      cacheOptions
+      defaultOptions={options}
+      loadOptions={promiseOptions}
+      onChange={handleChange}
+      defaultValue={value}
+      value={value}
+    />
   );
 };
 
-CreatableSelectV2.propTypes = {
+CreatableSelect.propTypes = {
   props: PropTypes.shape({
     options: PropTypes.array.isRequired,
     changeOption: PropTypes.func.isRequired,
@@ -59,4 +58,4 @@ CreatableSelectV2.propTypes = {
   }),
 };
 
-export default CreatableSelectV2;
+export default CreatableSelect;

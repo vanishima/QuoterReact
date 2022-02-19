@@ -1,25 +1,23 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { connect } from "react-redux";
 
 import Layout from "components/common/Layout";
 import QuotesInfiniteScroll from "components/quotes/Quotes/QuotesInfiniteScroll/QuotesInfiniteScroll";
-import { fetchQuotes } from "reducers/quotes/actions";
+import NewQuote from "components/quotes/NewQuote/NewQuote";
 
-const QuotesPage = ({ dispatch, quotes, loading, hasErrors, token }) => {
-  // console.log("currentUser", currentUser, "token", token);
+import "./styles/QuotesPage.css";
 
-  useEffect(() => {
-    console.log("### QuotesPage EFFECT");
-    dispatch(fetchQuotes(token, 7, 1));
-  }, [dispatch, token]);
-
-  console.log("quotes", quotes.length, quotes);
-
+const QuotesPage = props => {
   return (
     <Layout>
+      <section className="top">
+        <NewQuote />
+      </section>
+      <section className="middle">
+        {/* Infinite Scroll of quotes */}
+        <QuotesInfiniteScroll />
+      </section>
       {/* Filter bar */}
-      {/* Infinite Scroll of quotes */}
-      <QuotesInfiniteScroll />
     </Layout>
   );
 };

@@ -9,7 +9,7 @@ import FormEditBook from "../components/books/FormEditBook";
 // API
 import booksAPI from "../api/booksAPI";
 
-import "../styles/books.css";
+// import "../styles/books.css";
 
 async function drawBook(setBook, setQuotes) {
   const url = new URL(window.location);

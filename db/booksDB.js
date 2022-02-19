@@ -26,7 +26,7 @@ function BooksDB() {
 
       const books = await booksCol.find(query).sort({ _id: -1 }).toArray();
 
-      console.log("Found authors", books.length);
+      console.log("Found books", books.length);
 
       return books;
     } finally {
@@ -35,7 +35,7 @@ function BooksDB() {
     }
   };
 
-  myDB.getBookById = async (book_id) => {
+  myDB.getBookById = async book_id => {
     const client = new MongoClient(uri, { useUnifiedTopology: true });
     console.group("Connecting to the db");
 
@@ -69,7 +69,7 @@ function BooksDB() {
     }
   };
 
-  myDB.updateBook = async (book) => {
+  myDB.updateBook = async (book, userId) => {
     const client = new MongoClient(uri, { useUnifiedTopology: true });
     console.group("Connecting to the db");
 
@@ -85,8 +85,13 @@ function BooksDB() {
         book._id = ObjectId();
       }
 
-      book.author._id = ObjectId(book.author._id);
-      book.keywords = getTagsArray(book.keywords);
+      const author = {
+        _id: ObjectId(book.author._id),
+        name: book.author.name,
+      };
+
+      book.userId = ObjectId(userId);
+      if (book.keywords) book.keywords = getTagsArray(book.keywords);
 
       console.log(COL_BOOKS, "Collection ready, update book:", book);
 
@@ -96,7 +101,8 @@ function BooksDB() {
       const updateDoc = {
         $set: {
           title: book.title,
-          author: book.author,
+          author: author,
+          userId: book.userId,
           introduction: book.introduction,
           url: book.url,
           keywords: book.keywords,
@@ -108,9 +114,9 @@ function BooksDB() {
       console.groupEnd("Updated:", result);
 
       if (!result.upsertedId) {
-        return { _id: book._id };
+        return { _id: book._id, title: book.title };
       } else {
-        return { _id: result.upsertedId };
+        return { _id: result.upsertedId, title: book.title };
       }
     } finally {
       console.groupEnd("Closing the connection");
@@ -118,7 +124,7 @@ function BooksDB() {
     }
   };
 
-  myDB.getBookById = async (book_id) => {
+  myDB.getBookById = async book_id => {
     const client = new MongoClient(uri, { useUnifiedTopology: true });
     console.group("Connecting to the db");
 
@@ -152,7 +158,7 @@ function BooksDB() {
     }
   };
 
-  myDB.deleteBookById = async (bookId) => {
+  myDB.deleteBookById = async bookId => {
     const client = new MongoClient(uri, { useUnifiedTopology: true });
     console.group("Connecting to the db");
 
@@ -180,7 +186,7 @@ function BooksDB() {
 
 function getTagsArray(tags) {
   let arr = tags.split(" ");
-  return arr.filter((i) => i !== "");
+  return arr.filter(i => i !== "");
 }
 
 module.exports = BooksDB();

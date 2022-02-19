@@ -1,7 +1,7 @@
 import { ACTIONS } from "./actions";
 
 export const initialState = {
-  showDate: true,
+  showDate: false,
   showTag: true,
   showMemo: false,
   showTitle: false,

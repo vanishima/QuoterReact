@@ -14,7 +14,7 @@ export default function userReducer(state = initialState, action) {
     case ACTIONS.LOADING:
       return { ...state, loading: true };
     case ACTIONS.FETCH_USER_SUCCESS:
-      localStorage.setItem("currentUser", payload.user);
+      localStorage.setItem("currentUser", JSON.stringify(payload.user));
       localStorage.setItem("token", payload.token);
       return {
         ...state,

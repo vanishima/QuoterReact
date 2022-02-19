@@ -45,7 +45,7 @@ function AuthorsDB() {
     }
   };
 
-  myDB.getAuthorById = async (author_id) => {
+  myDB.getAuthorById = async author_id => {
     const client = new MongoClient(uri, { useUnifiedTopology: true });
     console.group("Connecting to the db");
 
@@ -87,7 +87,7 @@ function AuthorsDB() {
     }
   };
 
-  myDB.updateAuthor = async (author) => {
+  myDB.updateAuthor = async (author, userId) => {
     const client = new MongoClient(uri, { useUnifiedTopology: true });
     console.group("Connecting to the db");
 
@@ -97,13 +97,13 @@ function AuthorsDB() {
 
       const col = client.db(DB_NAME).collection(COL_AUTHORS);
 
-      console.log("before author id", author._id);
+      // console.log("before author id", author._id);
       if (author._id) {
         author._id = ObjectId(author._id);
       } else {
         author._id = ObjectId();
       }
-      console.log("after author._id", author._id);
+      // console.log("after author._id", author._id);
       if (author.category) author.category = getTagsArray(author.category);
 
       console.log(col, "Collection ready, update/create author:", author);
@@ -116,6 +116,7 @@ function AuthorsDB() {
           name: author.name,
           category: author.category,
           url: author.url,
+          userId: userId,
         },
       };
 
@@ -125,9 +126,9 @@ function AuthorsDB() {
       console.groupEnd("Updated:", result);
 
       if (!result.upsertedId) {
-        return { _id: author._id };
+        return { _id: author._id, name: author.name };
       } else {
-        return { _id: result.upsertedId };
+        return { _id: result.upsertedId, name: author.name };
       }
     } finally {
       console.groupEnd("Closing the connection");
@@ -135,7 +136,7 @@ function AuthorsDB() {
     }
   };
 
-  myDB.deleteAuthor = async (author) => {
+  myDB.deleteAuthor = async author => {
     const client = new MongoClient(uri, { useUnifiedTopology: true });
     console.group("Connecting to the db");
 
@@ -170,7 +171,7 @@ function AuthorsDB() {
 
 function getTagsArray(tags) {
   let arr = tags.split(" ");
-  return arr.filter((i) => i !== "");
+  return arr.filter(i => i !== "");
 }
 
 module.exports = AuthorsDB();

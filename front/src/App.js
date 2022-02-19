@@ -14,7 +14,7 @@ import Books from "pages/Books";
 import AuthorDetail from "pages/AuthorDetail";
 import BookDetail from "pages/BookDetail";
 import QuoteDetail from "pages/QuoteDetail";
-import QuotesPage from "pages/QuotesPage";
+import QuotesPage from "components/quotes/QuotesPage";
 
 function App() {
   return (

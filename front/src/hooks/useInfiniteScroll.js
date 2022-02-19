@@ -13,7 +13,7 @@ const useInfiniteScroll = (callback, isFetching) => {
   // dependency list and returns a memoized callback
   // which is guaranteed to have the same reference
   const lastElementRef = useCallback(
-    (node) => {
+    node => {
       if (isFetching) return;
 
       // stop watching targets, you can think of it as a reset
@@ -21,8 +21,9 @@ const useInfiniteScroll = (callback, isFetching) => {
 
       // create a new intersection observer and execute the
       // callback in case of an intersecting event
-      observer.current = new IntersectionObserver((entries) => {
+      observer.current = new IntersectionObserver(entries => {
         if (entries[0].isIntersecting) {
+          console.log("callback", callback);
           callback();
         }
       });

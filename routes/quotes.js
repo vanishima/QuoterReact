@@ -31,10 +31,15 @@ router.get("/", auth, async function (req, res) {
       sortorder
     );
 
+    const lastPage = await Math.ceil(total / pageSize);
+    console.log("total", total);
+    console.log("lastPage", lastPage);
+    console.log("page", page);
+
     res.status(200).json({
       quotes,
       currentPage: page,
-      lastPage: Math.ceil(total / pageSize),
+      lastPage: lastPage,
     });
   } catch (e) {
     res.status(400).json({ msg: e.message });
@@ -177,7 +182,7 @@ router.post("/update", auth, async function (req, res) {
   //   }
   // }
 
-  quote.memo = quote.memo.map((m) => {
+  quote.memo = quote.memo.map(m => {
     m._id = new ObjectId();
     m.user._id = ObjectId(m.user._id);
     m.date = new Date(m.date);

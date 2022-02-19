@@ -45,11 +45,12 @@ router.get("/:authorId", auth, async function (req, res) {
 router.post("/update", auth, async function (req, res) {
   console.log("Got request for /authors/update");
 
+  const userId = req.user.id;
   const author = req.body;
   console.log("Got author", author);
 
   try {
-    const result = await AuthorsDB.updateAuthor(author);
+    const result = await AuthorsDB.updateAuthor(author, userId);
     console.log("result", result);
     res.status(200).json(result);
   } catch (e) {

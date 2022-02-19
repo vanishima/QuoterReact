@@ -1,4 +1,5 @@
 import axios from "axios";
+import { pageSizeSelector, pageSelector } from "./selectors";
 
 const FRONTEND =
   process.env.NODE_ENV === "production"
@@ -41,7 +42,7 @@ export function fetchQuotes(
   sortorder = "latest",
   bookid = "undefined"
 ) {
-  return async dispatch => {
+  return async (dispatch, getState) => {
     dispatch(getQuotes());
     console.log("fetchQuotes", pageSize, page, bookid, sortorder);
 

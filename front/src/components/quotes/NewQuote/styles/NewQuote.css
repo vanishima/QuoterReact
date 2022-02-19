@@ -1,0 +1,32 @@
+.new-quote {
+  width: 400px;
+  align-self: center;
+  border-color: rgba(99, 99, 99, 0.2);
+  border-radius: 10%;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
+input {
+  width: 100%;
+}
+
+.inline-edit {
+  border: 0;
+  padding: 8px;
+}
+
+.inline-edit:focus {
+  outline: none;
+}
+
+.inline-edit:hover {
+  border: 0;
+}
+
+/* Author Book bar */
+.author-book-bar {
+  display: flex;
+}
+.half {
+  width: 50%;
+}

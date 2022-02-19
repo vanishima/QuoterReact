@@ -1,0 +1,9 @@
+.inline-edit {
+  background-color: transparent;
+  border: 0;
+  padding: 8px;
+}
+
+.inline-edit:hover {
+  cursor: pointer;
+}
