@@ -75,6 +75,14 @@ export default function quotesListReducer(state = initialState, action) {
       };
     case ACTIONS.GET_QUOTES_FAILURE:
       return { ...state, loading: false, error: true };
+
+    case ACTIONS.UPDATE_INPUT:
+      console.log("newQuote", state.newQuote);
+      console.log("UPDATE_INPUT", payload);
+      return {
+        ...state,
+        newQuote: { ...state.newQuote, [payload.key]: payload.value },
+      };
     default:
       return state;
   }

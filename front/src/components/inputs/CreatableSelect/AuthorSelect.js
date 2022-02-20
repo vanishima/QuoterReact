@@ -16,13 +16,13 @@ const AuthorSelect = ({
   currentAuthor,
 }) => {
   const dispatch = useDispatch();
-  console.group("AuthorSelect");
-  console.log("default", loading, isFetching, currentAuthor);
-  console.log("authors", authors);
-  console.groupEnd();
+  // console.group("AuthorSelect");
+  // console.log("default", loading, isFetching, currentAuthor);
+  // console.log("authors", authors);
+  // console.groupEnd();
 
   useEffect(() => {
-    console.log("fetching authors");
+    // console.log("fetching authors");
     dispatch(fetchAuthors());
   }, [dispatch]);
 

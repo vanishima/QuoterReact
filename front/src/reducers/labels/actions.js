@@ -12,53 +12,54 @@ const FRONTEND =
 export const ACTIONS = {
   LOADING: "LOADING",
   FAILURE: "FAILURE",
-  FETCH_AUTHORS_SUCCESS: "FETCH_AUTHORS_SUCCESS",
-  SET_AUTHOR: "SET_AUTHOR",
-  CREATE_AUTHOR_SUCCESS: "CREATE_AUTHOR_SUCCESS",
+  FETCH_LABELS_SUCCESS: "FETCH_LABELS_SUCCESS",
+  SET_LABEL: "SET_LABEL",
+  CREATE_LABEL_SUCCESS: "CREATE_LABEL_SUCCESS",
 };
 
-const FETCH_AUTHOR_URL = "/authors";
-const CREATE_AUTHOR_URL = "/authors/update";
+const FETCH_LABEL_URL = "/labels";
+const CREATE_LABEL_URL = "/labels/create";
 
-export const fetchAuthors = () => {
+export const fetchLabels = () => {
   return dispatch => {
-    console.group("fetchAuthors");
+    console.group("fetchLabels");
     dispatch({ type: ACTIONS.LOADING });
 
     axios
-      .get(FRONTEND + FETCH_AUTHOR_URL, {
+      .get(FRONTEND + FETCH_LABEL_URL, {
         headers: {
           "x-auth-token": localStorage.getItem("token"),
         },
         mode: "cors",
       })
       .then(async res => {
-        console.log("got data", res.data);
-        console.groupEnd();
+        console.log("got label data", res.data);
+
         dispatch({
-          type: ACTIONS.FETCH_AUTHORS_SUCCESS,
-          payload: { authors: processItems(res.data.authors, "name") },
+          type: ACTIONS.FETCH_LABELS_SUCCESS,
+          payload: { labels: processItems(res.data.labels, "label") },
         });
       })
       .catch(err => {
         console.log("failure", err);
-        console.groupEnd();
         dispatch({ type: ACTIONS.FAILURE });
       });
+
+    console.groupEnd();
   };
 };
 
-export const setAuthor = author => {
-  return { type: ACTIONS.SET_AUTHOR, payload: author };
+export const setLabel = label => {
+  return { type: ACTIONS.SET_LABEL, payload: label };
 };
 
-export const createAuthor = author => {
+export const createLabel = label => {
   return async dispatch => {
-    console.group("createAuthor", author);
+    console.group("createLabel", label);
     dispatch({ type: ACTIONS.LOADING });
     console.log("ready to create");
     await axios
-      .post(FRONTEND + CREATE_AUTHOR_URL, author, {
+      .post(FRONTEND + CREATE_LABEL_URL, label, {
         headers: {
           "x-auth-token": localStorage.getItem("token"),
           "Content-Type": "application/json",
@@ -69,8 +70,8 @@ export const createAuthor = author => {
         console.log("got data", res.data);
         console.groupEnd();
         dispatch({
-          type: ACTIONS.CREATE_AUTHOR_SUCCESS,
-          payload: { author: processItem(res.data, "name") },
+          type: ACTIONS.CREATE_LABEL_SUCCESS,
+          payload: { label: processItem(label, "label") },
         });
       })
       .catch(err => {

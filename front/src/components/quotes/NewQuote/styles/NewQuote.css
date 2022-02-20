@@ -1,5 +1,6 @@
 .new-quote {
-  width: 400px;
+  width: 500px;
+
   align-self: center;
   border-color: rgba(99, 99, 99, 0.2);
   border-radius: 10%;
@@ -29,4 +30,23 @@ input {
 }
 .half {
   width: 50%;
+}
+
+.text {
+  width: 100%;
+}
+
+/* optionBar */
+.option-bar {
+  display: flex;
+  justify-content: space-around;
+}
+
+.quote-options {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.create-button {
+  align-self: flex-end;
 }

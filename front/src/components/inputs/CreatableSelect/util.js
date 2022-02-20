@@ -18,6 +18,7 @@ export const createSelectItem = (item, key) => {
 };
 
 export const processItems = (items, key) => {
+  if (!items || items.length === 0) return [];
   return items
     .filter(item => typeof item[key] === "string")
     .map(item => {

@@ -12,6 +12,7 @@ export const ACTIONS = {
   GET_QUOTES_SUCCESS: "GET_QUOTES_SUCCESS",
   ADD_QUOTES: "ADD_QUOTES",
   GET_QUOTES_FAILURE: "GET_QUOTES_FAILURE",
+  UPDATE_INPUT: "UPDATE_INPUT",
 };
 
 // create redux action creators that return an action
@@ -32,6 +33,11 @@ export const addQuotes = data => ({
 export const getQuotesFailure = err => ({
   type: ACTIONS.GET_QUOTES_FAILURE,
   payload: err,
+});
+
+export const updateInput = (key, value) => ({
+  type: ACTIONS.UPDATE_INPUT,
+  payload: { key: key, value: value },
 });
 
 // combine them all in an asynchronous thunk

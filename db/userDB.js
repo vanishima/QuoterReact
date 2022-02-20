@@ -1,4 +1,4 @@
-const { MongoClient } = require("mongodb");
+const { MongoClient, ObjectId } = require("mongodb");
 require("dotenv").config();
 
 function UserDB() {
@@ -50,7 +50,7 @@ function UserDB() {
     }
   };
 
-  myDB.createOne = async (user) => {
+  myDB.createOne = async user => {
     const client = new MongoClient(uri, { useUnifiedTopology: true });
     // console.log("Connecting to the db");
 
@@ -67,6 +67,26 @@ function UserDB() {
       return res;
     } finally {
       // console.log("Closing the connection");
+      client.close();
+    }
+  };
+
+  myDB.createLabel = async (label, userId) => {
+    const client = new MongoClient(uri, { useUnifiedTopology: true });
+
+    try {
+      await client.connect();
+
+      const col = client.db(DB_NAME).collection(COL_NAME_USER);
+      console.log(COL_NAME_USER, "Collection ready, createOne:", label, userId);
+
+      const res = await col.updateOne(
+        { _id: ObjectId(userId) },
+        { $addToSet: { labels: label } }
+      );
+
+      return res;
+    } finally {
       client.close();
     }
   };

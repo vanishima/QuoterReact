@@ -3,20 +3,22 @@ import { connect, useDispatch } from "react-redux";
 import CreatableSelect from "components/inputs/CreatableSelect/CreatableSelect";
 
 import { fetchBooks, setBook, createBook } from "reducers/books/actions";
+import { setAuthor } from "reducers/authors/actions";
 
 const BookSelect = ({
   className,
   submitting,
   isFetching,
   books,
+  authors,
   currentBook,
   currentAuthor,
 }) => {
   const dispatch = useDispatch();
-  console.group("BookSelect");
-  console.log("default", submitting, isFetching, currentBook, currentAuthor);
-  console.log("books", books);
-  console.groupEnd();
+  // console.group("BookSelect");
+  // console.log("default", submitting, isFetching, currentBook, currentAuthor);
+  // console.log("books", books);
+  // console.groupEnd();
 
   useEffect(() => {
     console.log("fetching books");
@@ -32,9 +34,11 @@ const BookSelect = ({
     dispatch(createBook(newBook));
   };
 
+  // set book to selected and choose author based on _id
   const changeBook = book => {
-    console.log("changeBook", book);
+    const newAuthor = authors.filter(author => author._id === book.author._id);
     dispatch(setBook(book));
+    dispatch(setAuthor(newAuthor));
   };
 
   return (
@@ -53,6 +57,7 @@ const mapStateToProps = (state, ownProps) => ({
   submitting: state.quotes.loading,
   isFetching: state.books.loading,
   books: state.books.books,
+  authors: state.authors.authors,
   currentBook: state.books.currentBook,
   currentAuthor: state.authors.currentAuthor,
   ...ownProps,
