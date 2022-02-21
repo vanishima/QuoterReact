@@ -12,6 +12,29 @@ import "./styles/Quote.css";
 const Quote = props => {
   const { quote, book, author, showDate, showTag, showMemo, showTitle } = props;
 
+  const renderTags = () => {
+    if (showTag && quote.tags)
+      return (
+        <div className="quote-tags">
+          {typeof quote.tags !== "string" ? (
+            quote.tags.map((t, i) => (
+              <a
+                className="col-auto non-link greyText smallText tag"
+                href="/"
+                key={i}
+              >
+                {t}
+              </a>
+            ))
+          ) : (
+            <div className="col-auto non-link greyText smallText tag">
+              {quote.tags}
+            </div>
+          )}
+        </div>
+      );
+  };
+
   return (
     <div className="quote card mb-3">
       {showTitle && quote.title && (
@@ -47,25 +70,7 @@ const Quote = props => {
           )}
           {(showDate || showTag) && (
             <div className="quoteFooter">
-              {showTag && (
-                <div className="quote-tags">
-                  {typeof quote.tags !== "string" ? (
-                    quote.tags.map((t, i) => (
-                      <a
-                        className="col-auto non-link greyText smallText tag"
-                        href="/"
-                        key={i}
-                      >
-                        {t}
-                      </a>
-                    ))
-                  ) : (
-                    <div className="col-auto non-link greyText smallText tag">
-                      {quote.tags}
-                    </div>
-                  )}
-                </div>
-              )}
+              {renderTags()}
 
               {showDate && (
                 <small className="text-muted right quote-date">

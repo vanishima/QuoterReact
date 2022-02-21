@@ -1,0 +1,6 @@
+.privacy-button:focus,
+.privacy-button:active,
+.privacy-button:hover {
+  outline: none;
+  box-shadow: none;
+}

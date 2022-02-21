@@ -3,8 +3,17 @@ import PropTypes from "prop-types";
 import AsyncCreatableSelect from "react-select/async-creatable";
 
 const CreatableSelect = props => {
-  const { className, options, changeOption, createOption, value, isDisabled } =
-    props;
+  const {
+    className,
+    options,
+    changeOption,
+    createOption,
+    value,
+    isDisabled,
+    isClearable,
+    isLoading,
+    isMulti,
+  } = props;
 
   useEffect(() => {}, [options, value]);
 
@@ -25,11 +34,11 @@ const CreatableSelect = props => {
     });
 
   const handleChange = async (newValue, actionMeta) => {
-    console.log("handleChange", newValue);
+    // console.log("handleChange", newValue);
     if (!newValue.__isNew__) {
       changeOption(newValue);
     } else {
-      console.log("create newValue", newValue);
+      // console.log("create newValue", newValue);
       await createOption(newValue.label);
     }
   };
@@ -38,6 +47,9 @@ const CreatableSelect = props => {
     <AsyncCreatableSelect
       className={className}
       isDisabled={isDisabled}
+      isClearable={isClearable}
+      isLoading={isLoading}
+      isMulti={isMulti}
       cacheOptions
       defaultOptions={options}
       loadOptions={promiseOptions}
@@ -55,6 +67,9 @@ CreatableSelect.propTypes = {
     createOption: PropTypes.func.isRequired,
     value: PropTypes.object,
     isFixed: PropTypes.bool,
+    isClearable: PropTypes.bool,
+    isLoading: PropTypes.bool,
+    isMulti: PropTypes.bool,
   }),
 };
 

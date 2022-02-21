@@ -13,7 +13,19 @@ export const ACTIONS = {
   ADD_QUOTES: "ADD_QUOTES",
   GET_QUOTES_FAILURE: "GET_QUOTES_FAILURE",
   UPDATE_INPUT: "UPDATE_INPUT",
+  ADD_MEMO: "ADD_MEMO",
+  REMOVE_MEMO: "REMOVE_MEMO",
+  UPDATE_MEMO: "UPDATE_MEMO",
+  INITIALIZE_QUOTE: "INITIALIZE_QUOTE",
+  CREATE_QUOTE: "CREATE_QUOTE",
+  CREATE_QUOTE_SUCCESS: "CREATE_QUOTE_SUCCESS",
+  CREATE_QUOTE_FAILURE: "CREATE_QUOTE_FAILURE",
+  SET_DATE: "SET_DATE",
+  TOGGLE_PRIVACY: "TOGGLE_PRIVACY",
+  TOGGLE_EDITING: "TOGGLE_EDITING",
 };
+
+const CREATE_QUOTE_URL = "/quotes/update";
 
 // create redux action creators that return an action
 export const getQuotes = () => ({
@@ -40,6 +52,10 @@ export const updateInput = (key, value) => ({
   payload: { key: key, value: value },
 });
 
+export const tggleEditing = () => ({
+  type: ACTIONS.TOGGLE_EDITING,
+});
+
 // combine them all in an asynchronous thunk
 export function fetchQuotes(
   pageSize,
@@ -48,7 +64,7 @@ export function fetchQuotes(
   sortorder = "latest",
   bookid = "undefined"
 ) {
-  return async (dispatch, getState) => {
+  return async dispatch => {
     dispatch(getQuotes());
     console.log("fetchQuotes", pageSize, page, bookid, sortorder);
 
@@ -84,3 +100,48 @@ export function fetchQuotes(
       });
   };
 }
+
+export const addMemo = memo => {
+  return { type: ACTIONS.ADD_MEMO, payload: memo };
+};
+
+export const removeMemo = memoId => {
+  return { type: ACTIONS.REMOVE_MEMO, payload: memoId };
+};
+
+export const updateMemo = memo => {
+  return { type: ACTIONS.UPDATE_MEMO, payload: memo };
+};
+
+export const initializeQuote = () => {
+  return { type: ACTIONS.INITIALIZE_QUOTE };
+};
+
+export const createQuote = quote => {
+  return async dispatch => {
+    dispatch({ type: ACTIONS.CREATE_QUOTE });
+    console.log("ready to create quote", quote);
+    await axios
+      .post(FRONTEND + CREATE_QUOTE_URL, quote, {
+        headers: {
+          "x-auth-token": localStorage.getItem("token"),
+          "Content-Type": "application/json",
+        },
+        mode: "cors",
+      })
+      .then(res => {
+        console.log("got data", res.data);
+        console.groupEnd();
+        quote._id = res.data._id;
+        dispatch({
+          type: ACTIONS.CREATE_QUOTE_SUCCESS,
+          payload: quote,
+        });
+      })
+      .catch(err => {
+        console.log("failure", err);
+        console.groupEnd();
+        dispatch({ type: ACTIONS.CREATE_QUOTE_FAILURE });
+      });
+  };
+};

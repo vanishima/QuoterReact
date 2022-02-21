@@ -1,22 +1,26 @@
 import React from "react";
 import { MdOutlineLabel } from "react-icons/md";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Popover from "react-bootstrap/Popover";
 import LabelSelect from "components/inputs/CreatableSelect/LabelSelect";
+import "./styles/LabelButton.css";
+import { Popover } from "react-bootstrap";
 
 const LabelButton = () => {
-  const LabelPopover = (
-    <Popover id="popover-label">
-      {/* <Popover.Header as="h3">Popover right</Popover.Header> */}
-      <Popover.Body>
-        <LabelSelect />
-      </Popover.Body>
+  const ChooseLabelPopover = (
+    <Popover className="choose-label-popover">
+      <div>Label quote</div>
+      <LabelSelect />
     </Popover>
   );
 
   return (
-    <OverlayTrigger trigger="click" placement="right" overlay={LabelPopover}>
-      <button className="btn option-button">
+    <OverlayTrigger
+      trigger="click"
+      rootClose
+      placement="bottom-start"
+      overlay={ChooseLabelPopover}
+    >
+      <button className="btn add-label-button">
         <MdOutlineLabel size="1.5rem" />
         <span className="button-name">Label</span>
       </button>

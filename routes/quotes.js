@@ -163,7 +163,7 @@ router.get("/:quoteId", auth, async function (req, res) {
 
 /* GET quote by id */
 router.post("/update", auth, async function (req, res) {
-  console.log("Got request for /", req.user);
+  console.log("Got request for /", req.user, req.body);
 
   const quote = req.body;
   const user = req.user;
@@ -174,15 +174,14 @@ router.post("/update", auth, async function (req, res) {
 
   quote.date = new Date(quote.date);
 
-  // if (quote.memo) {
-  //   for (let m of quote.memo) {
-  //     m.user._id = ObjectId(m.user._id);
-  //     m.date = new Date(m.date);
-  //     m._id = new ObjectId();
-  //   }
-  // }
+  // quote.memo = quote.memo.map(m => {
+  //   m._id = new ObjectId();
+  //   m.user._id = ObjectId(m.user._id);
+  //   m.date = new Date(m.date);
+  //   return m;
+  // });
 
-  quote.memo = quote.memo.map(m => {
+  quote.memos = quote.memos.map(m => {
     m._id = new ObjectId();
     m.user._id = ObjectId(m.user._id);
     m.date = new Date(m.date);

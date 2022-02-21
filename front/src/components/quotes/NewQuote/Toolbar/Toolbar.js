@@ -1,17 +1,23 @@
 import React from "react";
+import DateButton from "./DateButton";
 import LabelButton from "./LabelButton";
 import MemoButton from "./MemoButton";
+import PrivacyButton from "./PrivacyButton";
 
 import "./styles/Toolbar.css";
 
-const Toolbar = () => {
+const Toolbar = ({ handleSubmit }) => {
   return (
     <div className="option-bar">
       <div className="quote-options">
         <LabelButton />
         <MemoButton />
+        <DateButton />
+        <PrivacyButton />
       </div>
-      <button className="btn create-button">Save</button>
+      <button className="btn save-button" onClick={handleSubmit}>
+        Save
+      </button>
     </div>
   );
 };

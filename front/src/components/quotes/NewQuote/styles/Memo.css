@@ -1,0 +1,48 @@
+.memo {
+  display: flex;
+  padding: 2px 0.5rem;
+  border-radius: 10px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 4px 0px;
+}
+
+/* Options Toggle */
+.memo-options-toggle {
+  color: black;
+  background-color: transparent;
+  border: 0;
+  box-shadow: none;
+  border-radius: 30px;
+}
+
+.memo-options-toggle:hover {
+  color: black;
+  background-color: var(--grey200);
+}
+
+.memo-options-toggle:focus,
+.memo-options-toggle:active:focus,
+.memo-options-toggle:active {
+  border: none;
+  border-width: 0;
+  outline: none !important;
+  color: black;
+  box-shadow: none !important;
+  background-color: transparent;
+}
+
+.memo-options-toggle::after {
+  display: none;
+}
+
+/* Options item */
+.memo-options-item:hover,
+.memo-options-item:active,
+.memo-options-item:active:focus,
+.memo-options-item:checked,
+.memo-options-item:focus,
+.memo-dropdown-item:hover,
+.memo-dropdown-item:hover,
+.memo-dropdown-item:active {
+  background-color: var(--grey200);
+  color: black;
+}

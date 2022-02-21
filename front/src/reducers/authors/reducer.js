@@ -18,6 +18,7 @@ export default function authorsReducer(state = initialState, action) {
         authors: payload.authors,
       };
     case ACTIONS.SET_AUTHOR:
+      console.log("setAuthor", payload);
       return { ...state, currentAuthor: payload };
     case ACTIONS.CREATE_AUTHOR_SUCCESS:
       return {

@@ -229,7 +229,7 @@ function QuotesDB() {
     }
   };
 
-  myDB.createQuote = async (quote) => {
+  myDB.createQuote = async quote => {
     const client = new MongoClient(uri, { useUnifiedTopology: true });
     console.log("Connecting to the db");
 
@@ -251,7 +251,7 @@ function QuotesDB() {
     }
   };
 
-  myDB.deleteQuoteById = async (quoteId) => {
+  myDB.deleteQuoteById = async quoteId => {
     const client = new MongoClient(uri, { useUnifiedTopology: true });
     console.log("Connecting to the db");
 
@@ -272,7 +272,7 @@ function QuotesDB() {
     }
   };
 
-  myDB.getQuoteById = async (quoteId) => {
+  myDB.getQuoteById = async quoteId => {
     const client = new MongoClient(uri, { useUnifiedTopology: true });
     console.log("Connecting to the db");
 
@@ -296,7 +296,7 @@ function QuotesDB() {
     }
   };
 
-  myDB.updateQuote = async (quote) => {
+  myDB.updateQuote = async quote => {
     const client = new MongoClient(uri, { useUnifiedTopology: true });
     console.log("Connecting to the db");
 
@@ -326,8 +326,10 @@ function QuotesDB() {
           title: quote.title,
           text: quote.text,
           date: quote.date,
-          memo: quote.memo,
-          tags: quote.tags,
+          labels: quote.labels,
+          // memo: quote.memo,
+          memos: quote.memos,
+          // tags: quote.tags,
           privacy_level: quote.privacy_level,
         },
       };

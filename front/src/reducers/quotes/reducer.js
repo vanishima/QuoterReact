@@ -1,36 +1,34 @@
+import _ from "lodash";
 import { ACTIONS } from "./actions";
 import { isoDateWithoutTimezone } from "api/utilsAPI";
 
 const initialQuote = {
-  _id: null,
-  user: {},
   book: {},
   author: {},
   title: "",
   text: "",
   tags: "",
   date: isoDateWithoutTimezone(new Date()),
-  memo: [],
+  memos: [],
   privacy_level: 1,
 };
 
 export const initialState = {
   quotes: [],
   loading: false,
+  editing: false,
   error: undefined,
   refresh: true,
   hasMore: true,
-  newQuote: initialQuote,
-  authors: [],
-  books: [],
+  newQuote: {},
   searchParams: {
     pageSize: 15,
     page: 1,
     sortOrder: "recent",
-    book: {},
-    author: {},
-    bookTags: [],
-    quoteTags: [],
+    // book: {},
+    // author: {},
+    // bookTags: [],
+    // quoteTags: [],
   },
 };
 
@@ -61,7 +59,6 @@ export default function quotesListReducer(state = initialState, action) {
         },
       };
     case ACTIONS.ADD_QUOTES:
-      console.log("ADD_QUOTES", payload);
       return {
         ...state,
         quotes: [...state.quotes, ...payload.quotes],
@@ -77,11 +74,62 @@ export default function quotesListReducer(state = initialState, action) {
       return { ...state, loading: false, error: true };
 
     case ACTIONS.UPDATE_INPUT:
-      console.log("newQuote", state.newQuote);
-      console.log("UPDATE_INPUT", payload);
       return {
         ...state,
         newQuote: { ...state.newQuote, [payload.key]: payload.value },
+      };
+    case ACTIONS.ADD_MEMO:
+      return {
+        ...state,
+        newQuote: {
+          ...state.newQuote,
+          memos: [...state.newQuote.memos, payload],
+        },
+      };
+    case ACTIONS.REMOVE_MEMO:
+      return {
+        ...state,
+        newQuote: {
+          ...state.newQuote,
+          memos: state.newQuote.memos.filter(memo => memo._id !== payload),
+        },
+      };
+
+    case ACTIONS.UPDATE_MEMO:
+      return {
+        ...state,
+        newQuote: {
+          ...state.newQuote,
+          memos: state.newQuote.memos.map(memo => {
+            if (memo._id === payload._id) {
+              return { ...memo, text: payload.text };
+            } else {
+              return memo;
+            }
+          }),
+        },
+      };
+    case ACTIONS.INITIALIZE_QUOTE:
+      return {
+        ...state,
+        editing: true,
+        newQuote: _.cloneDeep(initialQuote),
+      };
+    case ACTIONS.CREATE_QUOTE:
+      return { ...state, loading: true };
+    case ACTIONS.CREATE_QUOTE_SUCCESS:
+      console.log("CREATE_QUOTE_SUCCESS", payload);
+      return {
+        ...state,
+        quotes: [payload, ...state.quotes],
+        loading: false,
+        editing: false,
+        newQuote: _.cloneDeep(initialQuote),
+      };
+    case ACTIONS.CREATE_QUOTE_FAILURE:
+      return {
+        ...state,
+        loading: false,
       };
     default:
       return state;

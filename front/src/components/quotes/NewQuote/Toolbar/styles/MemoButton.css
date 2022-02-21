@@ -2,7 +2,30 @@
   margin-left: 5px;
 }
 
-.btn:focus {
+.save-memo-button:hover {
+  border-radius: 20%;
+  background-color: rgba(240, 240, 240, 0.5);
+}
+
+.add-memo-button:focus,
+.save-memo-button:focus {
   outline: none;
   box-shadow: none;
+}
+
+.add-memo-popover {
+  width: 300px;
+  padding: 5px;
+  background-color: white;
+  border-color: rgba(99, 99, 99, 0.2);
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.add-memo-title {
+  padding-left: 10px;
 }

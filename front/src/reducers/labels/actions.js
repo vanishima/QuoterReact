@@ -49,8 +49,8 @@ export const fetchLabels = () => {
   };
 };
 
-export const setLabel = label => {
-  return { type: ACTIONS.SET_LABEL, payload: label };
+export const setLabel = labels => {
+  return { type: ACTIONS.SET_LABEL, payload: labels };
 };
 
 export const createLabel = label => {

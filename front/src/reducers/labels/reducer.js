@@ -3,7 +3,7 @@ import { ACTIONS } from "./actions";
 export const initialState = {
   labels: [],
   loading: false,
-  currentLabel: {},
+  currentLabels: [],
 };
 
 export default function labelReducer(state = initialState, action) {
@@ -19,13 +19,13 @@ export default function labelReducer(state = initialState, action) {
         labels: payload.labels,
       };
     case ACTIONS.SET_LABEL:
-      return { ...state, currentLabel: payload };
+      return { ...state, currentLabels: payload };
     case ACTIONS.CREATE_LABEL_SUCCESS:
       console.log("CREATE_LABEL_SUCCESS", payload);
       return {
         ...state,
         labels: [payload, ...state.labels],
-        currentLabel: payload.label,
+        currentLabels: [...state.currentLabels, payload.label],
         loading: false,
       };
     case ACTIONS.FAILURE:

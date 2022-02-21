@@ -25,8 +25,6 @@ const BookSelect = ({
     dispatch(fetchBooks());
   }, [dispatch]);
 
-  const isDisabled = submitting || isFetching;
-
   const handleCreate = bookTitle => {
     const newBook = { title: bookTitle, author: currentAuthor };
     console.log("createBook", newBook);
@@ -36,8 +34,11 @@ const BookSelect = ({
 
   // set book to selected and choose author based on _id
   const changeBook = book => {
-    const newAuthor = authors.filter(author => author._id === book.author._id);
+    const newAuthor = authors.filter(
+      author => author._id === book.author._id
+    )[0];
     dispatch(setBook(book));
+    console.log("newauthor", newAuthor);
     dispatch(setAuthor(newAuthor));
   };
 
@@ -48,7 +49,8 @@ const BookSelect = ({
       value={currentBook}
       createOption={handleCreate}
       changeOption={changeBook}
-      isDisabled={isDisabled}
+      isDisabled={submitting}
+      isLoading={isFetching}
     />
   );
 };

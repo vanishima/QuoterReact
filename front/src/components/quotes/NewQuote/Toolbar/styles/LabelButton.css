@@ -1,0 +1,12 @@
+.choose-label-popover {
+  width: 300px;
+  padding: 5px;
+  background-color: white;
+  border-color: rgba(99, 99, 99, 0.2);
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
+.add-label-button:focus {
+  outline: none;
+  box-shadow: none;
+}

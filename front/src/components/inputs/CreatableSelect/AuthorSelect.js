@@ -10,14 +10,14 @@ import {
 
 const AuthorSelect = ({
   className,
-  loading,
+  submitting,
   isFetching,
   authors,
   currentAuthor,
 }) => {
   const dispatch = useDispatch();
   // console.group("AuthorSelect");
-  // console.log("default", loading, isFetching, currentAuthor);
+  // console.log("default", submitting, isFetching, currentAuthor);
   // console.log("authors", authors);
   // console.groupEnd();
 
@@ -25,8 +25,6 @@ const AuthorSelect = ({
     // console.log("fetching authors");
     dispatch(fetchAuthors());
   }, [dispatch]);
-
-  const isDisabled = loading || isFetching;
 
   const handleCreate = authorName => {
     console.log("createAuthor", authorName);
@@ -45,13 +43,14 @@ const AuthorSelect = ({
       value={currentAuthor}
       createOption={handleCreate}
       changeOption={changeAuthor}
-      isDisabled={isDisabled}
+      isDisabled={submitting}
+      isLoading={isFetching}
     />
   );
 };
 
 const mapStateToProps = (state, ownProps) => ({
-  loading: state.quotes.loading,
+  submitting: state.quotes.loading,
   isFetching: state.authors.loading,
   authors: state.authors.authors,
   currentAuthor: state.authors.currentAuthor,

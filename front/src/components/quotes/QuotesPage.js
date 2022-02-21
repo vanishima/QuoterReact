@@ -15,7 +15,7 @@ const QuotesPage = props => {
       </section>
       <section className="middle">
         {/* Infinite Scroll of quotes */}
-        {/* <QuotesInfiniteScroll /> */}
+        <QuotesInfiniteScroll />
       </section>
       {/* Filter bar */}
     </Layout>

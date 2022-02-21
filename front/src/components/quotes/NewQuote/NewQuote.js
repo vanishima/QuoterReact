@@ -1,36 +1,58 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import { useSelector, useDispatch } from "react-redux";
-import { updateInput } from "reducers/quotes/actions";
-import { newQuoteSelector } from "reducers/quotes/selectors";
+import { useDispatch } from "react-redux";
+import {
+  updateInput,
+  initializeQuote,
+  createQuote,
+} from "reducers/quotes/actions";
 
 import AuthorSelect from "../../inputs/CreatableSelect/AuthorSelect";
 import BookSelect from "../../inputs/CreatableSelect/BookSelect";
 import Toolbar from "./Toolbar/Toolbar";
 import Label from "./Label";
+import Memo from "./Memo";
 
 import "./styles/NewQuote.css";
 
 const NEW_QUOTE = "Write a new quote...";
 const TITLE = "Title";
+const user = JSON.parse(localStorage.getItem("currentUser"));
 
-const NewQuote = ({ loading, currentLabel }) => {
-  const [editing, setEditing] = useState(false);
-  const newQuote = useSelector(state => newQuoteSelector(state));
-  console.log("newQuote", newQuote);
+const NewQuote = ({
+  editing,
+  quote,
+  memos,
+  currentLabels,
+  currentAuthor,
+  currentBook,
+}) => {
   const dispatch = useDispatch();
 
   const toggleEdit = e => {
     e.preventDefault();
     if (!editing) {
-      setEditing(!editing);
+      dispatch(initializeQuote());
     }
+  };
+
+  const renderLabels = () => {
+    if (currentLabels)
+      return (
+        <div className="labels mb-2">
+          {currentLabels.map((label, i) => (
+            <div key={i}>
+              <Label label={label} />
+            </div>
+          ))}
+        </div>
+      );
   };
 
   const renderAuthorBook = () => {
     if (editing) {
       return (
-        <div className="author-book-bar">
+        <div className="author-book-bar mb-2">
           <AuthorSelect className="half" />
           <BookSelect className="half" />
         </div>
@@ -38,23 +60,50 @@ const NewQuote = ({ loading, currentLabel }) => {
     }
   };
 
+  const renderMemos = () => {
+    if (memos) {
+      return (
+        <div className="memos">
+          {memos.map((memo, i) => (
+            <div key={memo._id}>
+              <Memo memo={memo} />
+            </div>
+          ))}
+        </div>
+      );
+    }
+  };
+
   const handleInputChange = e => {
-    console.log("handleInputChange", e.target.name, e.target.value);
     dispatch(updateInput(e.target.name, e.target.value));
+  };
+
+  const handleSubmit = () => {
+    console.log("handleSubmit");
+    if (!currentAuthor || !currentBook || quote.text.length === 0) {
+      alert("Please fill out all required inputs");
+    } else {
+      const newQuote = {
+        ...quote,
+        labels: currentLabels,
+        author: { _id: currentAuthor._id, name: currentAuthor.name },
+        book: { _id: currentBook._id, title: currentBook.title },
+        user: { _id: user.id, name: user.name },
+      };
+      dispatch(createQuote(newQuote));
+    }
   };
 
   if (editing) {
     return (
       <div className="new-quote">
-        {editing && (
-          <input
-            name="title"
-            className="inline-edit"
-            type="text"
-            placeholder={TITLE}
-            onChange={handleInputChange}
-          />
-        )}
+        <input
+          name="title"
+          className="inline-edit"
+          type="text"
+          placeholder={TITLE}
+          onChange={handleInputChange}
+        />
         <textarea
           name="text"
           className="inline-edit text"
@@ -63,9 +112,10 @@ const NewQuote = ({ loading, currentLabel }) => {
           onClick={toggleEdit}
           onChange={handleInputChange}
         />
-        {currentLabel && <Label label={currentLabel} />}
-        {/* {renderAuthorBook()} */}
-        {editing && <Toolbar />}
+        {renderLabels()}
+        {renderAuthorBook()}
+        {renderMemos()}
+        <Toolbar handleSubmit={handleSubmit} />
       </div>
     );
   } else {
@@ -84,7 +134,12 @@ const NewQuote = ({ loading, currentLabel }) => {
 
 const mapStateToProps = (state, ownProps) => ({
   loading: state.quotes.loading,
-  currentLabel: state.labels.currentLabel,
+  editing: state.quotes.editing,
+  quote: state.quotes.newQuote,
+  memos: state.quotes.newQuote.memos,
+  currentLabels: state.labels.currentLabels,
+  currentAuthor: state.authors.currentAuthor,
+  currentBook: state.books.currentBook,
   ...ownProps,
 });
 

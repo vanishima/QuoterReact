@@ -9,11 +9,11 @@ const LabelSelect = ({
   submitting,
   isFetching,
   labels,
-  currentLabel,
+  currentLabels,
 }) => {
   const dispatch = useDispatch();
   console.group("LabelSelect");
-  console.log("default", submitting, isFetching, currentLabel);
+  console.log("default", submitting, isFetching, currentLabels);
   console.log("labels", labels);
   console.groupEnd();
 
@@ -21,8 +21,6 @@ const LabelSelect = ({
     console.log("fetching labels");
     dispatch(fetchLabels());
   }, [dispatch]);
-
-  const isDisabled = submitting || isFetching;
 
   const handleCreate = label => {
     const newLabel = { label: label, order: 0 };
@@ -36,12 +34,15 @@ const LabelSelect = ({
 
   return (
     <CreatableSelect
-      className={`${className}`}
+      isClearable={true}
+      isMulti={true}
+      className={`label-select ${className}`}
       options={labels}
-      value={currentLabel}
+      value={currentLabels}
       createOption={handleCreate}
       changeOption={changeLabel}
-      isDisabled={isDisabled}
+      isLoading={isFetching}
+      isDisabled={submitting}
     />
   );
 };
@@ -50,7 +51,7 @@ const mapStateToProps = (state, ownProps) => ({
   submitting: state.quotes.loading,
   isFetching: state.labels.loading,
   labels: state.labels.labels,
-  currentLabel: state.labels.currentLabel,
+  currentLabels: state.labels.currentLabels,
   ...ownProps,
 });
 
