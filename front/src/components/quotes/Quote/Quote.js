@@ -13,19 +13,21 @@ const Quote = props => {
   const { quote, book, author, showDate, showTag, showMemo, showTitle } = props;
 
   const renderTags = () => {
-    if (showTag && quote.tags)
+    if (showTag && quote.tags && quote.tags.length > 0)
       return (
         <div className="quote-tags">
           {typeof quote.tags !== "string" ? (
-            quote.tags.map((t, i) => (
-              <a
-                className="col-auto non-link greyText smallText tag"
-                href="/"
-                key={i}
-              >
-                {t}
-              </a>
-            ))
+            quote.tags
+              .filter(tag => tag.length > 0)
+              .map((t, i) => (
+                <a
+                  className="col-auto non-link greyText smallText tag"
+                  href="/"
+                  key={i}
+                >
+                  {t}
+                </a>
+              ))
           ) : (
             <div className="col-auto non-link greyText smallText tag">
               {quote.tags}
@@ -80,9 +82,9 @@ const Quote = props => {
             </div>
           )}
 
-          {showMemo && Array.isArray(quote.memo) && (
+          {showMemo && Array.isArray(quote.memos) && (
             <div className="memos">
-              {quote.memo.map(m => (
+              {quote.memos.map(m => (
                 <div key={m._id}>
                   - {m.text} ({getRelativeTime(m.date)})
                 </div>

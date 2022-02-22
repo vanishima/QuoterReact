@@ -327,9 +327,8 @@ function QuotesDB() {
           text: quote.text,
           date: quote.date,
           labels: quote.labels,
-          // memo: quote.memo,
           memos: quote.memos,
-          // tags: quote.tags,
+          tags: quote.tags,
           privacy_level: quote.privacy_level,
         },
       };

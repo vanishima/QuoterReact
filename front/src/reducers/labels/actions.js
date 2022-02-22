@@ -13,7 +13,8 @@ export const ACTIONS = {
   LOADING: "LOADING",
   FAILURE: "FAILURE",
   FETCH_LABELS_SUCCESS: "FETCH_LABELS_SUCCESS",
-  SET_LABEL: "SET_LABEL",
+  ADD_LABEL: "ADD_LABEL",
+  REMOVE_LABEL: "REMOVE_LABEL",
   CREATE_LABEL_SUCCESS: "CREATE_LABEL_SUCCESS",
 };
 
@@ -49,8 +50,12 @@ export const fetchLabels = () => {
   };
 };
 
-export const setLabel = labels => {
-  return { type: ACTIONS.SET_LABEL, payload: labels };
+export const addLabel = label => {
+  return { type: ACTIONS.ADD_LABEL, payload: label };
+};
+
+export const removeLabel = label => {
+  return { type: ACTIONS.REMOVE_LABEL, payload: label };
 };
 
 export const createLabel = label => {

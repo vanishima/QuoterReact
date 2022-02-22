@@ -21,13 +21,13 @@ const BookSelect = ({
   // console.groupEnd();
 
   useEffect(() => {
-    console.log("fetching books");
+    // console.log("fetching books");
     dispatch(fetchBooks());
   }, [dispatch]);
 
   const handleCreate = bookTitle => {
     const newBook = { title: bookTitle, author: currentAuthor };
-    console.log("createBook", newBook);
+    // console.log("createBook", newBook);
 
     dispatch(createBook(newBook));
   };
@@ -38,7 +38,7 @@ const BookSelect = ({
       author => author._id === book.author._id
     )[0];
     dispatch(setBook(book));
-    console.log("newauthor", newAuthor);
+    // console.log("newauthor", newAuthor);
     dispatch(setAuthor(newAuthor));
   };
 
@@ -50,7 +50,7 @@ const BookSelect = ({
       createOption={handleCreate}
       changeOption={changeBook}
       isDisabled={submitting}
-      isLoading={isFetching}
+      // isLoading={isFetching}
     />
   );
 };

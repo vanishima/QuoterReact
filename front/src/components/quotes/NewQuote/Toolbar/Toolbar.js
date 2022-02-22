@@ -3,6 +3,7 @@ import DateButton from "./DateButton";
 import LabelButton from "./LabelButton";
 import MemoButton from "./MemoButton";
 import PrivacyButton from "./PrivacyButton";
+import TagButton from "./TagButton";
 
 import "./styles/Toolbar.css";
 
@@ -10,6 +11,7 @@ const Toolbar = ({ handleSubmit }) => {
   return (
     <div className="option-bar">
       <div className="quote-options">
+        <TagButton />
         <LabelButton />
         <MemoButton />
         <DateButton />

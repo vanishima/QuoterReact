@@ -9,6 +9,7 @@ let authRouter = require("./routes/auth");
 let authorsRouter = require("./routes/authors");
 let booksRouter = require("./routes/books");
 let labelsRouter = require("./routes/labels");
+let tagsRouter = require("./routes/tags");
 
 let app = express();
 
@@ -24,5 +25,6 @@ app.use("/quotes", quotesRouter);
 app.use("/authors", authorsRouter);
 app.use("/books", booksRouter);
 app.use("/labels", labelsRouter);
+app.use("/tags", tagsRouter);
 
 module.exports = app;

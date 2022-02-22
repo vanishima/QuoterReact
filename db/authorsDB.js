@@ -116,7 +116,7 @@ function AuthorsDB() {
           name: author.name,
           category: author.category,
           url: author.url,
-          userId: userId,
+          userId: ObjectId(userId),
         },
       };
 

@@ -188,7 +188,7 @@ router.post("/update", auth, async function (req, res) {
     return m;
   });
 
-  console.log("ready to feed into DB", quote.memo);
+  console.log("ready to feed into DB", quote.memos);
 
   try {
     const result = await QuotesDB.updateQuote(quote);

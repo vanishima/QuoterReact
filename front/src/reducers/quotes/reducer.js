@@ -3,11 +3,9 @@ import { ACTIONS } from "./actions";
 import { isoDateWithoutTimezone } from "api/utilsAPI";
 
 const initialQuote = {
-  book: {},
-  author: {},
   title: "",
   text: "",
-  tags: "",
+  tags: [],
   date: isoDateWithoutTimezone(new Date()),
   memos: [],
   privacy_level: 1,
@@ -22,7 +20,7 @@ export const initialState = {
   hasMore: true,
   newQuote: {},
   searchParams: {
-    pageSize: 15,
+    pageSize: 25,
     page: 1,
     sortOrder: "recent",
     // book: {},

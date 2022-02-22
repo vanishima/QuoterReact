@@ -19,7 +19,7 @@
   color: var(--darkGrey);
 }
 
-.tag {
+/* .tag {
   border: 1px solid var(--darkPurple);
   font-size: 14px;
   color: var(--darkPurple);
@@ -31,7 +31,7 @@
 .tag:hover {
   background-color: var(--darkPurple);
   color: white;
-}
+} */
 
 .quote-date {
   font-size: 14px;

@@ -41,3 +41,9 @@ input {
   display: flex;
   justify-content: flex-start;
 }
+
+/* Tags */
+.tags {
+  display: flex;
+  justify-content: flex-start;
+}

@@ -27,12 +27,12 @@ const AuthorSelect = ({
   }, [dispatch]);
 
   const handleCreate = authorName => {
-    console.log("createAuthor", authorName);
+    // console.log("createAuthor", authorName);
     dispatch(createAuthor({ name: authorName }));
   };
 
   const changeAuthor = author => {
-    console.log("changeAuthor", author);
+    // console.log("changeAuthor", author);
     dispatch(setAuthor(author));
   };
 
@@ -44,7 +44,7 @@ const AuthorSelect = ({
       createOption={handleCreate}
       changeOption={changeAuthor}
       isDisabled={submitting}
-      isLoading={isFetching}
+      // isLoading={isFetching}
     />
   );
 };

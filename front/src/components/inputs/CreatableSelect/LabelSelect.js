@@ -2,7 +2,12 @@ import React, { useEffect } from "react";
 import { connect, useDispatch } from "react-redux";
 import CreatableSelect from "components/inputs/CreatableSelect/CreatableSelect";
 
-import { fetchLabels, setLabel, createLabel } from "reducers/labels/actions";
+import {
+  fetchLabels,
+  addLabel,
+  removeLabel,
+  createLabel,
+} from "reducers/labels/actions";
 
 const LabelSelect = ({
   className,
@@ -12,13 +17,13 @@ const LabelSelect = ({
   currentLabels,
 }) => {
   const dispatch = useDispatch();
-  console.group("LabelSelect");
-  console.log("default", submitting, isFetching, currentLabels);
-  console.log("labels", labels);
+  // console.group("LabelSelect");
+  // console.log("default", submitting, isFetching, currentLabels);
+  // console.log("labels", labels);
   console.groupEnd();
 
   useEffect(() => {
-    console.log("fetching labels");
+    // console.log("fetching labels");
     dispatch(fetchLabels());
   }, [dispatch]);
 
@@ -27,9 +32,13 @@ const LabelSelect = ({
     dispatch(createLabel(newLabel));
   };
 
-  const changeLabel = label => {
-    console.log("changeLabel", label);
-    dispatch(setLabel(label));
+  const handleChange = label => {
+    // console.log("handleChange", label);
+    dispatch(addLabel(label));
+  };
+
+  const handleRemove = label => {
+    dispatch(removeLabel(label));
   };
 
   return (
@@ -40,8 +49,9 @@ const LabelSelect = ({
       options={labels}
       value={currentLabels}
       createOption={handleCreate}
-      changeOption={changeLabel}
-      isLoading={isFetching}
+      changeOption={handleChange}
+      removeOption={handleRemove}
+      // isLoading={isFetching}
       isDisabled={submitting}
     />
   );

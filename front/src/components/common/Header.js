@@ -1,19 +1,19 @@
 import { React } from "react";
+import { useDispatch } from "react-redux";
 import { Navbar, Container, Nav, Button } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
 import { logout } from "reducers/user/actions";
 
 import "components/common/styles/header.css";
 
 const Header = props => {
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-  console.log("Header", currentUser);
-  console.log("token", localStorage.getItem("token"));
+  // console.log("Header", currentUser);
+  // console.log("token", localStorage.getItem("token"));
 
   const logoutClick = () => {
-    logout();
-    navigate("/login");
+    dispatch(logout());
+    window.location.reload();
   };
 
   const url = new URL(window.location);

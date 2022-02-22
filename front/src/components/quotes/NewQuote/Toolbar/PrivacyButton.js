@@ -18,7 +18,7 @@ const PrivacyButton = ({ loading, privacy }) => {
     <div>
       <button className="btn privacy-button" onClick={togglePrivacy}>
         {privacy ? <BiLock size="1.2rem" /> : <BiLockOpen size="1.2rem" />}
-        <span className="button-name">{privacyText}</span>
+        {/* <span className="button-name">{privacyText}</span> */}
       </button>
     </div>
   );

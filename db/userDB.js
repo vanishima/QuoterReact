@@ -91,6 +91,26 @@ function UserDB() {
     }
   };
 
+  myDB.createTag = async (tag, userId) => {
+    const client = new MongoClient(uri, { useUnifiedTopology: true });
+
+    try {
+      await client.connect();
+
+      const col = client.db(DB_NAME).collection(COL_NAME_USER);
+      console.log(COL_NAME_USER, "Collection ready, createOne:", tag, userId);
+
+      const res = await col.updateOne(
+        { _id: ObjectId(userId) },
+        { $addToSet: { tags: tag } }
+      );
+
+      return res;
+    } finally {
+      client.close();
+    }
+  };
+
   return myDB;
 }
 

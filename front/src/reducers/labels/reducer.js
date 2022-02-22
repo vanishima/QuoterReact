@@ -6,7 +6,7 @@ export const initialState = {
   currentLabels: [],
 };
 
-export default function labelReducer(state = initialState, action) {
+export default function labelsReducer(state = initialState, action) {
   const { type, payload } = action;
   switch (type) {
     case ACTIONS.LOADING:
@@ -18,13 +18,21 @@ export default function labelReducer(state = initialState, action) {
         loading: false,
         labels: payload.labels,
       };
-    case ACTIONS.SET_LABEL:
-      return { ...state, currentLabels: payload };
+    case ACTIONS.ADD_LABEL:
+      return { ...state, currentLabels: [...state.currentLabels, payload] };
+
+    case ACTIONS.REMOVE_LABEL:
+      return {
+        ...state,
+        currentLabels: state.currentLabels.filter(
+          label => label.label !== payload.label
+        ),
+      };
     case ACTIONS.CREATE_LABEL_SUCCESS:
       console.log("CREATE_LABEL_SUCCESS", payload);
       return {
         ...state,
-        labels: [payload, ...state.labels],
+        labels: [payload.label, ...state.labels],
         currentLabels: [...state.currentLabels, payload.label],
         loading: false,
       };

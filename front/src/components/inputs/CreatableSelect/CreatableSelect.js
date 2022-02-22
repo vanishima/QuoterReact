@@ -8,6 +8,7 @@ const CreatableSelect = props => {
     options,
     changeOption,
     createOption,
+    removeOption,
     value,
     isDisabled,
     isClearable,
@@ -34,12 +35,17 @@ const CreatableSelect = props => {
     });
 
   const handleChange = async (newValue, actionMeta) => {
-    // console.log("handleChange", newValue);
-    if (!newValue.__isNew__) {
-      changeOption(newValue);
-    } else {
-      // console.log("create newValue", newValue);
-      await createOption(newValue.label);
+    console.log("handleChange", newValue);
+    console.log("actionMeta", actionMeta);
+    if (actionMeta.action === "select-option") {
+      changeOption(actionMeta.option);
+    } else if (actionMeta.action === "remove-value") {
+      const removedValue = actionMeta.removedValue;
+      console.log("remove", removedValue);
+      removeOption(removedValue);
+    } else if (actionMeta.action === "create-option") {
+      console.log("create newValue", actionMeta);
+      await createOption(actionMeta.option.label);
     }
   };
 
@@ -65,8 +71,9 @@ CreatableSelect.propTypes = {
     options: PropTypes.array.isRequired,
     changeOption: PropTypes.func.isRequired,
     createOption: PropTypes.func.isRequired,
+    removeOption: PropTypes.func,
     value: PropTypes.object,
-    isFixed: PropTypes.bool,
+    isDisabled: PropTypes.bool,
     isClearable: PropTypes.bool,
     isLoading: PropTypes.bool,
     isMulti: PropTypes.bool,

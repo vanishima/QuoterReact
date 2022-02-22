@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { useDispatch } from "react-redux";
 import {
@@ -11,6 +11,7 @@ import AuthorSelect from "../../inputs/CreatableSelect/AuthorSelect";
 import BookSelect from "../../inputs/CreatableSelect/BookSelect";
 import Toolbar from "./Toolbar/Toolbar";
 import Label from "./Label";
+import Tag from "./Tag";
 import Memo from "./Memo";
 
 import "./styles/NewQuote.css";
@@ -26,6 +27,7 @@ const NewQuote = ({
   currentLabels,
   currentAuthor,
   currentBook,
+  currentTags,
 }) => {
   const dispatch = useDispatch();
 
@@ -34,6 +36,19 @@ const NewQuote = ({
     if (!editing) {
       dispatch(initializeQuote());
     }
+  };
+
+  const renderTags = () => {
+    if (currentTags)
+      return (
+        <div className="tags mb-2">
+          {currentTags.map((tag, i) => (
+            <div key={i}>
+              <Tag tag={tag} />
+            </div>
+          ))}
+        </div>
+      );
   };
 
   const renderLabels = () => {
@@ -86,6 +101,7 @@ const NewQuote = ({
       const newQuote = {
         ...quote,
         labels: currentLabels,
+        tags: currentTags,
         author: { _id: currentAuthor._id, name: currentAuthor.name },
         book: { _id: currentBook._id, title: currentBook.title },
         user: { _id: user.id, name: user.name },
@@ -112,9 +128,10 @@ const NewQuote = ({
           onClick={toggleEdit}
           onChange={handleInputChange}
         />
+        {renderTags()}
         {renderLabels()}
         {renderAuthorBook()}
-        {renderMemos()}
+        {/* {renderMemos()} */}
         <Toolbar handleSubmit={handleSubmit} />
       </div>
     );
@@ -140,6 +157,7 @@ const mapStateToProps = (state, ownProps) => ({
   currentLabels: state.labels.currentLabels,
   currentAuthor: state.authors.currentAuthor,
   currentBook: state.books.currentBook,
+  currentTags: state.tags.currentTags,
   ...ownProps,
 });
 

@@ -6,6 +6,7 @@ import userReducer from "reducers/user/reducer";
 import authorsReducer from "reducers/authors/reducer";
 import booksReducer from "reducers/books/reducer";
 import labelsReducer from "reducers/labels/reducer";
+import tagsReducer from "reducers/tags/reducer";
 
 const rootReducer = combineReducers({
   quotes: quotesListReducer,
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   authors: authorsReducer,
   books: booksReducer,
   labels: labelsReducer,
+  tags: tagsReducer,
 });
 
 export default rootReducer;
