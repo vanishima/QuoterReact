@@ -35,7 +35,8 @@ export default function quotesListReducer(state = initialState, action) {
   switch (type) {
     case ACTIONS.GET_QUOTES:
       return { ...state, loading: true, refresh: false, error: undefined };
-    case ACTIONS.GET_QUOTES_SUCCESS:
+    case ACTIONS.GET_QUOTES_SUCCESS: {
+      const { quotes, lastPage } = payload;
       console.group("GET_QUOTES_SUCCESS");
       console.log("quotes", payload.quotes.length);
       console.log("lastPage", payload.lastPage);
@@ -48,65 +49,75 @@ export default function quotesListReducer(state = initialState, action) {
       console.groupEnd();
       return {
         ...state,
-        quotes: payload.quotes,
+        quotes: quotes,
         loading: false,
-        hasMore: payload.lastPage > state.searchParams.page + 1,
+        hasMore: lastPage > state.searchParams.page + 1,
         searchParams: {
           ...state.searchParams,
           page: state.searchParams.page + 1,
         },
       };
-    case ACTIONS.ADD_QUOTES:
+    }
+    case ACTIONS.LOAD_MORE_QUOTES_SUCCESS: {
+      const { quotes, lastPage } = payload;
       return {
         ...state,
-        quotes: [...state.quotes, ...payload.quotes],
+        quotes: [...state.quotes, ...quotes],
         loading: false,
-        hasMore: payload.lastPage > state.searchParams.page + 1,
+        hasMore: lastPage > state.searchParams.page + 1,
         searchParams: {
           ...state.searchParams,
-          lastPage: payload.lastPage,
+          lastPage: lastPage,
           page: state.searchParams.page + 1,
         },
       };
+    }
     case ACTIONS.GET_QUOTES_FAILURE:
       return { ...state, loading: false, error: true };
 
-    case ACTIONS.UPDATE_INPUT:
+    case ACTIONS.UPDATE_INPUT: {
+      const { key, value } = payload;
       return {
         ...state,
-        newQuote: { ...state.newQuote, [payload.key]: payload.value },
+        newQuote: { ...state.newQuote, [key]: value },
       };
-    case ACTIONS.ADD_MEMO:
-      return {
-        ...state,
-        newQuote: {
-          ...state.newQuote,
-          memos: [...state.newQuote.memos, payload],
-        },
-      };
-    case ACTIONS.REMOVE_MEMO:
+    }
+    case ACTIONS.ADD_MEMO: {
+      const { memo } = payload;
       return {
         ...state,
         newQuote: {
           ...state.newQuote,
-          memos: state.newQuote.memos.filter(memo => memo._id !== payload),
+          memos: [...state.newQuote.memos, memo],
         },
       };
-
-    case ACTIONS.UPDATE_MEMO:
+    }
+    case ACTIONS.REMOVE_MEMO: {
+      const { memoId } = payload;
+      return {
+        ...state,
+        newQuote: {
+          ...state.newQuote,
+          memos: state.newQuote.memos.filter(memo => memo._id !== memoId),
+        },
+      };
+    }
+    case ACTIONS.UPDATE_MEMO: {
+      const { _id, text } = payload;
       return {
         ...state,
         newQuote: {
           ...state.newQuote,
           memos: state.newQuote.memos.map(memo => {
-            if (memo._id === payload._id) {
-              return { ...memo, text: payload.text };
+            if (memo._id === _id) {
+              return { ...memo, text: text };
             } else {
               return memo;
             }
           }),
         },
       };
+    }
     case ACTIONS.INITIALIZE_QUOTE:
       return {
         ...state,
@@ -116,10 +127,10 @@ export default function quotesListReducer(state = initialState, action) {
     case ACTIONS.CREATE_QUOTE:
       return { ...state, loading: true };
     case ACTIONS.CREATE_QUOTE_SUCCESS:
-      console.log("CREATE_QUOTE_SUCCESS", payload);
+      const { quote } = payload;
       return {
         ...state,
-        quotes: [payload, ...state.quotes],
+        quotes: [quote, ...state.quotes],
         loading: false,
         editing: false,
         newQuote: _.cloneDeep(initialQuote),

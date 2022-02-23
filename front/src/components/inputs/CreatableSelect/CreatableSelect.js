@@ -35,16 +35,18 @@ const CreatableSelect = props => {
     });
 
   const handleChange = async (newValue, actionMeta) => {
-    console.log("handleChange", newValue);
-    console.log("actionMeta", actionMeta);
+    // console.log("handleChange", newValue);
+    // console.log("actionMeta", actionMeta);
     if (actionMeta.action === "select-option") {
-      changeOption(actionMeta.option);
+      changeOption(
+        Array.isArray(newValue) ? newValue[newValue.length - 1] : newValue
+      );
     } else if (actionMeta.action === "remove-value") {
       const removedValue = actionMeta.removedValue;
-      console.log("remove", removedValue);
+      // console.log("remove", removedValue);
       removeOption(removedValue);
     } else if (actionMeta.action === "create-option") {
-      console.log("create newValue", actionMeta);
+      // console.log("create newValue", actionMeta);
       await createOption(actionMeta.option.label);
     }
   };

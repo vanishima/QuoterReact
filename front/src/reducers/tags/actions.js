@@ -51,11 +51,11 @@ export const fetchTags = () => {
 };
 
 export const addTag = tag => {
-  return { type: ACTIONS.ADD_TAG, payload: tag };
+  return { type: ACTIONS.ADD_TAG, payload: { tag } };
 };
 
 export const removeTag = tag => {
-  return { type: ACTIONS.REMOVE_TAG, payload: tag };
+  return { type: ACTIONS.REMOVE_TAG, payload: { tag } };
 };
 
 export const createTag = tag => {

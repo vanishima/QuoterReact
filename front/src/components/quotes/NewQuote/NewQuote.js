@@ -6,9 +6,11 @@ import {
   initializeQuote,
   createQuote,
 } from "reducers/quotes/actions";
+import { getLabelArray } from "./util";
 
 import AuthorSelect from "../../inputs/CreatableSelect/AuthorSelect";
 import BookSelect from "../../inputs/CreatableSelect/BookSelect";
+import ChapterSelect from "components/inputs/CreatableSelect/ChapterSelect";
 import Toolbar from "./Toolbar/Toolbar";
 import Label from "./Label";
 import Tag from "./Tag";
@@ -100,12 +102,13 @@ const NewQuote = ({
     } else {
       const newQuote = {
         ...quote,
-        labels: currentLabels,
-        tags: currentTags,
+        labels: getLabelArray(currentLabels),
+        tags: getLabelArray(currentTags),
         author: { _id: currentAuthor._id, name: currentAuthor.name },
         book: { _id: currentBook._id, title: currentBook.title },
         user: { _id: user.id, name: user.name },
       };
+      console.log("newQuote", newQuote);
       dispatch(createQuote(newQuote));
     }
   };
@@ -120,6 +123,7 @@ const NewQuote = ({
           placeholder={TITLE}
           onChange={handleInputChange}
         />
+        <ChapterSelect />
         <textarea
           name="text"
           className="inline-edit text"
@@ -131,7 +135,7 @@ const NewQuote = ({
         {renderTags()}
         {renderLabels()}
         {renderAuthorBook()}
-        {/* {renderMemos()} */}
+        {renderMemos()}
         <Toolbar handleSubmit={handleSubmit} />
       </div>
     );

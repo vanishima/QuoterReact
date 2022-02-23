@@ -49,7 +49,7 @@ export const fetchAuthors = () => {
 };
 
 export const setAuthor = author => {
-  return { type: ACTIONS.SET_AUTHOR, payload: author };
+  return { type: ACTIONS.SET_AUTHOR, payload: { author } };
 };
 
 export const createAuthor = author => {

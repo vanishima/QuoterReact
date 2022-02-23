@@ -12,30 +12,33 @@ export default function labelsReducer(state = initialState, action) {
     case ACTIONS.LOADING:
       return { ...state, loading: true };
     case ACTIONS.FETCH_LABELS_SUCCESS:
-      console.log("FETCH_LABELS_SUCCESS", payload);
+      const { labels } = payload;
       return {
         ...state,
         loading: false,
-        labels: payload.labels,
+        labels: labels,
       };
-    case ACTIONS.ADD_LABEL:
-      return { ...state, currentLabels: [...state.currentLabels, payload] };
+    case ACTIONS.ADD_LABEL: {
+      const { label } = payload;
+      return { ...state, currentLabels: [...state.currentLabels, label] };
+    }
 
-    case ACTIONS.REMOVE_LABEL:
+    case ACTIONS.REMOVE_LABEL: {
+      const { label } = payload;
       return {
         ...state,
-        currentLabels: state.currentLabels.filter(
-          label => label.label !== payload.label
-        ),
+        currentLabels: state.currentLabels.filter(l => l.label !== label.label),
       };
-    case ACTIONS.CREATE_LABEL_SUCCESS:
-      console.log("CREATE_LABEL_SUCCESS", payload);
+    }
+    case ACTIONS.CREATE_LABEL_SUCCESS: {
+      const { label } = payload;
       return {
         ...state,
-        labels: [payload.label, ...state.labels],
-        currentLabels: [...state.currentLabels, payload.label],
+        labels: [label, ...state.labels],
+        currentLabels: [...state.currentLabels, label],
         loading: false,
       };
+    }
     case ACTIONS.FAILURE:
       return {
         ...state,

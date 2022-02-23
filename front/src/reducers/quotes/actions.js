@@ -10,7 +10,7 @@ const FRONTEND =
 export const ACTIONS = {
   GET_QUOTES: "GET_QUOTES",
   GET_QUOTES_SUCCESS: "GET_QUOTES_SUCCESS",
-  ADD_QUOTES: "ADD_QUOTES",
+  LOAD_MORE_QUOTES_SUCCESS: "LOAD_MORE_QUOTES_SUCCESS",
   GET_QUOTES_FAILURE: "GET_QUOTES_FAILURE",
   UPDATE_INPUT: "UPDATE_INPUT",
   ADD_MEMO: "ADD_MEMO",
@@ -37,8 +37,8 @@ export const getQuotesSuccess = data => ({
   payload: data,
 });
 
-export const addQuotes = data => ({
-  type: ACTIONS.ADD_QUOTES,
+export const loadMoreQuotes = data => ({
+  type: ACTIONS.LOAD_MORE_QUOTES_SUCCESS,
   payload: data,
 });
 
@@ -91,7 +91,7 @@ export function fetchQuotes(
         if (refresh) {
           dispatch(getQuotesSuccess(res.data));
         } else {
-          dispatch(addQuotes(res.data));
+          dispatch(loadMoreQuotes(res.data));
         }
       })
       .catch(err => {
@@ -102,11 +102,11 @@ export function fetchQuotes(
 }
 
 export const addMemo = memo => {
-  return { type: ACTIONS.ADD_MEMO, payload: memo };
+  return { type: ACTIONS.ADD_MEMO, payload: { memo } };
 };
 
 export const removeMemo = memoId => {
-  return { type: ACTIONS.REMOVE_MEMO, payload: memoId };
+  return { type: ACTIONS.REMOVE_MEMO, payload: { memoId } };
 };
 
 export const updateMemo = memo => {
@@ -135,7 +135,7 @@ export const createQuote = quote => {
         quote._id = res.data._id;
         dispatch({
           type: ACTIONS.CREATE_QUOTE_SUCCESS,
-          payload: quote,
+          payload: { quote },
         });
       })
       .catch(err => {

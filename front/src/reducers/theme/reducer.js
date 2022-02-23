@@ -9,7 +9,8 @@ export const initialState = {
 };
 
 export default function themeReducer(state = initialState, action) {
-  switch (action.type) {
+  const { type } = action;
+  switch (type) {
     case ACTIONS.SHOW_DATE:
       return { ...state, showDate: !state.showDate };
     case ACTIONS.SHOW_TAG:

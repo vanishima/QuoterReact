@@ -28,17 +28,17 @@ const BookSelect = ({
   const handleCreate = bookTitle => {
     const newBook = { title: bookTitle, author: currentAuthor };
     // console.log("createBook", newBook);
-
     dispatch(createBook(newBook));
   };
 
   // set book to selected and choose author based on _id
   const changeBook = book => {
+    console.log("changeBook", book);
     const newAuthor = authors.filter(
       author => author._id === book.author._id
     )[0];
     dispatch(setBook(book));
-    // console.log("newauthor", newAuthor);
+    console.log("newauthor", newAuthor);
     dispatch(setAuthor(newAuthor));
   };
 

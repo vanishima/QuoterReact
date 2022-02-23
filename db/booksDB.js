@@ -91,7 +91,7 @@ function BooksDB() {
       };
 
       book.userId = ObjectId(userId);
-      if (book.keywords) book.keywords = getTagsArray(book.keywords);
+      // if (book.keywords) book.keywords = getTagsArray(book.keywords);
 
       console.log(COL_BOOKS, "Collection ready, update book:", book);
 
@@ -104,8 +104,9 @@ function BooksDB() {
           author: author,
           userId: book.userId,
           introduction: book.introduction,
+          chapters: book.chapters,
           url: book.url,
-          keywords: book.keywords,
+          // keywords: book.keywords,
           coverUrl: book.coverUrl,
         },
       };

@@ -16,15 +16,17 @@ export default function userReducer(state = initialState, action) {
     case ACTIONS.FETCH_USER_SUCCESS:
       localStorage.setItem("currentUser", JSON.stringify(payload.user));
       localStorage.setItem("token", payload.token);
+      const { user, token } = payload;
       return {
         ...state,
         loading: false,
-        currentUser: payload.user,
-        token: payload.token,
+        currentUser: user,
+        token: token,
         error: "",
       };
     case ACTIONS.FETCH_USER_FAILURE:
-      return { ...state, loading: false, error: payload.error };
+      const { error } = payload;
+      return { ...state, loading: false, error: error };
     case ACTIONS.LOG_OUT:
       localStorage.removeItem("currentUser");
       localStorage.removeItem("token");

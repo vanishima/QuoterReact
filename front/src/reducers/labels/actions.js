@@ -51,11 +51,11 @@ export const fetchLabels = () => {
 };
 
 export const addLabel = label => {
-  return { type: ACTIONS.ADD_LABEL, payload: label };
+  return { type: ACTIONS.ADD_LABEL, payload: { label } };
 };
 
 export const removeLabel = label => {
-  return { type: ACTIONS.REMOVE_LABEL, payload: label };
+  return { type: ACTIONS.REMOVE_LABEL, payload: { label } };
 };
 
 export const createLabel = label => {
