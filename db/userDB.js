@@ -100,6 +100,8 @@ function UserDB() {
       const col = client.db(DB_NAME).collection(COL_NAME_USER);
       console.log(COL_NAME_USER, "Collection ready, createOne:", tag, userId);
 
+      tag.lastUsedAt = new Date(tag.lastUsedAt);
+
       const res = await col.updateOne(
         { _id: ObjectId(userId) },
         { $addToSet: { tags: tag } }

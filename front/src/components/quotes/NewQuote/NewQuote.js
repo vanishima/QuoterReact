@@ -30,6 +30,7 @@ const NewQuote = ({
   currentAuthor,
   currentBook,
   currentTags,
+  currentChapter,
 }) => {
   const dispatch = useDispatch();
 
@@ -107,6 +108,7 @@ const NewQuote = ({
         author: { _id: currentAuthor._id, name: currentAuthor.name },
         book: { _id: currentBook._id, title: currentBook.title },
         user: { _id: user.id, name: user.name },
+        chapter: currentChapter,
       };
       console.log("newQuote", newQuote);
       dispatch(createQuote(newQuote));
@@ -161,6 +163,7 @@ const mapStateToProps = (state, ownProps) => ({
   currentLabels: state.labels.currentLabels,
   currentAuthor: state.authors.currentAuthor,
   currentBook: state.books.currentBook,
+  currentChapter: state.books.currentChapter,
   currentTags: state.tags.currentTags,
   ...ownProps,
 });

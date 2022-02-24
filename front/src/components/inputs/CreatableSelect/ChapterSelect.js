@@ -14,7 +14,7 @@ const ChapterSelect = ({
 }) => {
   const dispatch = useDispatch();
   //   console.group("ChapterSelect");
-  //   console.log("default", currentChapter, currentBook);
+  console.log("default", currentChapter, chapters);
   //   console.log("chapters", chapters);
   console.groupEnd();
 

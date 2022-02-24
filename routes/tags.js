@@ -3,15 +3,19 @@ let router = express.Router();
 
 const auth = require("../middleware/auth");
 const User = require("../db/userDB.js");
+const Quotes = require("../db/quotesDB");
 const { ObjectId } = require("mongodb");
 
 /* GET tags */
 router.get("/", auth, async function (req, res) {
   console.log("Got request for /tags", req.user);
+  const userId = req.user.id;
 
   try {
-    const user = await User.findOne({ _id: ObjectId(req.user.id) });
-    res.status(200).json({ tags: user.tags });
+    // const user = await User.findOne({ _id: ObjectId(req.user.id) });
+    // res.status(200).json({ tags: user.tags });
+    const tags = await Quotes.getUsedTags(userId);
+    res.status(200).json({ tags });
   } catch (e) {
     res.status(400).json({ msg: e.message });
   }

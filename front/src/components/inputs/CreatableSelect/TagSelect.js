@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { connect, useDispatch } from "react-redux";
 import CreatableSelect from "components/inputs/CreatableSelect/CreatableSelect";
+import { isoDateWithoutTimezone } from "api/utilsAPI";
 
 import { fetchTags, addTag, removeTag, createTag } from "reducers/tags/actions";
 
@@ -24,7 +25,11 @@ const TagSelect = ({
 
   const handleCreate = tag => {
     // console.log("handleCreate", tag);
-    const newTag = { label: tag, order: 0 };
+    const newTag = {
+      label: tag,
+      order: 0,
+      lastUsedAt: isoDateWithoutTimezone(new Date()),
+    };
     dispatch(createTag(newTag));
   };
 

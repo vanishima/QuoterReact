@@ -1,8 +1,5 @@
 import axios from "axios";
-import {
-  processItem,
-  processItems,
-} from "components/inputs/CreatableSelect/util";
+import { tagsMapper, tagMapper } from "./mappers";
 
 const FRONTEND =
   process.env.NODE_ENV === "production"
@@ -35,10 +32,9 @@ export const fetchTags = () => {
       })
       .then(async res => {
         console.log("got tag data", res.data);
-
         dispatch({
           type: ACTIONS.FETCH_TAGS_SUCCESS,
-          payload: { tags: processItems(res.data.tags, "label") },
+          payload: { tags: tagsMapper(res.data.tags) },
         });
       })
       .catch(err => {
@@ -76,7 +72,7 @@ export const createTag = tag => {
         console.groupEnd();
         dispatch({
           type: ACTIONS.CREATE_TAG_SUCCESS,
-          payload: { tag: processItem(tag, "label") },
+          payload: { tag: tagMapper(tag) },
         });
       })
       .catch(err => {

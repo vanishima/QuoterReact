@@ -324,6 +324,7 @@ function QuotesDB() {
           book: quote.book,
           user: quote.user,
           title: quote.title,
+          chapter: quote.chapter,
           text: quote.text,
           date: quote.date,
           labels: quote.labels,
@@ -342,6 +343,78 @@ function QuotesDB() {
       } else {
         return { _id: result.upsertedId };
       }
+    } finally {
+      console.log("Closing the connection");
+      client.close();
+    }
+  };
+
+  myDB.getUsedTags = async userId => {
+    const client = new MongoClient(uri, { useUnifiedTopology: true });
+
+    try {
+      await client.connect();
+
+      const db = client.db(DB_NAME);
+      const quotesCol = db.collection(COL_QUOTES);
+      console.log("Collection ready, querying with ", userId);
+
+      let query_arr = [
+        {
+          $match: {
+            $and: [
+              {
+                "user._id": new ObjectId(userId),
+              },
+              {
+                tags: {
+                  $ne: [""],
+                },
+              },
+            ],
+          },
+        },
+        {
+          $project: {
+            tags: 1,
+            date: 1,
+          },
+        },
+        {
+          $unwind: {
+            path: "$tags",
+            preserveNullAndEmptyArrays: false,
+          },
+        },
+        {
+          $match: {
+            tags: {
+              $ne: "",
+            },
+          },
+        },
+        {
+          $sort: {
+            date: -1,
+          },
+        },
+        {
+          $group: {
+            _id: "$tags",
+            label: {
+              $first: "$tags",
+            },
+            lastUsedAt: {
+              $first: "$date",
+            },
+            count: { $sum: 1 },
+          },
+        },
+      ];
+
+      const usedTags = await quotesCol.aggregate(query_arr).toArray();
+
+      return usedTags;
     } finally {
       console.log("Closing the connection");
       client.close();

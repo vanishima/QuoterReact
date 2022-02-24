@@ -132,12 +132,11 @@ export const createChapter = (chapter, book) => {
     console.group("createChapter", chapter);
     chapter = processItem(chapter, "title");
     dispatch({
-      type: ACTIONS.ADD_CHAPTER,
+      type: ACTIONS.SET_CHAPTER,
       payload: { chapter },
     });
     book.chapters = book.chapters ? [...book.chapters, chapter] : [chapter];
     console.log("book", book);
-    // dispatch({ type: ACTIONS.LOADING });
     console.log("ready to update book");
     await axios
       .post(FRONTEND + UPDATE_BOOK_URL, book, {
