@@ -7,6 +7,7 @@ import {
   setAuthor,
   createAuthor,
 } from "reducers/authors/actions";
+import { resetBook } from "reducers/books/actions";
 
 const AuthorSelect = ({
   className,
@@ -16,6 +17,7 @@ const AuthorSelect = ({
   currentAuthor,
 }) => {
   const dispatch = useDispatch();
+  console.log("currentAuthor", currentAuthor);
   // console.group("AuthorSelect");
   // console.log("default", submitting, isFetching, currentAuthor);
   // console.log("authors", authors);
@@ -31,19 +33,29 @@ const AuthorSelect = ({
     dispatch(createAuthor({ name: authorName }));
   };
 
-  const changeAuthor = author => {
-    // console.log("changeAuthor", author);
+  const handleChange = author => {
+    // console.log("handleChange", author);
     dispatch(setAuthor(author));
+    dispatch(resetBook);
+  };
+
+  const handleClear = () => {
+    console.log("handleClear in BookSelect");
+    dispatch(setAuthor(undefined));
+    dispatch(resetBook);
   };
 
   return (
     <CreatableSelect
       className={`${className}`}
+      placeholder="Select Author..."
       options={authors}
       value={currentAuthor}
       createOption={handleCreate}
-      changeOption={changeAuthor}
+      changeOption={handleChange}
+      clearOption={handleClear}
       isDisabled={submitting}
+      isClearable
       // isLoading={isFetching}
     />
   );

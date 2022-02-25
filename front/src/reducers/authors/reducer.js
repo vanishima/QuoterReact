@@ -3,7 +3,7 @@ import { ACTIONS } from "./actions";
 export const initialState = {
   authors: [],
   loading: false,
-  currentAuthor: {},
+  currentAuthor: undefined,
 };
 
 export default function authorsReducer(state = initialState, action) {

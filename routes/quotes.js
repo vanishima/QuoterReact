@@ -73,6 +73,24 @@ router.get("/books", auth, async function (req, res) {
   }
 });
 
+/* GET recent books */
+router.get("/quotedbooks", auth, async function (req, res) {
+  console.log("Got request for /quotes/books");
+
+  const userId = req.user.id;
+
+  try {
+    const books = await QuotesDB.getQuotedBooks(userId);
+    console.log("Got books", books);
+
+    res.status(200).json({
+      books,
+    });
+  } catch (e) {
+    res.status(400).json({ msg: e.message });
+  }
+});
+
 /* GET recent authors */
 router.get("/authors", auth, async function (req, res) {
   console.log("Got request for /quotes/authors");
@@ -173,13 +191,6 @@ router.post("/update", auth, async function (req, res) {
   quote.book._id = ObjectId(quote.book._id);
 
   quote.date = new Date(quote.date);
-
-  // quote.memo = quote.memo.map(m => {
-  //   m._id = new ObjectId();
-  //   m.user._id = ObjectId(m.user._id);
-  //   m.date = new Date(m.date);
-  //   return m;
-  // });
 
   quote.memos = quote.memos.map(m => {
     m._id = new ObjectId();

@@ -1,8 +1,14 @@
 import React, { useEffect } from "react";
+import _ from "lodash";
 import { connect, useDispatch } from "react-redux";
 import CreatableSelect from "components/inputs/CreatableSelect/CreatableSelect";
 
-import { fetchBooks, setBook, createBook } from "reducers/books/actions";
+import {
+  fetchBooks,
+  setBook,
+  createBook,
+  resetBook,
+} from "reducers/books/actions";
 import { setAuthor } from "reducers/authors/actions";
 
 const BookSelect = ({
@@ -16,6 +22,7 @@ const BookSelect = ({
 }) => {
   const dispatch = useDispatch();
   // console.group("BookSelect");
+  console.log("currentBook", currentBook);
   // console.log("default", submitting, isFetching, currentBook, currentAuthor);
   // console.log("books", books);
   // console.groupEnd();
@@ -26,14 +33,18 @@ const BookSelect = ({
   }, [dispatch]);
 
   const handleCreate = bookTitle => {
-    const newBook = { title: bookTitle, author: currentAuthor };
-    // console.log("createBook", newBook);
-    dispatch(createBook(newBook));
+    if (_.isEmpty(currentAuthor)) {
+      alert("Please select an author first");
+    } else {
+      const newBook = { title: bookTitle, author: currentAuthor };
+      // console.log("createBook", newBook);
+      dispatch(createBook(newBook));
+    }
   };
 
   // set book to selected and choose author based on _id
-  const changeBook = book => {
-    console.log("changeBook", book);
+  const handleChange = book => {
+    console.log("handleChange", book);
     const newAuthor = authors.filter(
       author => author._id === book.author._id
     )[0];
@@ -42,14 +53,21 @@ const BookSelect = ({
     dispatch(setAuthor(newAuthor));
   };
 
+  const handleClear = () => {
+    dispatch(resetBook);
+  };
+
   return (
     <CreatableSelect
       className={`${className}`}
+      placeholder="Select Book..."
       options={books}
       value={currentBook}
       createOption={handleCreate}
-      changeOption={changeBook}
+      changeOption={handleChange}
+      clearOption={handleClear}
       isDisabled={submitting}
+      isClearable
       // isLoading={isFetching}
     />
   );

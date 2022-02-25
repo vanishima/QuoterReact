@@ -13,6 +13,7 @@ export const ACTIONS = {
   ADD_TAG: "ADD_TAG",
   REMOVE_TAG: "REMOVE_TAG",
   CREATE_TAG_SUCCESS: "CREATE_TAG_SUCCESS",
+  RESET_TAGS: "RESET_TAGS",
 };
 
 const FETCH_TAG_URL = "/tags";
@@ -52,6 +53,10 @@ export const addTag = tag => {
 
 export const removeTag = tag => {
   return { type: ACTIONS.REMOVE_TAG, payload: { tag } };
+};
+
+export const resetTags = {
+  type: ACTIONS.RESET_TAGS,
 };
 
 export const createTag = tag => {

@@ -3,8 +3,8 @@ import { ACTIONS } from "./actions";
 export const initialState = {
   books: [],
   loading: false,
-  currentBook: {},
-  currentChapter: {},
+  currentBook: undefined,
+  currentChapter: undefined,
 };
 
 export default function booksReducer(state = initialState, action) {
@@ -21,7 +21,7 @@ export default function booksReducer(state = initialState, action) {
       };
     case ACTIONS.SET_BOOK: {
       const { book } = payload;
-      return { ...state, currentBook: book };
+      return { ...state, currentBook: book, currentChapter: undefined };
     }
     case ACTIONS.CREATE_BOOK_SUCCESS: {
       const { book } = payload;
@@ -85,10 +85,12 @@ export default function booksReducer(state = initialState, action) {
     case ACTIONS.RESET_CHAPTER:
       return {
         ...state,
-        currentChapter: {},
+        currentChapter: undefined,
       };
     case ACTIONS.CREATE_CHAPTER_FAILURE:
-      return { ...state, currentChapter: {} };
+      return { ...state, currentChapter: undefined };
+    case ACTIONS.RESET_BOOK:
+      return { ...state, currentBook: undefined, currentChapter: undefined };
     default:
       return state;
   }

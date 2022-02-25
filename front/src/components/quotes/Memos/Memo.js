@@ -12,7 +12,7 @@ const Memo = ({ memo }) => {
   const dispatch = useDispatch();
 
   const handleEdit = () => {
-    console.log("editing");
+    // console.log("editing");
     setEditing(true);
   };
 
@@ -21,14 +21,13 @@ const Memo = ({ memo }) => {
   };
 
   const handleDelete = () => {
-    console.log("deleting", memo);
     dispatch(removeMemo(memo._id));
   };
 
   const handleSave = () => {
-    console.log("updating memo", text);
+    // console.log("updating memo", text);
     const newMemo = { ...memo, text: text };
-    console.log("newMemo", newMemo);
+    // console.log("newMemo", newMemo);
     dispatch(updateMemo(newMemo));
     setEditing(false);
   };

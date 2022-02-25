@@ -5,15 +5,30 @@ const auth = require("../middleware/auth");
 const BooksDB = require("../db/booksDB.js");
 
 /* GET books */
+// router.get("/", auth, async function (req, res) {
+//   console.log("Got request for /books", req.user);
+
+//   const authorId = req.query.authorId || "undefined";
+//   const page = +req.query.page || 1;
+//   const pageSize = +req.query.pageSize || null;
+
+//   try {
+//     const books = await BooksDB.getAll(authorId, pageSize, page);
+
+//     res.status(200).json({ books });
+//   } catch (e) {
+//     res.status(400).json({ msg: e.message });
+//   }
+// });
+
+/* GET books */
 router.get("/", auth, async function (req, res) {
   console.log("Got request for /books", req.user);
 
-  const authorId = req.query.authorId || "undefined";
-  const page = +req.query.page || 1;
-  const pageSize = +req.query.pageSize || null;
+  const userId = req.user.id;
 
   try {
-    const books = await BooksDB.getAll(authorId, pageSize, page);
+    const books = await BooksDB.getRecentBooks(userId);
 
     res.status(200).json({ books });
   } catch (e) {

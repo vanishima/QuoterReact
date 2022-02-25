@@ -1,8 +1,6 @@
 import axios from "axios";
-import {
-  processItem,
-  processItems,
-} from "components/inputs/CreatableSelect/util";
+import { processItem } from "components/inputs/CreatableSelect/util";
+import { booksMapper } from "./mappers";
 
 const FRONTEND =
   process.env.NODE_ENV === "production"
@@ -21,9 +19,10 @@ export const ACTIONS = {
   ADD_CHAPTER: "ADD_CHAPTER",
   RESET_CHAPTER: "RESET_CHAPTER",
   SET_CHAPTER: "SET_CHAPTER",
+  RESET_BOOK: "RESET_BOOK",
 };
 
-const FETCH_BOOK_URL = "/books";
+const FETCH_QUOTED_BOOKS_URL = "/books";
 const UPDATE_BOOK_URL = "/books/update";
 
 export const fetchBooks = () => {
@@ -32,7 +31,8 @@ export const fetchBooks = () => {
     dispatch({ type: ACTIONS.LOADING });
 
     axios
-      .get(FRONTEND + FETCH_BOOK_URL, {
+      // .get(FRONTEND + FETCH_BOOK_URL, {
+      .get(FRONTEND + FETCH_QUOTED_BOOKS_URL, {
         headers: {
           "x-auth-token": localStorage.getItem("token"),
         },
@@ -43,7 +43,7 @@ export const fetchBooks = () => {
 
         dispatch({
           type: ACTIONS.FETCH_BOOKS_SUCCESS,
-          payload: { books: processItems(res.data.books, "title") },
+          payload: { books: booksMapper(res.data.books) },
         });
       })
       .catch(err => {
@@ -57,6 +57,10 @@ export const fetchBooks = () => {
 
 export const setBook = book => {
   return { type: ACTIONS.SET_BOOK, payload: { book } };
+};
+
+export const resetBook = {
+  type: ACTIONS.RESET_BOOK,
 };
 
 export const createBook = book => {

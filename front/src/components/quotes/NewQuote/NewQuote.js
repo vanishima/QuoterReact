@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { useDispatch } from "react-redux";
+import _ from "lodash";
 import {
   updateInput,
   initializeQuote,
@@ -12,11 +13,12 @@ import AuthorSelect from "../../inputs/CreatableSelect/AuthorSelect";
 import BookSelect from "../../inputs/CreatableSelect/BookSelect";
 import ChapterSelect from "components/inputs/CreatableSelect/ChapterSelect";
 import Toolbar from "./Toolbar/Toolbar";
-import Label from "./Label";
-import Tag from "./Tag";
-import Memo from "./Memo";
+import Labels from "components/quotes/Labels/Labels";
+import Tags from "components/quotes/Tags/Tags";
+import Memos from "components/quotes/Memos/Memos";
 
 import "./styles/NewQuote.css";
+import { isoDateWithoutTimezone } from "api/utilsAPI";
 
 const NEW_QUOTE = "Write a new quote...";
 const TITLE = "Title";
@@ -25,7 +27,6 @@ const user = JSON.parse(localStorage.getItem("currentUser"));
 const NewQuote = ({
   editing,
   quote,
-  memos,
   currentLabels,
   currentAuthor,
   currentBook,
@@ -41,68 +42,22 @@ const NewQuote = ({
     }
   };
 
-  const renderTags = () => {
-    if (currentTags)
-      return (
-        <div className="tags mb-2">
-          {currentTags.map((tag, i) => (
-            <div key={i}>
-              <Tag tag={tag} />
-            </div>
-          ))}
-        </div>
-      );
-  };
-
-  const renderLabels = () => {
-    if (currentLabels)
-      return (
-        <div className="labels mb-2">
-          {currentLabels.map((label, i) => (
-            <div key={i}>
-              <Label label={label} />
-            </div>
-          ))}
-        </div>
-      );
-  };
-
-  const renderAuthorBook = () => {
-    if (editing) {
-      return (
-        <div className="author-book-bar mb-2">
-          <AuthorSelect className="half" />
-          <BookSelect className="half" />
-        </div>
-      );
-    }
-  };
-
-  const renderMemos = () => {
-    if (memos) {
-      return (
-        <div className="memos">
-          {memos.map((memo, i) => (
-            <div key={memo._id}>
-              <Memo memo={memo} />
-            </div>
-          ))}
-        </div>
-      );
-    }
-  };
-
   const handleInputChange = e => {
     dispatch(updateInput(e.target.name, e.target.value));
   };
 
   const handleSubmit = () => {
     console.log("handleSubmit");
-    if (!currentAuthor || !currentBook || quote.text.length === 0) {
+    if (
+      _.isEmpty(currentAuthor) ||
+      _.isEmpty(currentBook) ||
+      quote.text.length === 0
+    ) {
       alert("Please fill out all required inputs");
     } else {
       const newQuote = {
         ...quote,
+        date: isoDateWithoutTimezone(new Date()),
         labels: getLabelArray(currentLabels),
         tags: getLabelArray(currentTags),
         author: { _id: currentAuthor._id, name: currentAuthor.name },
@@ -133,11 +88,15 @@ const NewQuote = ({
           placeholder={NEW_QUOTE}
           onClick={toggleEdit}
           onChange={handleInputChange}
+          required
         />
-        {renderTags()}
-        {renderLabels()}
-        {renderAuthorBook()}
-        {renderMemos()}
+        <Tags tags={currentTags} />
+        <Labels labels={currentLabels} />
+        <div className="author-book-bar mb-2">
+          <AuthorSelect className="half" />
+          <BookSelect className="half" />
+        </div>
+        <Memos memos={quote.memos} />
         <Toolbar handleSubmit={handleSubmit} />
       </div>
     );
@@ -159,7 +118,6 @@ const mapStateToProps = (state, ownProps) => ({
   loading: state.quotes.loading,
   editing: state.quotes.editing,
   quote: state.quotes.newQuote,
-  memos: state.quotes.newQuote.memos,
   currentLabels: state.labels.currentLabels,
   currentAuthor: state.authors.currentAuthor,
   currentBook: state.books.currentBook,

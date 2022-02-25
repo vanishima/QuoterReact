@@ -5,21 +5,24 @@ import AsyncCreatableSelect from "react-select/async-creatable";
 const CreatableSelect = props => {
   const {
     className,
+    placeholder = "Select...",
     options,
     changeOption,
     createOption,
     removeOption,
+    clearOption,
     value,
     isDisabled,
     isClearable,
     isLoading,
     isMulti,
+    autoFocus,
   } = props;
 
   useEffect(() => {}, [options, value]);
 
   const filterOptions = inputValue => {
-    if (options.length > 0) {
+    if (options?.length > 0) {
       return options.filter(i =>
         i.value.toLowerCase().includes(inputValue.toLowerCase())
       );
@@ -35,9 +38,10 @@ const CreatableSelect = props => {
     });
 
   const handleChange = async (newValue, actionMeta) => {
-    // console.log("handleChange", newValue);
-    // console.log("actionMeta", actionMeta);
+    console.log("handleChange", newValue);
+    console.log("actionMeta", actionMeta);
     if (actionMeta.action === "select-option") {
+      console.log("select-option");
       changeOption(
         Array.isArray(newValue) ? newValue[newValue.length - 1] : newValue
       );
@@ -48,6 +52,8 @@ const CreatableSelect = props => {
     } else if (actionMeta.action === "create-option") {
       // console.log("create newValue", actionMeta);
       await createOption(actionMeta.option.label);
+    } else if (actionMeta.action === "clear") {
+      clearOption();
     }
   };
 
@@ -58,12 +64,14 @@ const CreatableSelect = props => {
       isClearable={isClearable}
       isLoading={isLoading}
       isMulti={isMulti}
+      placeholder={placeholder}
       cacheOptions
       defaultOptions={options}
       loadOptions={promiseOptions}
       onChange={handleChange}
       defaultValue={value}
       value={value}
+      autoFocus={autoFocus}
     />
   );
 };
@@ -71,6 +79,7 @@ const CreatableSelect = props => {
 CreatableSelect.propTypes = {
   props: PropTypes.shape({
     options: PropTypes.array.isRequired,
+    placeholder: PropTypes.string,
     changeOption: PropTypes.func.isRequired,
     createOption: PropTypes.func.isRequired,
     removeOption: PropTypes.func,
@@ -79,6 +88,7 @@ CreatableSelect.propTypes = {
     isClearable: PropTypes.bool,
     isLoading: PropTypes.bool,
     isMulti: PropTypes.bool,
+    autoFocus: PropTypes.bool,
   }),
 };
 

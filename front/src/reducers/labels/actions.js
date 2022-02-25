@@ -16,6 +16,7 @@ export const ACTIONS = {
   ADD_LABEL: "ADD_LABEL",
   REMOVE_LABEL: "REMOVE_LABEL",
   CREATE_LABEL_SUCCESS: "CREATE_LABEL_SUCCESS",
+  RESET_LABELS: "RESET_LABELS",
 };
 
 const FETCH_LABEL_URL = "/labels";
@@ -56,6 +57,10 @@ export const addLabel = label => {
 
 export const removeLabel = label => {
   return { type: ACTIONS.REMOVE_LABEL, payload: { label } };
+};
+
+export const resetLabels = {
+  type: ACTIONS.RESET_LABELS,
 };
 
 export const createLabel = label => {

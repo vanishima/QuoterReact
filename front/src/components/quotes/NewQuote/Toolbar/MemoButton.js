@@ -5,7 +5,7 @@ import { GrNotes } from "react-icons/gr";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import { Popover } from "react-bootstrap";
 
-import EditMemo from "../EditMemo";
+import EditMemo from "../../Memos/EditMemo";
 
 import { isoDateWithoutTimezone } from "api/utilsAPI";
 import "./styles/MemoButton.css";

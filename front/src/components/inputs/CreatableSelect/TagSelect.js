@@ -3,7 +3,13 @@ import { connect, useDispatch } from "react-redux";
 import CreatableSelect from "components/inputs/CreatableSelect/CreatableSelect";
 import { isoDateWithoutTimezone } from "api/utilsAPI";
 
-import { fetchTags, addTag, removeTag, createTag } from "reducers/tags/actions";
+import {
+  fetchTags,
+  addTag,
+  removeTag,
+  createTag,
+  resetTags,
+} from "reducers/tags/actions";
 
 const TagSelect = ({
   className,
@@ -42,16 +48,24 @@ const TagSelect = ({
     dispatch(removeTag(tag));
   };
 
+  const handleClear = () => {
+    console.log("TagSelect handleClear");
+    dispatch(resetTags);
+  };
+
   return (
     <CreatableSelect
+      className={`tag-select ${className}`}
+      placeholder="Select Tags..."
       isClearable={true}
       isMulti={true}
-      className={`tag-select ${className}`}
+      autoFocus={true}
       options={tags}
       value={currentTags}
       createOption={handleCreate}
       changeOption={handleChange}
       removeOption={handleRemove}
+      clearOption={handleClear}
       //   isLoading={isFetching}
       isDisabled={submitting}
     />

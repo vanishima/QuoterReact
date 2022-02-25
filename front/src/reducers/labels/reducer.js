@@ -30,6 +30,11 @@ export default function labelsReducer(state = initialState, action) {
         currentLabels: state.currentLabels.filter(l => l.label !== label.label),
       };
     }
+    case ACTIONS.RESET_LABELS:
+      return {
+        ...state,
+        currentLabels: [],
+      };
     case ACTIONS.CREATE_LABEL_SUCCESS: {
       const { label } = payload;
       return {

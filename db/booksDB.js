@@ -9,6 +9,29 @@ function BooksDB() {
 
   myDB.getAll = async (authorId, pageSize, page) => {
     const client = new MongoClient(uri, { useUnifiedTopology: true });
+
+    try {
+      await client.connect();
+
+      const db = client.db(DB_NAME);
+      const booksCol = db.collection(COL_BOOKS);
+      console.log("Collection ready, querying with ", authorId, pageSize, page);
+
+      let query = {};
+
+      const books = await booksCol.find(query).sort({ _id: -1 }).toArray();
+
+      console.log("Found books", books.length);
+
+      return books;
+    } finally {
+      console.log("Closing the connection");
+      client.close();
+    }
+  };
+
+  myDB.getRecentBooks = async userId => {
+    const client = new MongoClient(uri, { useUnifiedTopology: true });
     console.log("Connecting to the db");
 
     try {
@@ -16,15 +39,68 @@ function BooksDB() {
       console.log("Connected!");
 
       const db = client.db(DB_NAME);
-      const booksCol = db.collection(COL_BOOKS);
-      console.log("Collection ready, querying with ", authorId, pageSize, page);
+      const col = db.collection(COL_BOOKS);
+      console.log("Collection ready, querying with ", userId);
 
-      let query = {};
-      if (authorId !== "undefined") {
-        query = { "author._id": ObjectId(authorId) };
-      }
+      const query_arr = [
+        {
+          $match: {
+            userId: new ObjectId(userId),
+          },
+        },
+        {
+          $lookup: {
+            from: "Quotes",
+            localField: "_id",
+            foreignField: "book._id",
+            as: "quotes",
+          },
+        },
+        {
+          $unwind: {
+            path: "$quotes",
+            includeArrayIndex: "order",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $group: {
+            _id: "$_id",
+            title: {
+              $first: "$title",
+            },
+            url: {
+              $first: "$url",
+            },
+            author: {
+              $first: "$author",
+            },
+            keywords: {
+              $first: "$keywords",
+            },
+            introduction: {
+              $first: "$introduction",
+            },
+            chapters: {
+              $first: "$chapters",
+            },
+            coverUrl: {
+              $first: "$coverUrl",
+            },
+            userId: {
+              $first: "$userId",
+            },
+            quotesCount: {
+              $sum: 1,
+            },
+            lastUsedAt: {
+              $last: "$quotes.date",
+            },
+          },
+        },
+      ];
 
-      const books = await booksCol.find(query).sort({ _id: -1 }).toArray();
+      const books = await col.aggregate(query_arr).toArray();
 
       console.log("Found books", books.length);
 
@@ -103,11 +179,11 @@ function BooksDB() {
           title: book.title,
           author: author,
           userId: book.userId,
-          introduction: book.introduction,
-          chapters: book.chapters,
-          url: book.url,
-          // keywords: book.keywords,
-          coverUrl: book.coverUrl,
+          introduction: book.introductionb || "",
+          chapters: book.chapters || [],
+          url: book.url || "",
+          // keywords: book.keywors,
+          coverUrl: book.coverUrl || "",
         },
       };
 
@@ -183,11 +259,6 @@ function BooksDB() {
   };
 
   return myDB;
-}
-
-function getTagsArray(tags) {
-  let arr = tags.split(" ");
-  return arr.filter(i => i !== "");
 }
 
 module.exports = BooksDB();

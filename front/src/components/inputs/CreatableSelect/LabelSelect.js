@@ -7,6 +7,7 @@ import {
   addLabel,
   removeLabel,
   createLabel,
+  resetLabels,
 } from "reducers/labels/actions";
 
 const LabelSelect = ({
@@ -41,16 +42,23 @@ const LabelSelect = ({
     dispatch(removeLabel(label));
   };
 
+  const handleClear = () => {
+    dispatch(resetLabels);
+  };
+
   return (
     <CreatableSelect
+      className={`label-select ${className}`}
+      placeholder="Select Labels..."
       isClearable={true}
       isMulti={true}
-      className={`label-select ${className}`}
+      autoFocus={true}
       options={labels}
       value={currentLabels}
       createOption={handleCreate}
       changeOption={handleChange}
       removeOption={handleRemove}
+      clearOption={handleClear}
       // isLoading={isFetching}
       isDisabled={submitting}
     />

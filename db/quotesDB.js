@@ -421,6 +421,84 @@ function QuotesDB() {
     }
   };
 
+  myDB.getQuotedBooks = async userId => {
+    const client = new MongoClient(uri, { useUnifiedTopology: true });
+
+    try {
+      await client.connect();
+
+      const db = client.db(DB_NAME);
+      const quotesCol = db.collection(COL_QUOTES);
+
+      let query_arr = [
+        {
+          $match: {
+            "user._id": new ObjectId(userId),
+          },
+        },
+        {
+          $project: {
+            book: 1,
+            date: 1,
+            author: 1,
+          },
+        },
+        {
+          $sort: {
+            date: 1,
+          },
+        },
+        {
+          $lookup: {
+            from: "Books",
+            localField: "book._id",
+            foreignField: "_id",
+            as: "bookDetail",
+          },
+        },
+        {
+          $unwind: {
+            path: "$bookDetail",
+            includeArrayIndex: "string",
+            preserveNullAndEmptyArrays: false,
+          },
+        },
+        {
+          $group: {
+            _id: "$book._id",
+            title: {
+              $first: "$book.title",
+            },
+            author: {
+              $first: "$author",
+            },
+            chapters: {
+              $first: "$bookDetail.chapters",
+            },
+            lastUsedAt: {
+              $last: "$date",
+            },
+            count: {
+              $sum: 1,
+            },
+          },
+        },
+        {
+          $sort: {
+            date: -1,
+          },
+        },
+      ];
+
+      const usedTags = await quotesCol.aggregate(query_arr).toArray();
+
+      return usedTags;
+    } finally {
+      console.log("Closing the connection");
+      client.close();
+    }
+  };
+
   return myDB;
 }
 

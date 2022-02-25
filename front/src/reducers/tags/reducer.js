@@ -28,6 +28,11 @@ export default function tagsReducer(state = initialState, action) {
         currentTags: state.currentTags.filter(t => t.label !== tag.label),
       };
     }
+    case ACTIONS.RESET_TAGS:
+      return {
+        ...state,
+        currentTags: [],
+      };
     case ACTIONS.CREATE_TAG_SUCCESS: {
       console.log("CREATE_TAG_SUCCESS", payload);
       const { tag } = payload;

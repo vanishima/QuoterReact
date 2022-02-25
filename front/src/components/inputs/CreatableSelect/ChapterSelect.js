@@ -3,7 +3,11 @@ import _ from "lodash";
 import { connect, useDispatch } from "react-redux";
 import CreatableSelect from "components/inputs/CreatableSelect/CreatableSelect";
 
-import { createChapter, setChapter } from "reducers/books/actions";
+import {
+  createChapter,
+  setChapter,
+  resetChapter,
+} from "reducers/books/actions";
 
 const ChapterSelect = ({
   className,
@@ -14,9 +18,9 @@ const ChapterSelect = ({
 }) => {
   const dispatch = useDispatch();
   //   console.group("ChapterSelect");
-  console.log("default", currentChapter, chapters);
+  // console.log("default", currentChapter, chapters);
   //   console.log("chapters", chapters);
-  console.groupEnd();
+  // console.groupEnd();
 
   const handleCreate = chapterTitle => {
     const newChapter = { title: chapterTitle, order: 0 };
@@ -29,14 +33,20 @@ const ChapterSelect = ({
     dispatch(setChapter(chapter));
   };
 
+  const handleClear = () => {
+    dispatch(resetChapter());
+  };
+
   return (
     <CreatableSelect
-      isClearable={true}
       className={`${className}`}
+      placeholder="Select chapter..."
+      isClearable={true}
       options={chapters}
       value={currentChapter}
       createOption={handleCreate}
       changeOption={handleChange}
+      clearOption={handleClear}
       isDisabled={submitting || _.isEmpty(currentBook)}
     />
   );
