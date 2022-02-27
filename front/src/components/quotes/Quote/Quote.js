@@ -4,38 +4,29 @@ import { connect } from "react-redux";
 // Elements
 import TextIndentation from "components/utils/TextIndentation";
 import QuoteImageModal from "components/quotes/Quoteimage/QuoteImageModal";
+import Toolbar from "../NewQuote/Toolbar/Toolbar";
 
 // API
 import { getRelativeTime } from "api/utilsAPI";
 import "./styles/Quote.css";
+import Memos from "../Memos/Memos";
+import Tags from "../Tags/Tags";
+import QuoteEditing from "./QuoteEditing";
 
 const Quote = props => {
-  const { quote, book, author, showDate, showTag, showMemo, showTitle } = props;
+  const { quote, book, author, display, activeQuote } = props;
+  const { showDate, showTag, showMemo, showTitle } = display;
+  const isEditing = activeQuote?._id === quote?._id;
+  // console.log("activeQuote", quote?._id, isEditing);
 
-  const renderTags = () => {
-    if (showTag && quote.tags && quote.tags.length > 0)
-      return (
-        <div className="quote-tags">
-          {typeof quote.tags !== "string" ? (
-            quote.tags
-              .filter(tag => tag.length > 0)
-              .map((t, i) => (
-                <a
-                  className="col-auto non-link greyText smallText tag"
-                  href="/"
-                  key={i}
-                >
-                  {t}
-                </a>
-              ))
-          ) : (
-            <div className="col-auto non-link greyText smallText tag">
-              {quote.tags}
-            </div>
-          )}
-        </div>
-      );
+  const handleSubmit = () => {
+    console.log("handleSubmit");
   };
+
+  if (isEditing) {
+    //quote={quote}
+    return <QuoteEditing />;
+  }
 
   return (
     <div className="quote card mb-3">
@@ -70,29 +61,21 @@ const Quote = props => {
               )}
             </footer>
           )}
-          {(showDate || showTag) && (
-            <div className="quoteFooter">
-              {renderTags()}
-
-              {showDate && (
-                <small className="text-muted right quote-date">
-                  {getRelativeTime(quote.date)}
-                </small>
-              )}
-            </div>
+          {showTag && <Tags tags={quote.tags} />}
+          {showDate && (
+            <small className="text-muted right quote-date">
+              {getRelativeTime(quote.date)}
+            </small>
           )}
-
-          {showMemo && Array.isArray(quote.memos) && (
-            <div className="memos">
-              {quote.memos.map(m => (
-                <div key={m._id}>
-                  - {m.text} ({getRelativeTime(m.date)})
-                </div>
-              ))}
-            </div>
-          )}
+          {showMemo && <Memos memos={quote.memos} />}
         </div>
       </div>
+      <Toolbar
+        handleSumbit={handleSubmit}
+        showText={false}
+        quoteId={quote._id}
+        isEditing={isEditing}
+      />
 
       <QuoteImageModal quote={quote} />
     </div>
@@ -104,9 +87,6 @@ Quote.propTypes = {
     quote: PropTypes.object.isRequired,
     book: PropTypes.object,
     author: PropTypes.object,
-    showDate: PropTypes.bool,
-    showTag: PropTypes.bool,
-    showMemo: PropTypes.bool,
     activeQuote: PropTypes.object,
     setActiveQuote: PropTypes.func,
     // handleDelete: PropTypes.func.isRequired,
@@ -115,10 +95,9 @@ Quote.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => ({
-  showDate: state.display.showDate,
-  showTag: state.display.showTag,
-  showMemo: state.display.showMemo,
-  showTitle: state.display.showTitle,
+  display: state.display,
+  // activeQuote: editingQuoteSelector(state),
+  activeQuote: state.quotes.activeQuote,
   ...ownProps,
   // quote: ownProps.quote,
   // book: ownProps.book,

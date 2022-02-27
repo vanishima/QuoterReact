@@ -3,7 +3,7 @@ import { ACTIONS } from "./actions";
 export const initialState = {
   showDate: false,
   showTag: true,
-  showMemo: false,
+  showMemo: true,
   showTitle: false,
   showTiles: true,
 };

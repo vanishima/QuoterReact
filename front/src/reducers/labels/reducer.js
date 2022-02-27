@@ -27,7 +27,7 @@ export default function labelsReducer(state = initialState, action) {
       const { label } = payload;
       return {
         ...state,
-        currentLabels: state.currentLabels.filter(l => l.label !== label.label),
+        currentLabels: state.currentLabels.filter(l => l !== label),
       };
     }
     case ACTIONS.RESET_LABELS:
@@ -36,11 +36,11 @@ export default function labelsReducer(state = initialState, action) {
         currentLabels: [],
       };
     case ACTIONS.CREATE_LABEL_SUCCESS: {
-      const { label } = payload;
+      const { labelOption } = payload;
       return {
         ...state,
-        labels: [label, ...state.labels],
-        currentLabels: [...state.currentLabels, label],
+        labels: [labelOption, ...state.labels],
+        currentLabels: [...state.currentLabels, labelOption.label],
         loading: false,
       };
     }

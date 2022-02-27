@@ -1,32 +1,18 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { connect, useDispatch } from "react-redux";
 import CreatableSelect from "components/inputs/CreatableSelect/CreatableSelect";
+import { processItem } from "./util";
 
-import {
-  fetchAuthors,
-  setAuthor,
-  createAuthor,
-} from "reducers/authors/actions";
+import { setAuthor, createAuthor } from "reducers/authors/actions";
 import { resetBook } from "reducers/books/actions";
 
-const AuthorSelect = ({
-  className,
-  submitting,
-  isFetching,
-  authors,
-  currentAuthor,
-}) => {
+const AuthorSelect = ({ className, submitting, authors, currentAuthor }) => {
   const dispatch = useDispatch();
   console.log("currentAuthor", currentAuthor);
   // console.group("AuthorSelect");
   // console.log("default", submitting, isFetching, currentAuthor);
   // console.log("authors", authors);
   // console.groupEnd();
-
-  useEffect(() => {
-    // console.log("fetching authors");
-    dispatch(fetchAuthors());
-  }, [dispatch]);
 
   const handleCreate = authorName => {
     // console.log("createAuthor", authorName);
@@ -50,7 +36,7 @@ const AuthorSelect = ({
       className={`${className}`}
       placeholder="Select Author..."
       options={authors}
-      value={currentAuthor}
+      value={currentAuthor && processItem(currentAuthor, "name")}
       createOption={handleCreate}
       changeOption={handleChange}
       clearOption={handleClear}

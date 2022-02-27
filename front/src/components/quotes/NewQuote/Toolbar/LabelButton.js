@@ -5,7 +5,7 @@ import LabelSelect from "components/inputs/CreatableSelect/LabelSelect";
 import "./styles/LabelButton.css";
 import { Popover } from "react-bootstrap";
 
-const LabelButton = () => {
+const LabelButton = ({ showText = true }) => {
   const ChooseLabelPopover = (
     <Popover className="choose-label-popover">
       <div>Label quote</div>
@@ -22,7 +22,7 @@ const LabelButton = () => {
     >
       <button className="btn add-label-button">
         <MdOutlineLabel size="1.5rem" />
-        <span className="button-name">Label</span>
+        {showText && <span className="button-name">Label</span>}
       </button>
     </OverlayTrigger>
   );

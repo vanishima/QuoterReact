@@ -47,12 +47,12 @@ export const fetchTags = () => {
   };
 };
 
-export const addTag = tag => {
-  return { type: ACTIONS.ADD_TAG, payload: { tag } };
+export const addTag = tagOption => {
+  return { type: ACTIONS.ADD_TAG, payload: { tag: tagOption.label } };
 };
 
-export const removeTag = tag => {
-  return { type: ACTIONS.REMOVE_TAG, payload: { tag } };
+export const removeTag = tagOption => {
+  return { type: ACTIONS.REMOVE_TAG, payload: { tag: tagOption.label } };
 };
 
 export const resetTags = {
@@ -77,7 +77,7 @@ export const createTag = tag => {
         console.groupEnd();
         dispatch({
           type: ACTIONS.CREATE_TAG_SUCCESS,
-          payload: { tag: tagMapper(tag) },
+          payload: { tagOption: tagMapper(tag) },
         });
       })
       .catch(err => {

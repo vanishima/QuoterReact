@@ -38,7 +38,7 @@ function quotesAPI() {
     }
   };
 
-  Quotes.getQuoteById = async (quoteId) => {
+  Quotes.getQuoteById = async quoteId => {
     console.log("quotesAPI.getQuoteById", quoteId);
     const resRaw = await fetch(FRONTEND + "/quotes/" + quoteId, {
       method: "GET",
@@ -57,7 +57,7 @@ function quotesAPI() {
     }
   };
 
-  Quotes.updateQuote = async (quote) => {
+  Quotes.updateQuote = async quote => {
     // console.log("quotesAPI.updateQuote", quote);
     const resRaw = await fetch(FRONTEND + "/quotes/update", {
       method: "post",
@@ -76,7 +76,7 @@ function quotesAPI() {
       alert(res.msg);
     } else {
       res.ok = true;
-      console.log("updateQuote result",res);
+      console.log("updateQuote result", res);
       return res;
     }
   };
@@ -136,7 +136,7 @@ function quotesAPI() {
     }
   };
 
-  Quotes.createQuote = async (post) => {
+  Quotes.createQuote = async post => {
     const resRaw = await fetch(FRONTEND + "/quotes/create", {
       method: "POST",
       headers: {
@@ -155,14 +155,18 @@ function quotesAPI() {
     }
   };
 
-  Quotes.deleteQuoteById = async (quoteId) => {
-    return fetch(FRONTEND + "/quotes/delete/" + quoteId, {
-      method: "POST",
-      headers: {
-        "x-auth-token": localStorage.getItem("token"),
-      },
-      mode: "cors",
-    });
+  Quotes.deleteQuoteById = async quoteId => {
+    return fetch(
+      FRONTEND + "/quotes/delete/" + quoteId,
+      {},
+      {
+        method: "POST",
+        headers: {
+          "x-auth-token": localStorage.getItem("token"),
+        },
+        mode: "cors",
+      }
+    );
   };
 
   return Quotes;

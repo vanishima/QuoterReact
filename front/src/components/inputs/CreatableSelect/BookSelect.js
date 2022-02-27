@@ -1,14 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import _ from "lodash";
 import { connect, useDispatch } from "react-redux";
 import CreatableSelect from "components/inputs/CreatableSelect/CreatableSelect";
+import { processItem } from "./util";
 
-import {
-  fetchBooks,
-  setBook,
-  createBook,
-  resetBook,
-} from "reducers/books/actions";
+import { setBook, createBook, resetBook } from "reducers/books/actions";
 import { setAuthor } from "reducers/authors/actions";
 
 const BookSelect = ({
@@ -26,11 +22,6 @@ const BookSelect = ({
   // console.log("default", submitting, isFetching, currentBook, currentAuthor);
   // console.log("books", books);
   // console.groupEnd();
-
-  useEffect(() => {
-    // console.log("fetching books");
-    dispatch(fetchBooks());
-  }, [dispatch]);
 
   const handleCreate = bookTitle => {
     if (_.isEmpty(currentAuthor)) {
@@ -62,7 +53,7 @@ const BookSelect = ({
       className={`${className}`}
       placeholder="Select Book..."
       options={books}
-      value={currentBook}
+      value={currentBook && processItem(currentBook, "title")}
       createOption={handleCreate}
       changeOption={handleChange}
       clearOption={handleClear}

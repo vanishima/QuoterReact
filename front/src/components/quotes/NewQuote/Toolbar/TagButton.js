@@ -5,7 +5,7 @@ import { Popover } from "react-bootstrap";
 import { BsTags } from "react-icons/bs";
 import "./styles/TagButton.css";
 
-const TagButton = () => {
+const TagButton = ({ showText = true, quoteId }) => {
   const addTagPopover = (
     <Popover className="choose-label-popover">
       <div>Tag quote</div>
@@ -13,16 +13,21 @@ const TagButton = () => {
     </Popover>
   );
 
+  const onToggle = () => {
+    console.log("TagButton clicked", quoteId);
+  };
+
   return (
     <OverlayTrigger
       trigger="click"
       rootClose
       placement="bottom-start"
       overlay={addTagPopover}
+      onToggle={onToggle}
     >
       <button className="btn add-label-button">
-        <BsTags size="1.5rem" />
-        <span className="button-name">Tags</span>
+        <BsTags size="1.2rem" />
+        {showText && <span className="button-name">Tags</span>}
       </button>
     </OverlayTrigger>
   );

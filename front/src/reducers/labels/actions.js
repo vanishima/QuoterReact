@@ -51,12 +51,12 @@ export const fetchLabels = () => {
   };
 };
 
-export const addLabel = label => {
-  return { type: ACTIONS.ADD_LABEL, payload: { label } };
+export const addLabel = labelOption => {
+  return { type: ACTIONS.ADD_LABEL, payload: { label: labelOption.label } };
 };
 
-export const removeLabel = label => {
-  return { type: ACTIONS.REMOVE_LABEL, payload: { label } };
+export const removeLabel = labelOption => {
+  return { type: ACTIONS.REMOVE_LABEL, payload: { label: labelOption.label } };
 };
 
 export const resetLabels = {
@@ -81,7 +81,7 @@ export const createLabel = label => {
         console.groupEnd();
         dispatch({
           type: ACTIONS.CREATE_LABEL_SUCCESS,
-          payload: { label: processItem(label, "label") },
+          payload: { labelOption: processItem(label, "label") },
         });
       })
       .catch(err => {

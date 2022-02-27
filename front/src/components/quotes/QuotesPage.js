@@ -1,13 +1,27 @@
-import React from "react";
-import { connect } from "react-redux";
+import React, { useEffect } from "react";
+import { connect, useDispatch } from "react-redux";
 
 import Layout from "components/common/Layout";
 import QuotesInfiniteScroll from "components/quotes/Quotes/QuotesInfiniteScroll/QuotesInfiniteScroll";
 import NewQuote from "components/quotes/NewQuote/NewQuote";
 
+import { fetchBooks } from "reducers/books/actions";
+import { fetchAuthors } from "reducers/authors/actions";
+import { fetchTags } from "reducers/tags/actions";
+import { fetchLabels } from "reducers/labels/actions";
+
 import "./styles/QuotesPage.css";
 
 const QuotesPage = props => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchBooks());
+    dispatch(fetchAuthors());
+    dispatch(fetchTags());
+    dispatch(fetchLabels());
+  }, [dispatch]);
+
   return (
     <Layout>
       <section className="top">

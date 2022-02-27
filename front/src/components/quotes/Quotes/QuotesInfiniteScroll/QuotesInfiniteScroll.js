@@ -23,7 +23,7 @@ const QuotesInfiniteScroll = ({
 
   // console.log("QuotesInfiniteScroll", pageSize, page, hasMore);
 
-  console.log("quotes", quotes);
+  // console.log("quotes", quotes);
   // console.log("loading", loading);
 
   const loadMoreItems = () => {

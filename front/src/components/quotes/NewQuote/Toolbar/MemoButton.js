@@ -10,7 +10,7 @@ import EditMemo from "../../Memos/EditMemo";
 import { isoDateWithoutTimezone } from "api/utilsAPI";
 import "./styles/MemoButton.css";
 
-const MemoButton = () => {
+const MemoButton = ({ showText = true }) => {
   const [text, setText] = useState("");
   const dispatch = useDispatch();
 
@@ -51,7 +51,7 @@ const MemoButton = () => {
     >
       <button className="btn add-memo-button">
         <GrNotes size="1.2rem" />
-        <span className="button-name">Memo</span>
+        {showText && <span className="button-name">Memo</span>}
       </button>
     </OverlayTrigger>
   );

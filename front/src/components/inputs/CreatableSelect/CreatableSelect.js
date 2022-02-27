@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import PropTypes from "prop-types";
 import AsyncCreatableSelect from "react-select/async-creatable";
+import { processItem } from "./util";
 
 const CreatableSelect = props => {
   const {
@@ -17,6 +18,7 @@ const CreatableSelect = props => {
     isLoading,
     isMulti,
     autoFocus,
+    menuIsOpen,
   } = props;
 
   useEffect(() => {}, [options, value]);
@@ -72,6 +74,7 @@ const CreatableSelect = props => {
       defaultValue={value}
       value={value}
       autoFocus={autoFocus}
+      menuIsOpen={menuIsOpen}
     />
   );
 };
@@ -89,6 +92,7 @@ CreatableSelect.propTypes = {
     isLoading: PropTypes.bool,
     isMulti: PropTypes.bool,
     autoFocus: PropTypes.bool,
+    menuIsOpen: PropTypes.bool,
   }),
 };
 

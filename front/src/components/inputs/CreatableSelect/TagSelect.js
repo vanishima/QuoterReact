@@ -1,15 +1,9 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { connect, useDispatch } from "react-redux";
 import CreatableSelect from "components/inputs/CreatableSelect/CreatableSelect";
 import { isoDateWithoutTimezone } from "api/utilsAPI";
 
-import {
-  fetchTags,
-  addTag,
-  removeTag,
-  createTag,
-  resetTags,
-} from "reducers/tags/actions";
+import { addTag, removeTag, createTag, resetTags } from "reducers/tags/actions";
 
 const TagSelect = ({
   className,
@@ -24,11 +18,6 @@ const TagSelect = ({
   //   console.log("tags", tags);
   console.groupEnd();
 
-  useEffect(() => {
-    // console.log("fetching tags");
-    dispatch(fetchTags());
-  }, [dispatch]);
-
   const handleCreate = tag => {
     // console.log("handleCreate", tag);
     const newTag = {
@@ -39,13 +28,13 @@ const TagSelect = ({
     dispatch(createTag(newTag));
   };
 
-  const handleChange = tag => {
+  const handleChange = tagOption => {
     // console.log("handleChange", tag);
-    dispatch(addTag(tag));
+    dispatch(addTag(tagOption));
   };
 
-  const handleRemove = tag => {
-    dispatch(removeTag(tag));
+  const handleRemove = tagOption => {
+    dispatch(removeTag(tagOption));
   };
 
   const handleClear = () => {
@@ -68,6 +57,7 @@ const TagSelect = ({
       clearOption={handleClear}
       //   isLoading={isFetching}
       isDisabled={submitting}
+      menuIsOpen={true}
     />
   );
 };

@@ -3,11 +3,12 @@ import { connect } from "react-redux";
 import { useDispatch } from "react-redux";
 import _ from "lodash";
 import {
-  updateInput,
+  updateQuoteInput,
   initializeQuote,
   createQuote,
+  toggleEditing,
 } from "reducers/quotes/actions";
-import { getLabelArray } from "./util";
+import useClickOutside from "hooks/useClickOutside";
 
 import AuthorSelect from "../../inputs/CreatableSelect/AuthorSelect";
 import BookSelect from "../../inputs/CreatableSelect/BookSelect";
@@ -34,16 +35,16 @@ const NewQuote = ({
   currentChapter,
 }) => {
   const dispatch = useDispatch();
+  const newQuoteRef = useClickOutside(() => {
+    dispatch(toggleEditing());
+  });
 
-  const toggleEdit = e => {
-    e.preventDefault();
-    if (!editing) {
-      dispatch(initializeQuote());
-    }
+  const toggleEdit = () => {
+    dispatch(initializeQuote());
   };
 
   const handleInputChange = e => {
-    dispatch(updateInput(e.target.name, e.target.value));
+    dispatch(updateQuoteInput(e.target.name, e.target.value));
   };
 
   const handleSubmit = () => {
@@ -55,24 +56,26 @@ const NewQuote = ({
     ) {
       alert("Please fill out all required inputs");
     } else {
-      const newQuote = {
+      const activeQuote = {
         ...quote,
         date: isoDateWithoutTimezone(new Date()),
-        labels: getLabelArray(currentLabels),
-        tags: getLabelArray(currentTags),
+        labels: currentLabels,
+        tags: currentTags,
         author: { _id: currentAuthor._id, name: currentAuthor.name },
         book: { _id: currentBook._id, title: currentBook.title },
         user: { _id: user.id, name: user.name },
         chapter: currentChapter,
       };
-      console.log("newQuote", newQuote);
-      dispatch(createQuote(newQuote));
+      console.log("activeQuote", activeQuote);
+      dispatch(createQuote(activeQuote));
     }
   };
 
+  // click outside to close or save
+
   if (editing) {
     return (
-      <div className="new-quote">
+      <div className="new-quote" ref={newQuoteRef}>
         <input
           name="title"
           className="inline-edit"
@@ -86,7 +89,6 @@ const NewQuote = ({
           className="inline-edit text"
           type="text"
           placeholder={NEW_QUOTE}
-          onClick={toggleEdit}
           onChange={handleInputChange}
           required
         />
@@ -117,7 +119,8 @@ const NewQuote = ({
 const mapStateToProps = (state, ownProps) => ({
   loading: state.quotes.loading,
   editing: state.quotes.editing,
-  quote: state.quotes.newQuote,
+  updating: state.quotes.updating,
+  quote: state.quotes.activeQuote,
   currentLabels: state.labels.currentLabels,
   currentAuthor: state.authors.currentAuthor,
   currentBook: state.books.currentBook,

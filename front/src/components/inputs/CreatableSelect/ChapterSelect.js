@@ -2,6 +2,7 @@ import React from "react";
 import _ from "lodash";
 import { connect, useDispatch } from "react-redux";
 import CreatableSelect from "components/inputs/CreatableSelect/CreatableSelect";
+import { processItem } from "./util";
 
 import {
   createChapter,
@@ -19,7 +20,7 @@ const ChapterSelect = ({
   const dispatch = useDispatch();
   //   console.group("ChapterSelect");
   // console.log("default", currentChapter, chapters);
-  //   console.log("chapters", chapters);
+  console.log("chapters", chapters);
   // console.groupEnd();
 
   const handleCreate = chapterTitle => {
@@ -43,7 +44,7 @@ const ChapterSelect = ({
       placeholder="Select chapter..."
       isClearable={true}
       options={chapters}
-      value={currentChapter}
+      value={currentChapter && processItem(currentChapter, "label")}
       createOption={handleCreate}
       changeOption={handleChange}
       clearOption={handleClear}

@@ -27,7 +27,7 @@ const UPDATE_BOOK_URL = "/books/update";
 
 export const fetchBooks = () => {
   return dispatch => {
-    console.group("fetchbooks");
+    // console.group("fetchbooks");
     dispatch({ type: ACTIONS.LOADING });
 
     axios
@@ -39,7 +39,7 @@ export const fetchBooks = () => {
         mode: "cors",
       })
       .then(async res => {
-        console.log("got book data", res.data);
+        // console.log("got book data", res.data);
 
         dispatch({
           type: ACTIONS.FETCH_BOOKS_SUCCESS,

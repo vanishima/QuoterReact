@@ -1,9 +1,28 @@
 .quote {
-  min-width: 200px;
   max-width: 500px;
+  min-width: 250px;
   border-radius: 20px;
   font-size: 18px;
+}
+
+.quote-card-body {
   font-family: "Georgia";
+}
+
+.quote:hover,
+.quote:focus {
+  /* box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 14px; */
+  transition: 0.4s;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.quote .option-bar > * {
+  opacity: 0;
+}
+
+.quote:hover .option-bar > * {
+  transition: 0.4s;
+  opacity: 1;
 }
 
 .card-header {

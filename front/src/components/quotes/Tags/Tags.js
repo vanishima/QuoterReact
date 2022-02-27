@@ -1,14 +1,17 @@
 import React from "react";
 import Tag from "./Tag";
+import _ from "lodash";
 
-const Tags = ({ tags }) => {
+const Tags = ({ tags = [] }) => {
   return (
     <div className="tags mb-2">
-      {tags.map((tag, i) => (
-        <div key={i}>
-          <Tag tag={tag} />
-        </div>
-      ))}
+      {tags
+        .filter(tag => tag.length > 0)
+        .map((tag, i) => (
+          <div key={i}>
+            <Tag tag={tag} />
+          </div>
+        ))}
     </div>
   );
 };

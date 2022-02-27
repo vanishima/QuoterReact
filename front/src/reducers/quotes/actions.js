@@ -1,5 +1,4 @@
 import axios from "axios";
-import { pageSizeSelector, pageSelector } from "./selectors";
 
 const FRONTEND =
   process.env.NODE_ENV === "production"
@@ -22,10 +21,18 @@ export const ACTIONS = {
   CREATE_QUOTE_FAILURE: "CREATE_QUOTE_FAILURE",
   SET_DATE: "SET_DATE",
   TOGGLE_PRIVACY: "TOGGLE_PRIVACY",
-  TOGGLE_EDITING: "TOGGLE_EDITING",
+  UPDATE_QUOTE_SUCCESS: "UPDATE_QUOTE_SUCCESS",
+  UPDATE_QUOTE_INPUT: "UPDATE_QUOTE_INPUT",
+  DELETE_QUOTE_SUCCESS: "DELETE_QUOTE_SUCCESS",
+  UPDATE_QUOTE_LIST_INPUT: "UPDATE_QUOTE_LIST_INPUT",
+  CANCEL_EDITING_QUOTE: "CANCEL_EDITING_QUOTE",
 };
 
-const CREATE_QUOTE_URL = "/quotes/update";
+export const SET_EDITING_QUOTE = "SET_EDITING_QUOTE";
+export const TOGGLE_EDITING = "TOGGLE_EDITING";
+
+const CREATE_UPDATE_QUOTE_URL = "/quotes/update";
+const DELETE_QUOTE_URL = "/quotes/delete/";
 
 // create redux action creators that return an action
 export const getQuotes = () => ({
@@ -47,13 +54,27 @@ export const getQuotesFailure = err => ({
   payload: err,
 });
 
-export const updateInput = (key, value) => ({
-  type: ACTIONS.UPDATE_INPUT,
+export const updateQuoteInput = (key, value) => ({
+  type: ACTIONS.UPDATE_QUOTE_INPUT,
   payload: { key: key, value: value },
 });
 
-export const tggleEditing = () => ({
-  type: ACTIONS.TOGGLE_EDITING,
+export const updateQuoteListInput = (key, value) => ({
+  type: ACTIONS.UPDATE_QUOTE_LIST_INPUT,
+  payload: { key, value },
+});
+
+export const toggleEditing = () => ({
+  type: TOGGLE_EDITING,
+});
+
+export const setEditingQuote = quoteId => ({
+  type: SET_EDITING_QUOTE,
+  payload: { quoteId },
+});
+
+export const cancelEditingQuote = () => ({
+  type: ACTIONS.CANCEL_EDITING_QUOTE,
 });
 
 // combine them all in an asynchronous thunk
@@ -122,7 +143,7 @@ export const createQuote = quote => {
     dispatch({ type: ACTIONS.CREATE_QUOTE });
     console.log("ready to create quote", quote);
     await axios
-      .post(FRONTEND + CREATE_QUOTE_URL, quote, {
+      .post(FRONTEND + CREATE_UPDATE_QUOTE_URL, quote, {
         headers: {
           "x-auth-token": localStorage.getItem("token"),
           "Content-Type": "application/json",
@@ -142,6 +163,62 @@ export const createQuote = quote => {
         console.log("failure", err);
         console.groupEnd();
         dispatch({ type: ACTIONS.CREATE_QUOTE_FAILURE });
+      });
+  };
+};
+
+export const updateQuote = quote => {
+  return async dispatch => {
+    dispatch({ type: ACTIONS.CREATE_QUOTE });
+    console.group("ready to update quote", quote);
+    await axios
+      .post(FRONTEND + CREATE_UPDATE_QUOTE_URL, quote, {
+        headers: {
+          "x-auth-token": localStorage.getItem("token"),
+          "Content-Type": "application/json",
+        },
+        mode: "cors",
+      })
+      .then(res => {
+        console.log("successfully updated", res.data);
+        console.groupEnd();
+        dispatch({
+          type: ACTIONS.UPDATE_QUOTE_SUCCESS,
+          payload: { quote },
+        });
+      })
+      .catch(err => {
+        console.log("failure", err);
+        console.groupEnd();
+        dispatch({ type: ACTIONS.CREATE_QUOTE_FAILURE });
+      });
+  };
+};
+
+export const deleteQuote = quoteId => {
+  return async dispatch => {
+    await axios
+      .post(
+        FRONTEND + DELETE_QUOTE_URL + quoteId,
+        {},
+        {
+          headers: {
+            "x-auth-token": localStorage.getItem("token"),
+          },
+          mode: "cors",
+        }
+      )
+      .then(res => {
+        console.log("successfully updated", res.data);
+        console.groupEnd();
+        dispatch({
+          type: ACTIONS.DELETE_QUOTE_SUCCESS,
+          payload: { quoteId },
+        });
+      })
+      .catch(err => {
+        console.log("failure", err);
+        console.groupEnd();
       });
   };
 };

@@ -1,8 +1,17 @@
 .memo {
   display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 2px 0.5rem;
   border-radius: 10px;
-  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 4px 0px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 4px 2px;
+  /* box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; */
+}
+
+.memo .text {
+  justify-content: center;
+  align-items: center;
+  place-items: center;
 }
 
 /* Options Toggle */

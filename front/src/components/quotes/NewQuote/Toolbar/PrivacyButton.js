@@ -1,17 +1,16 @@
 import React from "react";
 import { connect, useDispatch } from "react-redux";
 import { BiLock, BiLockOpen } from "react-icons/bi";
-import { updateInput } from "reducers/quotes/actions";
+import { updateQuoteInput } from "reducers/quotes/actions";
 import "./styles/PrivacyButton.css";
 
 const PrivacyButton = ({ loading, privacy }) => {
   const dispatch = useDispatch();
-  console.log("privacy", privacy);
 
   const privacyText = privacy === 1 ? "Private" : "Public";
 
   const togglePrivacy = e => {
-    dispatch(updateInput("privacy_level", privacy === 1 ? 0 : 1));
+    dispatch(updateQuoteInput("privacy_level", privacy === 1 ? 0 : 1));
   };
 
   return (
@@ -26,7 +25,7 @@ const PrivacyButton = ({ loading, privacy }) => {
 
 const mapStateToProps = (state, ownProps) => ({
   loading: state.quotes.loading,
-  privacy: state.quotes.newQuote.privacy_level,
+  privacy: state.quotes.newQuote?.privacy_level,
   ...ownProps,
 });
 

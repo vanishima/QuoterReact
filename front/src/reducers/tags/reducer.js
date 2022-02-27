@@ -25,7 +25,7 @@ export default function tagsReducer(state = initialState, action) {
       const { tag } = payload;
       return {
         ...state,
-        currentTags: state.currentTags.filter(t => t.label !== tag.label),
+        currentTags: state.currentTags.filter(t => t !== tag),
       };
     }
     case ACTIONS.RESET_TAGS:
@@ -35,11 +35,11 @@ export default function tagsReducer(state = initialState, action) {
       };
     case ACTIONS.CREATE_TAG_SUCCESS: {
       console.log("CREATE_TAG_SUCCESS", payload);
-      const { tag } = payload;
+      const { tagOption } = payload;
       return {
         ...state,
-        tags: [tag, ...state.tags],
-        currentTags: [...state.currentTags, tag],
+        tags: [tagOption, ...state.tags],
+        currentTags: [...state.currentTags, tagOption.label],
         loading: false,
       };
     }

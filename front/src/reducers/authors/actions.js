@@ -22,7 +22,7 @@ const CREATE_AUTHOR_URL = "/authors/update";
 
 export const fetchAuthors = () => {
   return dispatch => {
-    console.group("fetchAuthors");
+    // console.group("fetchAuthors");
     dispatch({ type: ACTIONS.LOADING });
 
     axios
@@ -33,7 +33,7 @@ export const fetchAuthors = () => {
         mode: "cors",
       })
       .then(async res => {
-        console.log("got data", res.data);
+        // console.log("got data", res.data);
         console.groupEnd();
         dispatch({
           type: ACTIONS.FETCH_AUTHORS_SUCCESS,

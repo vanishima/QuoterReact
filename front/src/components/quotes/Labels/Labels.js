@@ -1,7 +1,8 @@
 import React from "react";
 import Label from "./Label";
+import _ from "lodash";
 
-const Labels = ({ labels }) => {
+const Labels = ({ labels = [] }) => {
   return (
     <div className="labels mb-2">
       {labels.map((label, i) => (
