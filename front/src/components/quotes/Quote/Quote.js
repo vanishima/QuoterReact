@@ -12,11 +12,12 @@ import "./styles/Quote.css";
 import Memos from "../Memos/Memos";
 import Tags from "../Tags/Tags";
 import QuoteEditing from "./QuoteEditing";
+import { selectActiveQuoteId } from "reducers/quotes/selectors";
 
 const Quote = props => {
-  const { quote, book, author, display, activeQuote } = props;
+  const { quote, book, author, display, activeQuoteId } = props;
   const { showDate, showTag, showMemo, showTitle } = display;
-  const isEditing = activeQuote?._id === quote?._id;
+  const isEditing = activeQuoteId === quote?._id;
   // console.log("activeQuote", quote?._id, isEditing);
 
   const handleSubmit = () => {
@@ -95,16 +96,8 @@ Quote.propTypes = {
 
 const mapStateToProps = (state, ownProps) => ({
   display: state.display,
-  // activeQuote: editingQuoteSelector(state),
-  activeQuote: state.quotes.activeQuote,
+  activeQuoteId: selectActiveQuoteId(state),
   ...ownProps,
-  // quote: ownProps.quote,
-  // book: ownProps.book,
-  // author: ownProps.author,
-  // handleDelete: ownProps.handleDelete,
-  // handleUpdate: ownProps.handleUpdate,
-  // activeQuote: ownProps.activeQuote,
-  // setActiveQuote: ownProps.setActiveQuote,
 });
 
 export default connect(mapStateToProps)(Quote);

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { quotesMapper } from "./mappers";
 
 const FRONTEND =
   process.env.NODE_ENV === "production"
@@ -11,7 +12,7 @@ export const ACTIONS = {
   GET_QUOTES_SUCCESS: "GET_QUOTES_SUCCESS",
   LOAD_MORE_QUOTES_SUCCESS: "LOAD_MORE_QUOTES_SUCCESS",
   GET_QUOTES_FAILURE: "GET_QUOTES_FAILURE",
-  UPDATE_INPUT: "UPDATE_INPUT",
+  UPDATE_QUOTE_INPUT: "UPDATE_QUOTE_INPUT",
   ADD_MEMO: "ADD_MEMO",
   REMOVE_MEMO: "REMOVE_MEMO",
   UPDATE_MEMO: "UPDATE_MEMO",
@@ -22,7 +23,6 @@ export const ACTIONS = {
   SET_DATE: "SET_DATE",
   TOGGLE_PRIVACY: "TOGGLE_PRIVACY",
   UPDATE_QUOTE_SUCCESS: "UPDATE_QUOTE_SUCCESS",
-  UPDATE_QUOTE_INPUT: "UPDATE_QUOTE_INPUT",
   DELETE_QUOTE_SUCCESS: "DELETE_QUOTE_SUCCESS",
   UPDATE_QUOTE_LIST_INPUT: "UPDATE_QUOTE_LIST_INPUT",
   CANCEL_EDITING_QUOTE: "CANCEL_EDITING_QUOTE",
@@ -56,7 +56,7 @@ export const getQuotesFailure = err => ({
 
 export const updateQuoteInput = (key, value) => ({
   type: ACTIONS.UPDATE_QUOTE_INPUT,
-  payload: { key: key, value: value },
+  payload: { key, value },
 });
 
 export const updateQuoteListInput = (key, value) => ({
@@ -108,11 +108,13 @@ export function fetchQuotes(
         mode: "cors",
       })
       .then(async res => {
-        console.log("got data", res.data);
+        // console.log("got data", res.data);
+        const quotes = quotesMapper(res.data.quotes);
+        // console.log("mapped quotes", quotes);
         if (refresh) {
-          dispatch(getQuotesSuccess(res.data));
+          dispatch(getQuotesSuccess({ ...res.data, quotes }));
         } else {
-          dispatch(loadMoreQuotes(res.data));
+          dispatch(loadMoreQuotes({ ...res.data, quotes }));
         }
       })
       .catch(err => {

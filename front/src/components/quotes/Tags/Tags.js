@@ -5,7 +5,7 @@ const Tags = ({ tags = [] }) => {
   return (
     <div className="tags mb-2">
       {tags
-        .filter(tag => tag.length > 0)
+        .filter(tag => tag && tag !== "")
         .map((tag, i) => (
           <div key={i}>
             <Tag tag={tag} />

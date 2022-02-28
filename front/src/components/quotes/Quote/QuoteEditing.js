@@ -3,20 +3,25 @@ import { connect } from "react-redux";
 import { useDispatch, useSelector } from "react-redux";
 import _ from "lodash";
 import {
-  updateQuoteInput,
   updateQuote,
   deleteQuote,
   cancelEditingQuote,
 } from "reducers/quotes/actions";
-import { selectActiveQuote } from "reducers/quotes/selectors";
+import {
+  updateQuoteInputById,
+  updateQuoteInputListById,
+} from "reducers/quotes/quoteActions";
+import {
+  selectActiveQuote,
+  selectActiveQuoteId,
+} from "reducers/quotes/selectors";
 import {
   selectBookById,
   selectCurrentBook,
   selectCurrentChapter,
 } from "reducers/books/selectors";
 import { selectCurrentAuthor } from "reducers/authors/selectors";
-import { selectCurrentTags } from "reducers/tags/selectors";
-import { selectCurrentLabels } from "reducers/labels/selectors";
+import { selectCurrentTags, selectTagsOptions } from "reducers/tags/selectors";
 
 import useClickOutside from "hooks/useClickOutside";
 import { setAuthor } from "reducers/authors/actions";
@@ -27,13 +32,11 @@ import AuthorSelect from "../../inputs/CreatableSelect/AuthorSelect";
 import BookSelect from "../../inputs/CreatableSelect/BookSelect";
 import ChapterSelect from "components/inputs/CreatableSelect/ChapterSelect";
 import Toolbar from "../NewQuote/Toolbar/Toolbar";
-import Labels from "components/quotes/Labels/Labels";
 import Tags from "components/quotes/Tags/Tags";
 import Memos from "components/quotes/Memos/Memos";
 
 import "components/quotes/NewQuote/styles/NewQuote.css";
 import { isoDateWithoutTimezone } from "api/utilsAPI";
-import { setTags } from "reducers/tags/actions";
 
 const NEW_QUOTE = "Write a new quote...";
 const TITLE = "Title";
@@ -41,6 +44,7 @@ const user = JSON.parse(localStorage.getItem("currentUser"));
 
 const QuoteEditing = ({
   quote,
+  activeQuoteId,
   currentAuthor,
   currentBook,
   currentTags,
@@ -55,18 +59,24 @@ const QuoteEditing = ({
   const initialBook = useSelector(state =>
     selectBookById(state, quote.book._id)
   );
+  const initialTags = useSelector(state =>
+    selectTagsOptions(state, quote.tags)
+  );
+
+  console.log("quote", quote);
 
   useEffect(() => {
     dispatch(setAuthor(quote.author));
     dispatch(setBook(initialBook));
     dispatch(setChapter(quote.chapter));
-    dispatch(setTags(quote.tags));
+    dispatch(updateQuoteInputById(activeQuoteId, "tags", initialTags));
   }, []);
 
-  console.log("activeQuote", quote);
+  console.log("activeQuote tags", quote.tags);
 
   const handleInputChange = e => {
-    dispatch(updateQuoteInput(e.target.name, e.target.value));
+    console.log("handleInputChange", quote._id, e.target.name, e.target.value);
+    dispatch(updateQuoteInputById(quote._id, e.target.name, e.target.value));
   };
 
   const handleSubmit = () => {
@@ -81,8 +91,7 @@ const QuoteEditing = ({
       const newQuote = {
         ...quote,
         date: isoDateWithoutTimezone(new Date()),
-        labels: currentLabels.map(label => label.label),
-        tags: currentTags.map(tag => tag.label),
+        tags: quote.tags.map(tag => tag.label),
         author: { _id: currentAuthor._id, name: currentAuthor.name },
         book: { _id: currentBook._id, title: currentBook.title },
         user: { _id: user.id, name: user.name },
@@ -117,8 +126,7 @@ const QuoteEditing = ({
         required
         value={quote.text}
       />
-      <Tags tags={currentTags} />
-      <Labels labels={quote.labels} />
+      <Tags tags={quote.tags} />
       <div className="author-book-bar mb-2">
         <AuthorSelect className="half" />
         <BookSelect className="half" />
@@ -136,11 +144,11 @@ const QuoteEditing = ({
 
 const mapStateToProps = (state, ownProps) => ({
   quote: selectActiveQuote(state),
+  activeQuoteId: selectActiveQuoteId(state),
   currentAuthor: selectCurrentAuthor(state),
   currentBook: selectCurrentBook(state),
   currentChapter: selectCurrentChapter(state),
   currentTags: selectCurrentTags(state),
-  currentLabels: selectCurrentLabels(state),
   ...ownProps,
 });
 

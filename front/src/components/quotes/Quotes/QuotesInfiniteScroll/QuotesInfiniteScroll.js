@@ -9,6 +9,7 @@ import useInfiniteScroll from "hooks/useInfiniteScroll";
 // API
 import { fetchQuotes } from "reducers/quotes/actions";
 import "./styles/QuotesInfiniteScroll.css";
+import { selectSortedQuotes } from "reducers/quotes/selectors";
 
 const QuotesInfiniteScroll = ({
   dispatch,
@@ -74,7 +75,7 @@ const QuotesInfiniteScroll = ({
 };
 
 const mapStateToProps = state => ({
-  quotes: state.quotes.quotes,
+  quotes: selectSortedQuotes(state),
   loading: state.quotes.loading,
   error: state.quotes.error,
   refresh: state.quotes.refresh,

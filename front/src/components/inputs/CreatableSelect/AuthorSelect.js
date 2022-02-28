@@ -8,7 +8,7 @@ import { resetBook } from "reducers/books/actions";
 
 const AuthorSelect = ({ className, submitting, authors, currentAuthor }) => {
   const dispatch = useDispatch();
-  console.log("currentAuthor", currentAuthor);
+  // console.log("currentAuthor", currentAuthor);
   // console.group("AuthorSelect");
   // console.log("default", submitting, isFetching, currentAuthor);
   // console.log("authors", authors);

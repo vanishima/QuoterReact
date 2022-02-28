@@ -9,7 +9,7 @@ import {
   toggleEditing,
 } from "reducers/quotes/actions";
 import {
-  selectActiveQuote,
+  selectNewQuote,
   selectEditing,
   selectLoading,
 } from "reducers/quotes/selectors";
@@ -131,7 +131,7 @@ const NewQuote = ({
 const mapStateToProps = (state, ownProps) => ({
   loading: selectLoading(state),
   editing: selectEditing(state),
-  quote: selectActiveQuote(state),
+  quote: selectNewQuote(state),
   currentAuthor: selectCurrentAuthor(state),
   currentBook: selectCurrentBook(state),
   currentChapter: selectCurrentChapter(state),

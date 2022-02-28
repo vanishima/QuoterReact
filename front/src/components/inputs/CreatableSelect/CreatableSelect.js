@@ -58,6 +58,14 @@ const CreatableSelect = props => {
     }
   };
 
+  const disableOption = option => {
+    if (!value) return false;
+    if (Array.isArray(value)) {
+      return value.includes(option);
+    }
+    return option.label === value.label;
+  };
+
   return (
     <AsyncCreatableSelect
       className={className}
@@ -74,6 +82,7 @@ const CreatableSelect = props => {
       value={value}
       autoFocus={autoFocus}
       menuIsOpen={menuIsOpen}
+      isOptionDisabled={disableOption}
     />
   );
 };

@@ -1,5 +1,6 @@
 import _ from "lodash";
 import { ACTIONS } from "./actions";
+import { QUOTE_ACTIONS } from "./quoteActions";
 import { SET_EDITING_QUOTE, TOGGLE_EDITING } from "./actions";
 import { isoDateWithoutTimezone } from "api/utilsAPI";
 
@@ -15,13 +16,14 @@ const initialQuote = {
 };
 
 export const initialState = {
-  quotes: [],
+  quotes: {},
   loading: false,
   editing: false,
   error: undefined,
   refresh: true,
   hasMore: true,
   activeQuote: undefined,
+  activeQuoteId: undefined,
   searchParams: {
     pageSize: 25,
     page: 1,
@@ -41,16 +43,16 @@ export default function quotesListReducer(state = initialState, action) {
       return { ...state, loading: true, refresh: false, error: undefined };
     case ACTIONS.GET_QUOTES_SUCCESS: {
       const { quotes, lastPage } = payload;
-      console.group("GET_QUOTES_SUCCESS");
-      console.log("quotes", payload.quotes.length);
-      console.log("lastPage", payload.lastPage);
-      console.log(
-        "pageSize",
-        state.searchParams.pageSize,
-        "page",
-        state.searchParams.page
-      );
-      console.groupEnd();
+      // console.group("GET_QUOTES_SUCCESS");
+      // console.log("quotes", payload.quotes.length);
+      // console.log("lastPage", payload.lastPage);
+      // console.log(
+      //   "pageSize",
+      //   state.searchParams.pageSize,
+      //   "page",
+      //   state.searchParams.page
+      // );
+      // console.groupEnd();
       return {
         ...state,
         quotes: quotes,
@@ -66,7 +68,7 @@ export default function quotesListReducer(state = initialState, action) {
       const { quotes, lastPage } = payload;
       return {
         ...state,
-        quotes: [...state.quotes, ...quotes],
+        quotes: { ...state.quotes, ...quotes },
         loading: false,
         hasMore: lastPage > state.searchParams.page + 1,
         searchParams: {
@@ -86,6 +88,24 @@ export default function quotesListReducer(state = initialState, action) {
         editing: true,
         activeQuote: _.cloneDeep(initialQuote),
       };
+    case ACTIONS.CREATE_QUOTE:
+      return { ...state, loading: true };
+    case ACTIONS.CREATE_QUOTE_SUCCESS:
+      const { quote } = payload;
+      let updatedQuotes = state.quotes;
+      updatedQuotes[quote._id] = quote;
+      return {
+        ...state,
+        quotes: updatedQuotes,
+        loading: false,
+        editing: false,
+        activeQuote: undefined,
+      };
+    case ACTIONS.CREATE_QUOTE_FAILURE:
+      return {
+        ...state,
+        loading: false,
+      };
     case ACTIONS.UPDATE_QUOTE_INPUT: {
       const { key, value } = payload;
       return {
@@ -93,7 +113,6 @@ export default function quotesListReducer(state = initialState, action) {
         activeQuote: { ...state.activeQuote, [key]: value },
       };
     }
-
     case ACTIONS.UPDATE_QUOTE_LIST_INPUT: {
       const { key, value } = payload;
       const updatedList = [...state.activeQuote[key], value];
@@ -138,65 +157,101 @@ export default function quotesListReducer(state = initialState, action) {
         },
       };
     }
-
     case TOGGLE_EDITING:
       return { ...state, editing: false };
 
-    case ACTIONS.CREATE_QUOTE:
-      return { ...state, loading: true };
-    case ACTIONS.CREATE_QUOTE_SUCCESS:
-      const { quote } = payload;
-      return {
-        ...state,
-        quotes: [quote, ...state.quotes],
-        loading: false,
-        editing: false,
-        activeQuote: _.cloneDeep(initialQuote),
-      };
-    case ACTIONS.CREATE_QUOTE_FAILURE:
-      return {
-        ...state,
-        loading: false,
-      };
-
     /* Update Quote */
+
+    case ACTIONS.CANCEL_EDITING_QUOTE:
+      return { ...state, activeQuote: undefined, activeQuoteId: undefined };
     case SET_EDITING_QUOTE: {
       const { quoteId } = payload;
-      const activeQuote = state.quotes?.find(quote => quote._id === quoteId);
+      const activeQuote = state.quotes[quoteId];
       console.log("SET_EDITING_QUOTE", activeQuote);
       return {
         ...state,
         editing: false,
         activeQuote: activeQuote,
+        activeQuoteId: quoteId,
       };
     }
-    case ACTIONS.CANCEL_EDITING_QUOTE:
-      return { ...state, activeQuote: undefined };
+    case QUOTE_ACTIONS.UPDATE_QUOTE_INPUT_BY_ID: {
+      const { quoteId, key, value } = payload;
+      console.log("UPDATE_QUOTE_INPUT_BY_ID", quoteId, key, value);
+      return {
+        ...state,
+        quotes: {
+          ...state.quotes,
+          [quoteId]: { ...state.quotes[quoteId], [key]: value },
+        },
+      };
+    }
+
+    case QUOTE_ACTIONS.UPDATE_QUOTE_INPUT_LIST_BY_ID: {
+      const { quoteId, key, value } = payload;
+      console.log("UPDATE_QUOTE_INPUT_LIST_BY_ID", quoteId, key, value);
+      const oldList = state.quotes[quoteId][key];
+      return {
+        ...state,
+        quotes: {
+          ...state.quotes,
+          [quoteId]: {
+            ...state.quotes[quoteId],
+            [key]:
+              oldList && oldList.length > 0 ? [...oldList, value] : [value],
+          },
+        },
+      };
+    }
+
+    case QUOTE_ACTIONS.UPDATE_QUOTE_AUTHOR_BY_ID: {
+      const { quoteId, author } = payload;
+      return {
+        ...state,
+        quotes: {
+          ...state.quotes,
+          [quoteId]: {
+            ...state.quotes[quoteId],
+            author: author,
+            book: undefined,
+            chapter: undefined,
+          },
+        },
+      };
+    }
+
+    case QUOTE_ACTIONS.UPDATE_QUOTE_BOOK_BY_ID: {
+      const { quoteId, author, book } = payload;
+      return {
+        ...state,
+        quotes: {
+          ...state.quotes,
+          [quoteId]: {
+            ...state.quotes[quoteId],
+            author: author,
+            book: book,
+            chapter: undefined,
+          },
+        },
+      };
+    }
+
     case ACTIONS.UPDATE_QUOTE_SUCCESS: {
       console.log("UPDATE_QUOTE_SUCCESS");
       const { quote } = payload;
-      console.log("new quote", quote);
-      console.log("quotes", state.quotes);
-      const updatedQuotes = state.quotes?.map(q => {
-        if (q._id === quote._id) {
-          return quote;
-        }
-        return q;
-      });
-      console.log("updatedQuotes", updatedQuotes);
       return {
         ...state,
         loading: false,
+        quotes: { ...state.quotes, [quote._id]: quote },
         activeQuote: undefined,
-        quotes: updatedQuotes,
+        activeQuoteId: undefined,
       };
     }
 
     case ACTIONS.DELETE_QUOTE_SUCCESS: {
       const { quoteId } = payload;
-      const updatedQuotes = state.quotes?.filter(
-        quote => quote._id !== quoteId
-      );
+      let updatedQuotes = state.quotes;
+      delete updatedQuotes[quoteId];
       return {
         ...state,
         loading: false,

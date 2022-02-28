@@ -4,7 +4,7 @@ import useClickInside from "hooks/useClickInside";
 import { setEditingQuote } from "reducers/quotes/actions";
 
 import DateButton from "./DateButton";
-import LabelButton from "./LabelButton";
+// import LabelButton from "./LabelButton";
 import MemoButton from "./MemoButton";
 import PrivacyButton from "./PrivacyButton";
 import TagButton from "./TagButton";
@@ -31,7 +31,7 @@ const Toolbar = ({
     <div className="option-bar" ref={toolbarRef}>
       <div className="quote-options">
         <TagButton showText={showText} quoteId={quoteId} />
-        <LabelButton showText={showText} quoteId={quoteId} />
+        {/* <LabelButton showText={showText} quoteId={quoteId} /> */}
         <MemoButton showText={showText} quoteId={quoteId} />
         <DateButton showText={showText} quoteId={quoteId} />
         <PrivacyButton quoteId={quoteId} />

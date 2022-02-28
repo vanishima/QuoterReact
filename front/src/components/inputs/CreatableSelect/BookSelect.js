@@ -18,7 +18,7 @@ const BookSelect = ({
 }) => {
   const dispatch = useDispatch();
   // console.group("BookSelect");
-  console.log("currentBook", currentBook);
+  // console.log("currentBook", currentBook);
   // console.log("default", submitting, isFetching, currentBook, currentAuthor);
   // console.log("books", books);
   // console.groupEnd();
