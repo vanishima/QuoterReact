@@ -1,11 +1,6 @@
-import axios from "axios";
+import axiosInstance from "axiosconfig";
 import { processItem } from "components/inputs/CreatableSelect/util";
 import { booksMapper } from "./mappers";
-
-const FRONTEND =
-  process.env.NODE_ENV === "production"
-    ? process.env.REACT_APP_FRONTEND_PREFIX
-    : ".";
 
 export const ACTIONS = {
   LOADING: "LOADING",
@@ -26,18 +21,12 @@ const FETCH_QUOTED_BOOKS_URL = "/books";
 const UPDATE_BOOK_URL = "/books/update";
 
 export const fetchBooks = () => {
-  return dispatch => {
+  return async dispatch => {
     // console.group("fetchbooks");
     dispatch({ type: ACTIONS.LOADING });
 
-    axios
-      // .get(FRONTEND + FETCH_BOOK_URL, {
-      .get(FRONTEND + FETCH_QUOTED_BOOKS_URL, {
-        headers: {
-          "x-auth-token": localStorage.getItem("token"),
-        },
-        mode: "cors",
-      })
+    await axiosInstance
+      .get(FETCH_QUOTED_BOOKS_URL)
       .then(async res => {
         // console.log("got book data", res.data);
 
@@ -68,13 +57,13 @@ export const createBook = book => {
     console.group("createBook", book);
     dispatch({ type: ACTIONS.LOADING });
     console.log("ready to create");
-    await axios
-      .post(FRONTEND + UPDATE_BOOK_URL, book, {
+
+    await axiosInstance
+      .post(UPDATE_BOOK_URL, {
+        data: book,
         headers: {
-          "x-auth-token": localStorage.getItem("token"),
           "Content-Type": "application/json",
         },
-        mode: "cors",
       })
       .then(res => {
         console.log("got data", res.data);
@@ -97,13 +86,12 @@ export const updateBook = book => {
     console.group("createBook", book);
     dispatch({ type: ACTIONS.LOADING });
     console.log("ready to create");
-    await axios
-      .post(FRONTEND + UPDATE_BOOK_URL, book, {
+
+    await axiosInstance
+      .post(UPDATE_BOOK_URL, book, {
         headers: {
-          "x-auth-token": localStorage.getItem("token"),
           "Content-Type": "application/json",
         },
-        mode: "cors",
       })
       .then(res => {
         console.log("got data", res.data);
@@ -135,20 +123,22 @@ export const createChapter = (chapter, book) => {
   return async dispatch => {
     console.group("createChapter", chapter);
     chapter = processItem(chapter, "title");
+
     dispatch({
       type: ACTIONS.SET_CHAPTER,
       payload: { chapter },
     });
     book.chapters = book.chapters ? [...book.chapters, chapter] : [chapter];
+
     console.log("book", book);
     console.log("ready to update book");
-    await axios
-      .post(FRONTEND + UPDATE_BOOK_URL, book, {
+
+    await axiosInstance
+      .post(UPDATE_BOOK_URL, {
+        data: book,
         headers: {
-          "x-auth-token": localStorage.getItem("token"),
           "Content-Type": "application/json",
         },
-        mode: "cors",
       })
       .then(res => {
         console.log("got data", res.data);

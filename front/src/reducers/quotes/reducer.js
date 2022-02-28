@@ -88,15 +88,14 @@ export default function quotesListReducer(state = initialState, action) {
         editing: true,
         activeQuote: _.cloneDeep(initialQuote),
       };
+
     case ACTIONS.CREATE_QUOTE:
       return { ...state, loading: true };
     case ACTIONS.CREATE_QUOTE_SUCCESS:
       const { quote } = payload;
-      let updatedQuotes = state.quotes;
-      updatedQuotes[quote._id] = quote;
       return {
         ...state,
-        quotes: updatedQuotes,
+        quotes: { [quote._id]: quote, ...state.quotes },
         loading: false,
         editing: false,
         activeQuote: undefined,
@@ -106,6 +105,7 @@ export default function quotesListReducer(state = initialState, action) {
         ...state,
         loading: false,
       };
+
     case ACTIONS.UPDATE_QUOTE_INPUT: {
       const { key, value } = payload;
       return {
@@ -250,7 +250,7 @@ export default function quotesListReducer(state = initialState, action) {
 
     case ACTIONS.DELETE_QUOTE_SUCCESS: {
       const { quoteId } = payload;
-      let updatedQuotes = state.quotes;
+      let updatedQuotes = { ...state.quotes };
       delete updatedQuotes[quoteId];
       return {
         ...state,

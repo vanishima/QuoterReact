@@ -1,10 +1,5 @@
-import axios from "axios";
+import axiosInstance from "axiosconfig";
 import { tagsMapper, tagMapper } from "./mappers";
-
-const FRONTEND =
-  process.env.NODE_ENV === "production"
-    ? process.env.REACT_APP_FRONTEND_PREFIX
-    : ".";
 
 export const ACTIONS = {
   FETCH_TAG_REQUEST: "FETCH_TAG_REQUEST",
@@ -21,17 +16,12 @@ const FETCH_TAG_URL = "/tags";
 const CREATE_TAG_URL = "/tags/create";
 
 export const fetchTags = () => {
-  return dispatch => {
+  return async dispatch => {
     console.group("fetchTags");
     dispatch({ type: ACTIONS.FETCH_TAG_REQUEST });
 
-    axios
-      .get(FRONTEND + FETCH_TAG_URL, {
-        headers: {
-          "x-auth-token": localStorage.getItem("token"),
-        },
-        mode: "cors",
-      })
+    await axiosInstance
+      .get(FETCH_TAG_URL)
       .then(async res => {
         console.log("got tag data", res.data);
         dispatch({
@@ -69,13 +59,13 @@ export const createTag = tag => {
     console.group("createTag", tag);
     dispatch({ type: ACTIONS.FETCH_TAG_REQUEST });
     console.log("ready to create");
-    await axios
-      .post(FRONTEND + CREATE_TAG_URL, tag, {
+
+    await axiosInstance
+      .post(CREATE_TAG_URL, {
+        data: tag,
         headers: {
-          "x-auth-token": localStorage.getItem("token"),
           "Content-Type": "application/json",
         },
-        mode: "cors",
       })
       .then(res => {
         console.log("got data", res.data);

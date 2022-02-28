@@ -1,13 +1,8 @@
-import axios from "axios";
+import axiosInstance from "axiosconfig";
 import {
   processItem,
   processItems,
 } from "components/inputs/CreatableSelect/util";
-
-const FRONTEND =
-  process.env.NODE_ENV === "production"
-    ? process.env.REACT_APP_FRONTEND_PREFIX
-    : ".";
 
 export const ACTIONS = {
   LOADING: "LOADING",
@@ -27,13 +22,8 @@ export const fetchLabels = () => {
     console.group("fetchLabels");
     dispatch({ type: ACTIONS.LOADING });
 
-    axios
-      .get(FRONTEND + FETCH_LABEL_URL, {
-        headers: {
-          "x-auth-token": localStorage.getItem("token"),
-        },
-        mode: "cors",
-      })
+    axiosInstance
+      .get(FETCH_LABEL_URL)
       .then(async res => {
         console.log("got label data", res.data);
 
@@ -68,13 +58,13 @@ export const createLabel = label => {
     console.group("createLabel", label);
     dispatch({ type: ACTIONS.LOADING });
     console.log("ready to create");
-    await axios
-      .post(FRONTEND + CREATE_LABEL_URL, label, {
+
+    await axiosInstance
+      .post(CREATE_LABEL_URL, {
+        data: label,
         headers: {
-          "x-auth-token": localStorage.getItem("token"),
           "Content-Type": "application/json",
         },
-        mode: "cors",
       })
       .then(res => {
         console.log("got data", res.data);

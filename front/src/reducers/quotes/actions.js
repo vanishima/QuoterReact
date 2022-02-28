@@ -1,14 +1,9 @@
-import axios from "axios";
+import axiosInstance from "axiosconfig";
 import { quotesMapper } from "./mappers";
-
-const FRONTEND =
-  process.env.NODE_ENV === "production"
-    ? process.env.REACT_APP_FRONTEND_PREFIX
-    : ".";
 
 // create redux action types
 export const ACTIONS = {
-  GET_QUOTES: "GET_QUOTES",
+  GET_QUOTES_REQUEST: "GET_QUOTES_REQUEST",
   GET_QUOTES_SUCCESS: "GET_QUOTES_SUCCESS",
   LOAD_MORE_QUOTES_SUCCESS: "LOAD_MORE_QUOTES_SUCCESS",
   GET_QUOTES_FAILURE: "GET_QUOTES_FAILURE",
@@ -31,12 +26,13 @@ export const ACTIONS = {
 export const SET_EDITING_QUOTE = "SET_EDITING_QUOTE";
 export const TOGGLE_EDITING = "TOGGLE_EDITING";
 
+const FETCH_QUOTES_URL = "/quotes";
 const CREATE_UPDATE_QUOTE_URL = "/quotes/update";
 const DELETE_QUOTE_URL = "/quotes/delete/";
 
 // create redux action creators that return an action
-export const getQuotes = () => ({
-  type: ACTIONS.GET_QUOTES,
+export const getQuotesRequest = () => ({
+  type: ACTIONS.GET_QUOTES_REQUEST,
 });
 
 export const getQuotesSuccess = data => ({
@@ -86,26 +82,17 @@ export function fetchQuotes(
   bookid = "undefined"
 ) {
   return async dispatch => {
-    dispatch(getQuotes());
+    dispatch(getQuotesRequest());
     console.log("fetchQuotes", pageSize, page, bookid, sortorder);
 
-    const url =
-      FRONTEND +
-      "/quotes?pagesize=" +
-      pageSize +
-      "&page=" +
-      page +
-      "&bookid=" +
-      bookid +
-      "&sortorder=" +
-      sortorder;
-
-    axios
-      .get(url, {
-        headers: {
-          "x-auth-token": localStorage.getItem("token"),
+    await axiosInstance
+      .get(FETCH_QUOTES_URL, {
+        params: {
+          pagesize: pageSize,
+          page: page,
+          bookid: bookid,
+          sortoder: sortorder,
         },
-        mode: "cors",
       })
       .then(async res => {
         // console.log("got data", res.data);
@@ -144,13 +131,12 @@ export const createQuote = quote => {
   return async dispatch => {
     dispatch({ type: ACTIONS.CREATE_QUOTE });
     console.log("ready to create quote", quote);
-    await axios
-      .post(FRONTEND + CREATE_UPDATE_QUOTE_URL, quote, {
+
+    await axiosInstance
+      .post(CREATE_UPDATE_QUOTE_URL, quote, {
         headers: {
-          "x-auth-token": localStorage.getItem("token"),
           "Content-Type": "application/json",
         },
-        mode: "cors",
       })
       .then(res => {
         console.log("got data", res.data);
@@ -173,13 +159,11 @@ export const updateQuote = quote => {
   return async dispatch => {
     dispatch({ type: ACTIONS.CREATE_QUOTE });
     console.group("ready to update quote", quote);
-    await axios
-      .post(FRONTEND + CREATE_UPDATE_QUOTE_URL, quote, {
+    await axiosInstance
+      .post(CREATE_UPDATE_QUOTE_URL, quote, {
         headers: {
-          "x-auth-token": localStorage.getItem("token"),
           "Content-Type": "application/json",
         },
-        mode: "cors",
       })
       .then(res => {
         console.log("successfully updated", res.data);
@@ -199,17 +183,8 @@ export const updateQuote = quote => {
 
 export const deleteQuote = quoteId => {
   return async dispatch => {
-    await axios
-      .post(
-        FRONTEND + DELETE_QUOTE_URL + quoteId,
-        {},
-        {
-          headers: {
-            "x-auth-token": localStorage.getItem("token"),
-          },
-          mode: "cors",
-        }
-      )
+    await axiosInstance
+      .post(DELETE_QUOTE_URL + quoteId)
       .then(res => {
         console.log("successfully updated", res.data);
         console.groupEnd();

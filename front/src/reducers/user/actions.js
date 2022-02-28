@@ -1,12 +1,4 @@
-import { FRONTEND } from "api/utilsAPI";
-import axios from "axios";
-
-const BASIC_OPTIONS = {
-  headers: {
-    "Content-Type": "application/json",
-  },
-  mode: "cors",
-};
+import axiosInstance from "axiosconfig";
 
 export const ACTIONS = {
   LOADING: "LOADING",
@@ -14,6 +6,9 @@ export const ACTIONS = {
   FETCH_USER_FAILURE: "FETCH_USER_FAILURE",
   LOG_OUT: "LOG_OUT",
 };
+
+const USER_SIGNUP_URL = "/auth/register";
+const USER_LOGIN_URL = "/auth/login";
 
 export const loading = () => {
   return {
@@ -35,8 +30,16 @@ export const signup = user => {
   return async dispatch => {
     dispatch(loading());
 
-    return await axios
-      .post(FRONTEND + "/auth/register", { user: user }, BASIC_OPTIONS)
+    await axiosInstance
+      .post(
+        USER_SIGNUP_URL,
+        { user: user },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
       .then(res => {
         console.log("got response", res);
         dispatch(fetchUserSuccess(res.data));
@@ -52,8 +55,16 @@ export const login = user => {
   return async dispatch => {
     dispatch(loading());
 
-    return await axios
-      .post(FRONTEND + "/auth/login", { user: user }, BASIC_OPTIONS)
+    await axiosInstance
+      .post(
+        USER_LOGIN_URL,
+        { user: user },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
       .then(res => {
         console.log("got response", res);
         dispatch(fetchUserSuccess(res.data));
