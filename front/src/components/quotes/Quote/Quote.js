@@ -24,7 +24,6 @@ const Quote = props => {
   };
 
   if (isEditing) {
-    //quote={quote}
     return <QuoteEditing />;
   }
 

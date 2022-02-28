@@ -14,6 +14,7 @@ export const ACTIONS = {
   REMOVE_TAG: "REMOVE_TAG",
   CREATE_TAG_SUCCESS: "CREATE_TAG_SUCCESS",
   RESET_TAGS: "RESET_TAGS",
+  SET_TAGS: "SET_TAGS",
 };
 
 const FETCH_TAG_URL = "/tags";
@@ -47,16 +48,20 @@ export const fetchTags = () => {
   };
 };
 
-export const addTag = tagOption => {
-  return { type: ACTIONS.ADD_TAG, payload: { tag: tagOption.label } };
+export const addTag = tag => {
+  return { type: ACTIONS.ADD_TAG, payload: { tag } };
 };
 
-export const removeTag = tagOption => {
-  return { type: ACTIONS.REMOVE_TAG, payload: { tag: tagOption.label } };
+export const removeTag = tag => {
+  return { type: ACTIONS.REMOVE_TAG, payload: { tag } };
 };
 
 export const resetTags = {
   type: ACTIONS.RESET_TAGS,
+};
+
+export const setTags = rawTags => {
+  return { type: ACTIONS.RESET_TAGS, payload: { tag: tagsMapper(rawTags) } };
 };
 
 export const createTag = tag => {

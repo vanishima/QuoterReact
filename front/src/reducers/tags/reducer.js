@@ -20,13 +20,19 @@ export default function tagsReducer(state = initialState, action) {
       };
     case ACTIONS.ADD_TAG:
       const { tag } = payload;
+      console.log("ADD_TAG", tag);
       return { ...state, currentTags: [...state.currentTags, tag] };
     case ACTIONS.REMOVE_TAG: {
       const { tag } = payload;
+      console.log("REMOVE_TAG", tag);
       return {
         ...state,
-        currentTags: state.currentTags.filter(t => t !== tag),
+        currentTags: state.currentTags.filter(t => t.label !== tag.label),
       };
+    }
+    case ACTIONS.SET_TAGS: {
+      const { tags } = payload;
+      return { ...state, currentTags: tags };
     }
     case ACTIONS.RESET_TAGS:
       return {

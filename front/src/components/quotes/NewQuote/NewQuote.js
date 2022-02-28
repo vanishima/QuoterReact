@@ -8,6 +8,18 @@ import {
   createQuote,
   toggleEditing,
 } from "reducers/quotes/actions";
+import {
+  selectActiveQuote,
+  selectEditing,
+  selectLoading,
+} from "reducers/quotes/selectors";
+import {
+  selectCurrentBook,
+  selectCurrentChapter,
+} from "reducers/books/selectors";
+import { selectCurrentAuthor } from "reducers/authors/selectors";
+import { selectCurrentTags } from "reducers/tags/selectors";
+import { selectCurrentLabels } from "reducers/labels/selectors";
 import useClickOutside from "hooks/useClickOutside";
 
 import AuthorSelect from "../../inputs/CreatableSelect/AuthorSelect";
@@ -59,8 +71,8 @@ const NewQuote = ({
       const activeQuote = {
         ...quote,
         date: isoDateWithoutTimezone(new Date()),
-        labels: currentLabels,
-        tags: currentTags,
+        labels: currentLabels.map(label => label.label),
+        tags: currentTags.map(tag => tag.label),
         author: { _id: currentAuthor._id, name: currentAuthor.name },
         book: { _id: currentBook._id, title: currentBook.title },
         user: { _id: user.id, name: user.name },
@@ -117,15 +129,14 @@ const NewQuote = ({
 };
 
 const mapStateToProps = (state, ownProps) => ({
-  loading: state.quotes.loading,
-  editing: state.quotes.editing,
-  updating: state.quotes.updating,
-  quote: state.quotes.activeQuote,
-  currentLabels: state.labels.currentLabels,
-  currentAuthor: state.authors.currentAuthor,
-  currentBook: state.books.currentBook,
-  currentChapter: state.books.currentChapter,
-  currentTags: state.tags.currentTags,
+  loading: selectLoading(state),
+  editing: selectEditing(state),
+  quote: selectActiveQuote(state),
+  currentAuthor: selectCurrentAuthor(state),
+  currentBook: selectCurrentBook(state),
+  currentChapter: selectCurrentChapter(state),
+  currentTags: selectCurrentTags(state),
+  currentLabels: selectCurrentLabels(state),
   ...ownProps,
 });
 

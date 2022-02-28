@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import PropTypes from "prop-types";
 import AsyncCreatableSelect from "react-select/async-creatable";
-import { processItem } from "./util";
 
 const CreatableSelect = props => {
   const {
@@ -49,7 +48,7 @@ const CreatableSelect = props => {
       );
     } else if (actionMeta.action === "remove-value") {
       const removedValue = actionMeta.removedValue;
-      // console.log("remove", removedValue);
+      console.log("remove", removedValue);
       removeOption(removedValue);
     } else if (actionMeta.action === "create-option") {
       // console.log("create newValue", actionMeta);

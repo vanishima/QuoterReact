@@ -1,6 +1,5 @@
 import React from "react";
 import Tag from "./Tag";
-import _ from "lodash";
 
 const Tags = ({ tags = [] }) => {
   return (
