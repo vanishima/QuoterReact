@@ -4,13 +4,13 @@ import { connect } from "react-redux";
 // Elements
 import TextIndentation from "components/utils/TextIndentation";
 import QuoteImageModal from "components/quotes/Quoteimage/QuoteImageModal";
-import Toolbar from "../NewQuote/Toolbar/Toolbar";
+import Toolbar from "./Toolbar/Toolbar";
 
 // API
 import { getRelativeTime } from "api/utilsAPI";
 import "./styles/Quote.css";
-import Memos from "../Memos/Memos";
-import Tags from "../Tags/Tags";
+import Memos from "./Memos/Memos";
+import Tags from "./Tags/Tags";
 import QuoteEditing from "./QuoteEditing";
 import { selectActiveQuoteId } from "reducers/quotes/selectors";
 

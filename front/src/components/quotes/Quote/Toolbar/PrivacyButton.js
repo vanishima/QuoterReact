@@ -1,6 +1,7 @@
 import React from "react";
 import { connect, useDispatch } from "react-redux";
-import { BiLock, BiLockOpen } from "react-icons/bi";
+// import { BiLock, BiLockOpen } from "react-icons/bi";
+import { BsLock, BsUnlock } from "react-icons/bs";
 import { updateQuoteInput } from "reducers/quotes/actions";
 import "./styles/PrivacyButton.css";
 
@@ -12,11 +13,16 @@ const PrivacyButton = ({ loading, privacy }) => {
   const togglePrivacy = e => {
     dispatch(updateQuoteInput("privacy_level", privacy === 1 ? 0 : 1));
   };
+  console.log("privacy", privacy);
 
   return (
     <div>
-      <button className="btn privacy-button" onClick={togglePrivacy}>
-        {privacy ? <BiLock size="1.2rem" /> : <BiLockOpen size="1.2rem" />}
+      <button
+        className="btn privacy-button"
+        onClick={togglePrivacy}
+        disabled={loading}
+      >
+        {privacy ? <BsLock size="1.2rem" /> : <BsUnlock size="1.2rem" />}
         {/* <span className="button-name">{privacyText}</span> */}
       </button>
     </div>
@@ -25,7 +31,7 @@ const PrivacyButton = ({ loading, privacy }) => {
 
 const mapStateToProps = (state, ownProps) => ({
   loading: state.quotes.loading,
-  privacy: state.quotes.newQuote?.privacy_level,
+  privacy: state.quotes.activeQuote?.privacy_level,
   ...ownProps,
 });
 

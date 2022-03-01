@@ -145,6 +145,42 @@ function BooksDB() {
     }
   };
 
+  myDB.createBook = async (book, userId) => {
+    const client = new MongoClient(uri, { useUnifiedTopology: true });
+
+    try {
+      await client.connect();
+
+      const col = client.db(DB_NAME).collection(COL_BOOKS);
+
+      book._id = ObjectId();
+      book.author = {
+        _id: ObjectId(book.author._id),
+        name: book.author.name,
+      };
+
+      console.log(col, "Collection ready, update/create book:", book);
+
+      const filter = { _id: book._id };
+      const options = { upsert: true };
+
+      const updateDoc = {
+        $set: {
+          title: book.title,
+          author: book.author,
+          userId: ObjectId(userId),
+        },
+      };
+
+      const result = await col.updateOne(filter, updateDoc, options);
+
+      return { _id: result.upsertedId, title: book.title };
+    } finally {
+      console.groupEnd("Closing the connection");
+      client.close();
+    }
+  };
+
   myDB.updateBook = async (book, userId) => {
     const client = new MongoClient(uri, { useUnifiedTopology: true });
     console.group("Connecting to the db");
@@ -155,17 +191,11 @@ function BooksDB() {
 
       const col = client.db(DB_NAME).collection(COL_BOOKS);
 
-      if (book._id) {
-        book._id = ObjectId(book._id);
-      } else {
-        book._id = ObjectId();
-      }
-
-      const author = {
+      book._id = ObjectId(book._id);
+      book.author = {
         _id: ObjectId(book.author._id),
         name: book.author.name,
       };
-
       book.userId = ObjectId(userId);
       // if (book.keywords) book.keywords = getTagsArray(book.keywords);
 
@@ -174,17 +204,26 @@ function BooksDB() {
       const filter = { _id: book._id };
       const options = { upsert: true };
 
+      let fields = {
+        title: book.title,
+        author: book.author,
+        userId: book.userId,
+      };
+      if (book.chapters?.length > 0) {
+        fields["chapters"] = book.chapters;
+      }
+      if (book.introduction?.length > 0) {
+        fields["introduction"] = book.introduction;
+      }
+      if (book.url?.length > 0) {
+        fields["url"] = book.url;
+      }
+      if (book.coverUrl?.length > 0) {
+        fields["coverUrl"] = book.coverUrl;
+      }
+
       const updateDoc = {
-        $set: {
-          title: book.title,
-          author: author,
-          userId: book.userId,
-          introduction: book.introductionb || "",
-          chapters: book.chapters || [],
-          url: book.url || "",
-          // keywords: book.keywors,
-          coverUrl: book.coverUrl || "",
-        },
+        $set: fields,
       };
 
       const result = await col.updateOne(filter, updateDoc, options);

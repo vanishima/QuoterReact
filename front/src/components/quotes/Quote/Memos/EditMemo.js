@@ -1,4 +1,5 @@
 import React from "react";
+import Textarea from "components/inputs/Textarea";
 
 import "./styles/EditMemo.css";
 
@@ -14,6 +15,15 @@ const EditMemo = ({ text, onChange, handleSave }) => {
         value={text}
         placeholder={NEW_MEMO}
         onChange={onChange}
+      />
+      <Textarea
+        name="text"
+        className="inline-edit quote-text"
+        placeholder={NEW_MEMO}
+        onChange={onChange}
+        required={true}
+        dependency={text}
+        value={text}
       />
       <div className="actions">
         <button onClick={handleSave} className="btn save-memo-button">

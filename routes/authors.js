@@ -41,6 +41,24 @@ router.get("/:authorId", auth, async function (req, res) {
   }
 });
 
+/* POST create author */
+router.post("/create", auth, async function (req, res) {
+  console.log("Got request for /authors/create");
+
+  const userId = req.user.id;
+  const author = req.body;
+  console.log("Got author", author);
+
+  try {
+    const result = await AuthorsDB.createAuthor(author, userId);
+    console.log("result", result);
+    res.status(200).json(result);
+  } catch (e) {
+    console.log(e.message);
+    res.status(400).json({ msg: e.message });
+  }
+});
+
 /* POST update/create author */
 router.post("/update", auth, async function (req, res) {
   console.log("Got request for /authors/update");

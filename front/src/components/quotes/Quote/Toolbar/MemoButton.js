@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addMemo } from "reducers/quotes/actions";
-import { GrNotes } from "react-icons/gr";
+import { BsSticky } from "react-icons/bs";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import { Popover } from "react-bootstrap";
 
-import EditMemo from "../../Memos/EditMemo";
+import EditMemo from "../Memos/EditMemo";
 
 import { isoDateWithoutTimezone } from "api/utilsAPI";
 import "./styles/MemoButton.css";
@@ -50,7 +50,7 @@ const MemoButton = ({ showText = true }) => {
       overlay={AddMemoPopover}
     >
       <button className="btn add-memo-button">
-        <GrNotes size="1.2rem" />
+        <BsSticky size="1.2rem" />
         {showText && <span className="button-name">Memo</span>}
       </button>
     </OverlayTrigger>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { useDispatch } from "react-redux";
 import _ from "lodash";
@@ -22,13 +22,14 @@ import { selectCurrentTags } from "reducers/tags/selectors";
 import { selectCurrentLabels } from "reducers/labels/selectors";
 import useClickOutside from "hooks/useClickOutside";
 
+import Textarea from "components/inputs/Textarea";
 import AuthorSelect from "../../inputs/CreatableSelect/AuthorSelect";
 import BookSelect from "../../inputs/CreatableSelect/BookSelect";
 import ChapterSelect from "components/inputs/CreatableSelect/ChapterSelect";
 import Toolbar from "./Toolbar/Toolbar";
-import Labels from "components/quotes/Labels/Labels";
-import Tags from "components/quotes/Tags/Tags";
-import Memos from "components/quotes/Memos/Memos";
+import Labels from "components/quotes/Quote/Labels/Labels";
+import Tags from "components/quotes/Quote/Tags/Tags";
+import Memos from "components/quotes/Quote/Memos/Memos";
 
 import "./styles/NewQuote.css";
 import { isoDateWithoutTimezone } from "api/utilsAPI";
@@ -84,48 +85,46 @@ const NewQuote = ({
   };
 
   // click outside to close or save
-
-  if (editing) {
-    return (
-      <div className="new-quote" ref={newQuoteRef}>
-        <input
-          name="title"
-          className="inline-edit"
-          type="text"
-          placeholder={TITLE}
-          onChange={handleInputChange}
-        />
-        <ChapterSelect />
-        <textarea
-          name="text"
-          className="inline-edit text"
-          type="text"
-          placeholder={NEW_QUOTE}
-          onChange={handleInputChange}
-          required
-        />
-        <Tags tags={currentTags} />
-        <Labels labels={currentLabels} />
-        <div className="author-book-bar mb-2">
-          <AuthorSelect className="half" />
-          <BookSelect className="half" />
-        </div>
-        <Memos memos={quote.memos} />
-        <Toolbar handleSubmit={handleSubmit} />
-      </div>
-    );
-  } else {
-    return (
-      <div className="new-quote">
+  return (
+    <div className="new-quote" ref={newQuoteRef}>
+      {editing ? (
+        <>
+          <input
+            name="title"
+            className="inline-edit"
+            type="text"
+            placeholder={TITLE}
+            onChange={handleInputChange}
+          />
+          <ChapterSelect />
+          <Textarea
+            name="text"
+            className="inline-edit quote-text"
+            placeholder={NEW_QUOTE}
+            onChange={handleInputChange}
+            required={true}
+            dependency={quote}
+            value={quote.text}
+          />
+          <Tags tags={currentTags} />
+          <Labels labels={currentLabels} />
+          <div className="author-book-bar mb-2">
+            <AuthorSelect className="half" />
+            <BookSelect className="half" />
+          </div>
+          <Memos memos={quote.memos} />
+          <Toolbar handleSubmit={handleSubmit} />
+        </>
+      ) : (
         <input
           className="inline-edit text"
           type="text"
           placeholder={NEW_QUOTE}
           onClick={toggleEdit}
         />
-      </div>
-    );
-  }
+      )}
+    </div>
+  );
 };
 
 const mapStateToProps = (state, ownProps) => ({

@@ -28,14 +28,15 @@ import { setAuthor } from "reducers/authors/actions";
 import { setBook } from "reducers/books/actions";
 import { setChapter } from "reducers/books/actions";
 
+import Textarea from "components/inputs/Textarea";
 import AuthorSelect from "../../inputs/CreatableSelect/AuthorSelect";
 import BookSelect from "../../inputs/CreatableSelect/BookSelect";
 import ChapterSelect from "components/inputs/CreatableSelect/ChapterSelect";
-import Toolbar from "../NewQuote/Toolbar/Toolbar";
-import Tags from "components/quotes/Tags/Tags";
-import Memos from "components/quotes/Memos/Memos";
+import Toolbar from "./Toolbar/Toolbar";
+import Tags from "components/quotes/Quote/Tags/Tags";
+import Memos from "components/quotes/Quote/Memos/Memos";
 
-import "components/quotes/NewQuote/styles/NewQuote.css";
+import "./styles/NewQuote.css";
 import { isoDateWithoutTimezone } from "api/utilsAPI";
 
 const NEW_QUOTE = "Write a new quote...";
@@ -63,16 +64,12 @@ const QuoteEditing = ({
     selectTagsOptions(state, quote.tags)
   );
 
-  console.log("quote", quote);
-
   useEffect(() => {
     dispatch(setAuthor(quote.author));
     dispatch(setBook(initialBook));
     dispatch(setChapter(quote.chapter));
     dispatch(updateQuoteInputById(activeQuoteId, "tags", initialTags));
   }, []);
-
-  console.log("activeQuote tags", quote.tags);
 
   const handleInputChange = e => {
     console.log("handleInputChange", quote._id, e.target.name, e.target.value);
@@ -107,7 +104,7 @@ const QuoteEditing = ({
   };
 
   return (
-    <div className="new-quote" ref={editingQuoteRef}>
+    <div className="editing-quote" ref={editingQuoteRef}>
       <input
         name="title"
         className="inline-edit"
@@ -117,13 +114,13 @@ const QuoteEditing = ({
         value={quote.title}
       />
       <ChapterSelect value={currentChapter} />
-      <textarea
+      <Textarea
         name="text"
-        className="inline-edit text"
-        type="text"
+        className="inline-edit quote-text"
         placeholder={NEW_QUOTE}
         onChange={handleInputChange}
-        required
+        required={true}
+        dependency={quote}
         value={quote.text}
       />
       <Tags tags={quote.tags} />
@@ -137,6 +134,7 @@ const QuoteEditing = ({
         handleDelete={handleDelete}
         quoteId={quote._id}
         isEditing={true}
+        showText={false}
       />
     </div>
   );

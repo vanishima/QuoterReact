@@ -15,8 +15,6 @@ export const ACTIONS = {
   CREATE_QUOTE: "CREATE_QUOTE",
   CREATE_QUOTE_SUCCESS: "CREATE_QUOTE_SUCCESS",
   CREATE_QUOTE_FAILURE: "CREATE_QUOTE_FAILURE",
-  SET_DATE: "SET_DATE",
-  TOGGLE_PRIVACY: "TOGGLE_PRIVACY",
   UPDATE_QUOTE_SUCCESS: "UPDATE_QUOTE_SUCCESS",
   DELETE_QUOTE_SUCCESS: "DELETE_QUOTE_SUCCESS",
   UPDATE_QUOTE_LIST_INPUT: "UPDATE_QUOTE_LIST_INPUT",
@@ -29,26 +27,6 @@ export const TOGGLE_EDITING = "TOGGLE_EDITING";
 const FETCH_QUOTES_URL = "/quotes";
 const CREATE_UPDATE_QUOTE_URL = "/quotes/update";
 const DELETE_QUOTE_URL = "/quotes/delete/";
-
-// create redux action creators that return an action
-export const getQuotesRequest = () => ({
-  type: ACTIONS.GET_QUOTES_REQUEST,
-});
-
-export const getQuotesSuccess = data => ({
-  type: ACTIONS.GET_QUOTES_SUCCESS,
-  payload: data,
-});
-
-export const loadMoreQuotes = data => ({
-  type: ACTIONS.LOAD_MORE_QUOTES_SUCCESS,
-  payload: data,
-});
-
-export const getQuotesFailure = err => ({
-  type: ACTIONS.GET_QUOTES_FAILURE,
-  payload: err,
-});
 
 export const updateQuoteInput = (key, value) => ({
   type: ACTIONS.UPDATE_QUOTE_INPUT,
@@ -82,7 +60,9 @@ export function fetchQuotes(
   bookid = "undefined"
 ) {
   return async dispatch => {
-    dispatch(getQuotesRequest());
+    dispatch({
+      type: ACTIONS.GET_QUOTES_REQUEST,
+    });
     console.log("fetchQuotes", pageSize, page, bookid, sortorder);
 
     await axiosInstance
@@ -99,14 +79,23 @@ export function fetchQuotes(
         const quotes = quotesMapper(res.data.quotes);
         // console.log("mapped quotes", quotes);
         if (refresh) {
-          dispatch(getQuotesSuccess({ ...res.data, quotes }));
+          dispatch({
+            type: ACTIONS.GET_QUOTES_SUCCESS,
+            payload: { ...res.data, quotes },
+          });
         } else {
-          dispatch(loadMoreQuotes({ ...res.data, quotes }));
+          dispatch({
+            type: ACTIONS.LOAD_MORE_QUOTES_SUCCESS,
+            payload: { ...res.data, quotes },
+          });
         }
       })
       .catch(err => {
         console.log("failure", err);
-        dispatch(getQuotesFailure(err));
+        dispatch({
+          type: ACTIONS.GET_QUOTES_FAILURE,
+          payload: err,
+        });
       });
   };
 }

@@ -7,6 +7,19 @@
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 
+/* Quote Editing */
+.editing-quote {
+  max-width: 500px;
+  min-width: 250px;
+  height: fit-content;
+  padding: 0 10px;
+  align-self: center;
+  border-radius: 10px;
+  border-color: rgba(99, 99, 99, 0.2);
+  /* box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px; */
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
 input {
   width: 100%;
 }
@@ -32,8 +45,12 @@ input {
   width: 50%;
 }
 
-.text {
+.quote-text {
   width: 100%;
+  overflow: auto;
+  /* height: auto;
+  min-height: 100px;
+  max-height: 700px; */
 }
 
 /* Labels */

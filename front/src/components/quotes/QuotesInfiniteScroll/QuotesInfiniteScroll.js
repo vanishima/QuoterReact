@@ -4,6 +4,7 @@ import Masonry from "react-masonry-css";
 
 // Element
 import Quote from "components/quotes/Quote/Quote";
+import MySpinner from "components/common/Spinner/Spinner";
 import useInfiniteScroll from "hooks/useInfiniteScroll";
 
 // API
@@ -25,7 +26,7 @@ const QuotesInfiniteScroll = ({
   // console.log("QuotesInfiniteScroll", pageSize, page, hasMore);
 
   // console.log("quotes", quotes);
-  // console.log("loading", loading);
+  console.log("loading", loading);
 
   const loadMoreItems = () => {
     dispatch(fetchQuotes(pageSize, page, refresh));
@@ -69,7 +70,10 @@ const QuotesInfiniteScroll = ({
           ))}
         </Masonry>
       )}
-      {loading && <p>Fetching items...</p>}
+      {
+        loading && <MySpinner />
+        // <p>Fetching items...</p>
+      }
     </div>
   );
 };

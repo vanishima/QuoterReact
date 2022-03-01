@@ -502,9 +502,4 @@ function QuotesDB() {
   return myDB;
 }
 
-function addAuthorBook(q) {
-  if (q.author) q.author = q.author[0];
-  if (q.book) q.book = q.book[0];
-}
-
 module.exports = QuotesDB();

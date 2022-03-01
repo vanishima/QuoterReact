@@ -52,7 +52,23 @@ router.get("/:bookId", auth, async function (req, res) {
   }
 });
 
-/* POST update or create book */
+/* POST create book */
+router.post("/create", auth, async (req, res) => {
+  console.log("Got request for /books/create", req.body);
+
+  const book = req.body;
+  const userId = req.user.id;
+
+  try {
+    const result = await BooksDB.createBook(book, userId);
+    console.log("/books/update", result);
+    res.status(200).json(result);
+  } catch (e) {
+    res.status(400).json({ msg: e.message });
+  }
+});
+
+/* POST update  book */
 router.post("/update", auth, async (req, res) => {
   console.log("Got request for /books/update", req.body);
 

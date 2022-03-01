@@ -13,7 +13,8 @@ export const ACTIONS = {
 };
 
 const FETCH_AUTHOR_URL = "/authors";
-const CREATE_AUTHOR_URL = "/authors/update";
+const CREATE_AUTHOR_URL = "/authors/create";
+// const UPDATE_AUTHOR_URL = "/authors/update";
 
 export const fetchAuthors = () => {
   return async dispatch => {
@@ -49,8 +50,7 @@ export const createAuthor = author => {
     console.log("ready to create");
 
     await axiosInstance
-      .post(CREATE_AUTHOR_URL, {
-        data: author,
+      .post(CREATE_AUTHOR_URL, author, {
         headers: {
           "Content-Type": "application/json",
         },

@@ -18,6 +18,7 @@ export const ACTIONS = {
 };
 
 const FETCH_QUOTED_BOOKS_URL = "/books";
+const CREATE_BOOK_URL = "/books/create";
 const UPDATE_BOOK_URL = "/books/update";
 
 export const fetchBooks = () => {
@@ -59,8 +60,7 @@ export const createBook = book => {
     console.log("ready to create");
 
     await axiosInstance
-      .post(UPDATE_BOOK_URL, {
-        data: book,
+      .post(CREATE_BOOK_URL, book, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -134,8 +134,7 @@ export const createChapter = (chapter, book) => {
     console.log("ready to update book");
 
     await axiosInstance
-      .post(UPDATE_BOOK_URL, {
-        data: book,
+      .post(UPDATE_BOOK_URL, book, {
         headers: {
           "Content-Type": "application/json",
         },

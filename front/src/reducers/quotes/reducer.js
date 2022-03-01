@@ -39,8 +39,8 @@ export default function quotesListReducer(state = initialState, action) {
   const { type, payload } = action;
   switch (type) {
     /* Quote List */
-    case ACTIONS.GET_QUOTES:
-      return { ...state, loading: true, refresh: false, error: undefined };
+    case ACTIONS.GET_QUOTES_REQUEST:
+      return { ...state, loading: true, error: undefined };
     case ACTIONS.GET_QUOTES_SUCCESS: {
       const { quotes, lastPage } = payload;
       // console.group("GET_QUOTES_SUCCESS");
@@ -57,6 +57,7 @@ export default function quotesListReducer(state = initialState, action) {
         ...state,
         quotes: quotes,
         loading: false,
+        refresh: false,
         hasMore: lastPage > state.searchParams.page + 1,
         searchParams: {
           ...state.searchParams,

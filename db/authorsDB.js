@@ -87,6 +87,40 @@ function AuthorsDB() {
     }
   };
 
+  myDB.createAuthor = async (author, userId) => {
+    const client = new MongoClient(uri, { useUnifiedTopology: true });
+
+    try {
+      await client.connect();
+
+      const col = client.db(DB_NAME).collection(COL_AUTHORS);
+
+      author._id = ObjectId();
+      if (author.category) author.category = getTagsArray(author.category);
+
+      console.log(col, "Collection ready, update/create author:", author);
+
+      const filter = { _id: author._id };
+      const options = { upsert: true };
+
+      const updateDoc = {
+        $set: {
+          name: author.name,
+          userId: ObjectId(userId),
+        },
+      };
+
+      const result = await col.updateOne(filter, updateDoc, options);
+
+      // console.groupEnd("created:", result);
+
+      return { _id: result.upsertedId, name: author.name };
+    } finally {
+      console.groupEnd("Closing the connection");
+      client.close();
+    }
+  };
+
   myDB.updateAuthor = async (author, userId) => {
     const client = new MongoClient(uri, { useUnifiedTopology: true });
     console.group("Connecting to the db");

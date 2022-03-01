@@ -9,6 +9,7 @@
 }
 
 .memo .text {
+  width: 100%;
   justify-content: center;
   align-items: center;
   place-items: center;

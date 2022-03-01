@@ -1,5 +1,8 @@
 .quotes-infinite-scroll {
   margin: 2rem;
+  /* display: flex;
+  justify-content: center;
+  align-items: center; */
 }
 
 .quotes-grid {

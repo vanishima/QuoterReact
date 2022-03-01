@@ -7,6 +7,10 @@ const useClickOutside = handler => {
 
   useEffect(() => {
     let handleClick = event => {
+      if (domNode && domNode.current) {
+        console.log("domNode.current", domNode.current);
+        console.log("event.target", event.target);
+      }
       if (
         domNode &&
         domNode.current &&

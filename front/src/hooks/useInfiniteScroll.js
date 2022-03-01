@@ -17,16 +17,20 @@ const useInfiniteScroll = (callback, isFetching) => {
       if (isFetching) return;
 
       // stop watching targets, you can think of it as a reset
+      // so our new last element will be hooked correctly
       if (observer.current) observer.current.disconnect();
 
       // create a new intersection observer and execute the
       // callback in case of an intersecting event
-      observer.current = new IntersectionObserver(entries => {
-        if (entries[0].isIntersecting) {
-          console.log("callback", callback);
-          callback();
-        }
-      });
+      observer.current = new IntersectionObserver(
+        entries => {
+          if (entries[0].isIntersecting) {
+            // console.log("Last element visible", entries[0], callback);
+            callback();
+          }
+        },
+        { threshold: 1 }
+      );
 
       // if there is a node, let the intersection observer
       // watch that node
