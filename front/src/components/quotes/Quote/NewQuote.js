@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { useDispatch } from "react-redux";
 import _ from "lodash";
@@ -19,7 +19,6 @@ import {
 } from "reducers/books/selectors";
 import { selectCurrentAuthor } from "reducers/authors/selectors";
 import { selectCurrentTags } from "reducers/tags/selectors";
-import { selectCurrentLabels } from "reducers/labels/selectors";
 import useClickOutside from "hooks/useClickOutside";
 
 import Textarea from "components/inputs/Textarea";
@@ -27,7 +26,6 @@ import AuthorSelect from "../../inputs/CreatableSelect/AuthorSelect";
 import BookSelect from "../../inputs/CreatableSelect/BookSelect";
 import ChapterSelect from "components/inputs/CreatableSelect/ChapterSelect";
 import Toolbar from "./Toolbar/Toolbar";
-import Labels from "components/quotes/Quote/Labels/Labels";
 import Tags from "components/quotes/Quote/Tags/Tags";
 import Memos from "components/quotes/Quote/Memos/Memos";
 
@@ -41,7 +39,6 @@ const user = JSON.parse(localStorage.getItem("currentUser"));
 const NewQuote = ({
   editing,
   quote,
-  currentLabels,
   currentAuthor,
   currentBook,
   currentTags,
@@ -49,7 +46,7 @@ const NewQuote = ({
 }) => {
   const dispatch = useDispatch();
   const newQuoteRef = useClickOutside(() => {
-    dispatch(toggleEditing());
+    // dispatch(toggleEditing());
   });
 
   const toggleEdit = () => {
@@ -72,7 +69,6 @@ const NewQuote = ({
       const activeQuote = {
         ...quote,
         date: isoDateWithoutTimezone(new Date()),
-        labels: currentLabels.map(label => label.label),
         tags: currentTags.map(tag => tag.label),
         author: { _id: currentAuthor._id, name: currentAuthor.name },
         book: { _id: currentBook._id, title: currentBook.title },
@@ -107,7 +103,6 @@ const NewQuote = ({
             value={quote.text}
           />
           <Tags tags={currentTags} />
-          <Labels labels={currentLabels} />
           <div className="author-book-bar mb-2">
             <AuthorSelect className="half" />
             <BookSelect className="half" />
@@ -135,7 +130,6 @@ const mapStateToProps = (state, ownProps) => ({
   currentBook: selectCurrentBook(state),
   currentChapter: selectCurrentChapter(state),
   currentTags: selectCurrentTags(state),
-  currentLabels: selectCurrentLabels(state),
   ...ownProps,
 });
 

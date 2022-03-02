@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import useClickInside from "hooks/useClickInside";
-import { setEditingQuote } from "reducers/quotes/actions";
+import { setEditingQuote, cancelEditingQuote } from "reducers/quotes/actions";
 
 import DateButton from "./DateButton";
 // import LabelButton from "./LabelButton";
@@ -27,6 +27,11 @@ const Toolbar = ({
     }
   });
 
+  const handleCancel = () => {
+    console.log("cancel");
+    dispatch(cancelEditingQuote());
+  };
+
   return (
     <div className="option-bar" ref={toolbarRef}>
       <div className="quote-options">
@@ -36,11 +41,19 @@ const Toolbar = ({
         <DateButton showText={showText} quoteId={quoteId} />
         <PrivacyButton quoteId={quoteId} />
       </div>
-      <button className="btn save-button" onClick={handleSubmit}>
-        Save
-      </button>
+      {(isEditing || !quoteId) && (
+        <>
+          <button className="btn quote-option-button" onClick={handleSubmit}>
+            Save
+          </button>
+
+          <button className="btn quote-option-button" onClick={handleCancel}>
+            Cancel
+          </button>
+        </>
+      )}
       {isEditing && (
-        <button className="btn delete-button" onClick={handleDelete}>
+        <button className="btn quote-option-button" onClick={handleDelete}>
           Delete
         </button>
       )}

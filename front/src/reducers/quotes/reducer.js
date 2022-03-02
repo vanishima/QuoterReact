@@ -164,7 +164,7 @@ export default function quotesListReducer(state = initialState, action) {
     /* Update Quote */
 
     case ACTIONS.CANCEL_EDITING_QUOTE:
-      return { ...state, activeQuote: undefined, activeQuoteId: undefined };
+      return { ...state, editing: false, activeQuoteId: undefined };
     case SET_EDITING_QUOTE: {
       const { quoteId } = payload;
       const activeQuote = state.quotes[quoteId];
@@ -200,6 +200,30 @@ export default function quotesListReducer(state = initialState, action) {
             ...state.quotes[quoteId],
             [key]:
               oldList && oldList.length > 0 ? [...oldList, value] : [value],
+          },
+        },
+      };
+    }
+
+    case QUOTE_ACTIONS.UPDATE_QUOTE_MEMO_BY_ID: {
+      console.log("UPDATE_QUOTE_MEMO_BY_ID");
+      const { quoteId, memo } = payload;
+      console.log("memo", memo);
+      let updatedMemos = state.quotes[quoteId].memos;
+      updatedMemos = updatedMemos.map(m => {
+        if (m._id === memo._id) {
+          return memo;
+        }
+        return m;
+      });
+      console.log("updatedMemos", updatedMemos);
+      return {
+        ...state,
+        quotes: {
+          ...state.quotes,
+          [quoteId]: {
+            ...state.quotes[quoteId],
+            memos: updatedMemos,
           },
         },
       };

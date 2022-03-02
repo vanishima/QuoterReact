@@ -1,12 +1,12 @@
 import React from "react";
 import Memo from "./Memo";
 
-const Memos = ({ memos }) => {
+const Memos = ({ memos, quoteId }) => {
   return (
     <div className="memos">
       {memos.map(memo => (
         <div key={memo._id}>
-          <Memo memo={memo} />
+          <Memo memo={memo} quoteId={quoteId} />
         </div>
       ))}
     </div>

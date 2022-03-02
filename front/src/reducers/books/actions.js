@@ -49,8 +49,10 @@ export const setBook = book => {
   return { type: ACTIONS.SET_BOOK, payload: { book } };
 };
 
-export const resetBook = {
-  type: ACTIONS.RESET_BOOK,
+export const resetBook = () => {
+  return {
+    type: ACTIONS.RESET_BOOK,
+  };
 };
 
 export const createBook = book => {

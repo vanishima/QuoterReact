@@ -9,19 +9,24 @@ import {
   setChapter,
   resetChapter,
 } from "reducers/books/actions";
+import { selectLoading, selectActiveQuoteId } from "reducers/quotes/selectors";
+import {
+  selectCurrentBook,
+  selectCurrentChapter,
+} from "reducers/books/selectors";
 
 const ChapterSelect = ({
   className,
   submitting,
-  chapters = [],
   currentBook,
   currentChapter,
+  activeQuoteId,
 }) => {
   const dispatch = useDispatch();
   //   console.group("ChapterSelect");
   // console.log("default", currentChapter, chapters);
-  console.log("chapters", chapters);
   // console.groupEnd();
+  // console.log("currentChapter", currentChapter);
 
   const handleCreate = chapterTitle => {
     const newChapter = { title: chapterTitle, order: 0 };
@@ -43,7 +48,7 @@ const ChapterSelect = ({
       className={`${className}`}
       placeholder="Select chapter..."
       isClearable={true}
-      options={chapters}
+      options={currentBook?.chapters}
       value={currentChapter && processItem(currentChapter, "label")}
       createOption={handleCreate}
       changeOption={handleChange}
@@ -54,11 +59,10 @@ const ChapterSelect = ({
 };
 
 const mapStateToProps = (state, ownProps) => ({
-  submitting: state.quotes.loading,
-  isFetching: state.books.loading,
-  currentBook: state.books.currentBook,
-  chapters: state.books.currentBook?.chapters,
-  currentChapter: state.books.currentChapter,
+  submitting: selectLoading(state),
+  currentBook: selectCurrentBook(state),
+  currentChapter: selectCurrentChapter(state),
+  activeQuoteId: selectActiveQuoteId(state),
   ...ownProps,
 });
 

@@ -7,10 +7,7 @@ import {
   deleteQuote,
   cancelEditingQuote,
 } from "reducers/quotes/actions";
-import {
-  updateQuoteInputById,
-  updateQuoteInputListById,
-} from "reducers/quotes/quoteActions";
+import { updateQuoteInputById } from "reducers/quotes/quoteActions";
 import {
   selectActiveQuote,
   selectActiveQuoteId,
@@ -48,14 +45,12 @@ const QuoteEditing = ({
   activeQuoteId,
   currentAuthor,
   currentBook,
-  currentTags,
-  currentLabels,
   currentChapter,
 }) => {
   const dispatch = useDispatch();
   const editingQuoteRef = useClickOutside(() => {
     console.log("clicked outside", quote._id);
-    dispatch(cancelEditingQuote());
+    // dispatch(cancelEditingQuote());
   });
   const initialBook = useSelector(state =>
     selectBookById(state, quote.book._id)
@@ -63,6 +58,8 @@ const QuoteEditing = ({
   const initialTags = useSelector(state =>
     selectTagsOptions(state, quote.tags)
   );
+
+  console.log("quote", quote);
 
   useEffect(() => {
     dispatch(setAuthor(quote.author));
@@ -128,7 +125,7 @@ const QuoteEditing = ({
         <AuthorSelect className="half" />
         <BookSelect className="half" />
       </div>
-      <Memos memos={quote.memos} />
+      <Memos memos={quote.memos} quoteId={quote._id} />
       <Toolbar
         handleSubmit={handleSubmit}
         handleDelete={handleDelete}
@@ -146,7 +143,6 @@ const mapStateToProps = (state, ownProps) => ({
   currentAuthor: selectCurrentAuthor(state),
   currentBook: selectCurrentBook(state),
   currentChapter: selectCurrentChapter(state),
-  currentTags: selectCurrentTags(state),
   ...ownProps,
 });
 

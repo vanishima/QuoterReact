@@ -67,7 +67,7 @@ const Quote = props => {
               {getRelativeTime(quote.date)}
             </small>
           )}
-          {showMemo && <Memos memos={quote.memos} />}
+          {showMemo && <Memos memos={quote.memos} quoteId={quote._id} />}
         </div>
       </div>
       <Toolbar

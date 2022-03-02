@@ -9,7 +9,6 @@ export const dateSelector = state => state.quotes.newQuote.date;
 
 export const selectQuotes = state => state.quotes.quotes;
 export const selectSortedQuotes = createSelector(selectQuotes, quotes => {
-  //   return quotes ? Object.values(quotes) : [];
   return quotes
     ? _.orderBy(Object.values(quotes), quote => new Date(quote.date), "desc")
     : [];

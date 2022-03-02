@@ -4,7 +4,7 @@ import CreatableSelect from "components/inputs/CreatableSelect/CreatableSelect";
 import { processItem } from "./util";
 
 import { setAuthor, createAuthor } from "reducers/authors/actions";
-import { resetBook } from "reducers/books/actions";
+import { resetBook, setBook, setChapter } from "reducers/books/actions";
 
 const AuthorSelect = ({ className, submitting, authors, currentAuthor }) => {
   const dispatch = useDispatch();
@@ -22,13 +22,15 @@ const AuthorSelect = ({ className, submitting, authors, currentAuthor }) => {
   const handleChange = author => {
     // console.log("handleChange", author);
     dispatch(setAuthor(author));
-    dispatch(resetBook);
+    dispatch(resetBook());
   };
 
   const handleClear = () => {
-    console.log("handleClear in BookSelect");
+    console.log("handleClear in AuthorSelect");
     dispatch(setAuthor(undefined));
-    dispatch(resetBook);
+    // dispatch(resetBook());
+    dispatch(setBook(undefined));
+    dispatch(setChapter(undefined));
   };
 
   return (

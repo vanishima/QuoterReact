@@ -4,7 +4,12 @@ import { connect, useDispatch } from "react-redux";
 import CreatableSelect from "components/inputs/CreatableSelect/CreatableSelect";
 import { processItem } from "./util";
 
-import { setBook, createBook, resetBook } from "reducers/books/actions";
+import {
+  setBook,
+  createBook,
+  resetBook,
+  resetChapter,
+} from "reducers/books/actions";
 import { setAuthor } from "reducers/authors/actions";
 
 const BookSelect = ({
@@ -42,6 +47,7 @@ const BookSelect = ({
     dispatch(setBook(book));
     console.log("newauthor", newAuthor);
     dispatch(setAuthor(newAuthor));
+    dispatch(resetChapter());
   };
 
   const handleClear = () => {

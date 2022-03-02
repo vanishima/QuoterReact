@@ -4,6 +4,7 @@ export const QUOTE_ACTIONS = {
   UPDATE_QUOTE_INPUT_LIST_BY_ID: "UPDATE_QUOTE_INPUT_LIST_BY_ID",
   UPDATE_QUOTE_AUTHOR_BY_ID: "UPDATE_QUOTE_AUTHOR_BY_ID",
   UPDATE_QUOTE_BOOK_BY_ID: "UPDATE_QUOTE_BOOK_BY_ID",
+  UPDATE_QUOTE_MEMO_BY_ID: "UPDATE_QUOTE_MEMO_BY_ID",
 };
 
 export const setEditingQuote = quoteId => {
@@ -16,10 +17,12 @@ export const updateQuoteInputById = (quoteId, key, value) => ({
   payload: { quoteId, key, value },
 });
 
-export const updateQuoteInputListById = (quoteId, key, value) => ({
-  type: QUOTE_ACTIONS.UPDATE_QUOTE_INPUT_LIST_BY_ID,
-  payload: { quoteId, key, value },
-});
+export const updateQuoteInputListById = (quoteId, key, value) => {
+  return {
+    type: QUOTE_ACTIONS.UPDATE_QUOTE_INPUT_LIST_BY_ID,
+    payload: { quoteId, key, value },
+  };
+};
 
 export const updateQuoteAuthorById = (quoteId, author) => ({
   type: QUOTE_ACTIONS.UPDATE_QUOTE_AUTHOR_BY_ID,
@@ -30,3 +33,11 @@ export const updateQuoteBookById = (quoteId, author, book) => ({
   type: QUOTE_ACTIONS.UPDATE_QUOTE_BOOK_BY_ID,
   payload: { quoteId, author, book },
 });
+
+export const updateQuoteMemoById = (quoteId, memo) => {
+  console.log("updateQuoteMemoById");
+  return {
+    type: QUOTE_ACTIONS.UPDATE_QUOTE_MEMO_BY_ID,
+    payload: { quoteId, memo },
+  };
+};

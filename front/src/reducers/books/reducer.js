@@ -79,7 +79,7 @@ export default function booksReducer(state = initialState, action) {
       const { chapter } = payload;
       return {
         ...state,
-        currentChapter: chapter,
+        currentChapter: chapter || undefined,
       };
     }
     case ACTIONS.RESET_CHAPTER:
@@ -90,6 +90,7 @@ export default function booksReducer(state = initialState, action) {
     case ACTIONS.CREATE_CHAPTER_FAILURE:
       return { ...state, currentChapter: undefined };
     case ACTIONS.RESET_BOOK:
+      console.log("RESET_BOOK");
       return { ...state, currentBook: undefined, currentChapter: undefined };
     default:
       return state;
