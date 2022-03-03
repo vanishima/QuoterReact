@@ -108,7 +108,7 @@ const NewQuote = ({
             <BookSelect className="half" />
           </div>
           <Memos memos={quote.memos} />
-          <Toolbar handleSubmit={handleSubmit} />
+          <Toolbar handleSubmit={handleSubmit} isEditing={true} />
         </>
       ) : (
         <input

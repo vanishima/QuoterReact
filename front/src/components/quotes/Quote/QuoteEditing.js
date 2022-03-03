@@ -2,11 +2,8 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { useDispatch, useSelector } from "react-redux";
 import _ from "lodash";
-import {
-  updateQuote,
-  deleteQuote,
-  cancelEditingQuote,
-} from "reducers/quotes/actions";
+import { updateQuote, deleteQuote } from "reducers/quotes/quoteActions";
+import { cancelEditingQuote } from "reducers/quotes/actions";
 import { updateQuoteInputById } from "reducers/quotes/quoteActions";
 import {
   selectActiveQuote,

@@ -12,12 +12,9 @@ export const ACTIONS = {
   REMOVE_MEMO: "REMOVE_MEMO",
   UPDATE_MEMO: "UPDATE_MEMO",
   INITIALIZE_QUOTE: "INITIALIZE_QUOTE",
-  CREATE_QUOTE: "CREATE_QUOTE",
+  CREATE_QUOTE_REQUEST: "CREATE_QUOTE_REQUEST",
   CREATE_QUOTE_SUCCESS: "CREATE_QUOTE_SUCCESS",
   CREATE_QUOTE_FAILURE: "CREATE_QUOTE_FAILURE",
-  UPDATE_QUOTE_SUCCESS: "UPDATE_QUOTE_SUCCESS",
-  DELETE_QUOTE_SUCCESS: "DELETE_QUOTE_SUCCESS",
-  UPDATE_QUOTE_LIST_INPUT: "UPDATE_QUOTE_LIST_INPUT",
   CANCEL_EDITING_QUOTE: "CANCEL_EDITING_QUOTE",
 };
 
@@ -26,7 +23,6 @@ export const TOGGLE_EDITING = "TOGGLE_EDITING";
 
 const FETCH_QUOTES_URL = "/quotes";
 const CREATE_UPDATE_QUOTE_URL = "/quotes/update";
-const DELETE_QUOTE_URL = "/quotes/delete/";
 
 export const updateQuoteInput = (key, value) => ({
   type: ACTIONS.UPDATE_QUOTE_INPUT,
@@ -118,7 +114,7 @@ export const initializeQuote = () => {
 
 export const createQuote = quote => {
   return async dispatch => {
-    dispatch({ type: ACTIONS.CREATE_QUOTE });
+    dispatch({ type: ACTIONS.CREATE_QUOTE_REQUEST });
     console.log("ready to create quote", quote);
 
     await axiosInstance
@@ -140,51 +136,6 @@ export const createQuote = quote => {
         console.log("failure", err);
         console.groupEnd();
         dispatch({ type: ACTIONS.CREATE_QUOTE_FAILURE });
-      });
-  };
-};
-
-export const updateQuote = quote => {
-  return async dispatch => {
-    dispatch({ type: ACTIONS.CREATE_QUOTE });
-    console.group("ready to update quote", quote);
-    await axiosInstance
-      .post(CREATE_UPDATE_QUOTE_URL, quote, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then(res => {
-        console.log("successfully updated", res.data);
-        console.groupEnd();
-        dispatch({
-          type: ACTIONS.UPDATE_QUOTE_SUCCESS,
-          payload: { quote },
-        });
-      })
-      .catch(err => {
-        console.log("failure", err);
-        console.groupEnd();
-        dispatch({ type: ACTIONS.CREATE_QUOTE_FAILURE });
-      });
-  };
-};
-
-export const deleteQuote = quoteId => {
-  return async dispatch => {
-    await axiosInstance
-      .post(DELETE_QUOTE_URL + quoteId)
-      .then(res => {
-        console.log("successfully updated", res.data);
-        console.groupEnd();
-        dispatch({
-          type: ACTIONS.DELETE_QUOTE_SUCCESS,
-          payload: { quoteId },
-        });
-      })
-      .catch(err => {
-        console.log("failure", err);
-        console.groupEnd();
       });
   };
 };

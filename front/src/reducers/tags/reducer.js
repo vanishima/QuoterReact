@@ -45,7 +45,6 @@ export default function tagsReducer(state = initialState, action) {
       return {
         ...state,
         tags: [tagOption, ...state.tags],
-        currentTags: [...state.currentTags, tagOption.label],
         loading: false,
       };
     }

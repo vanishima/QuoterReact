@@ -9,7 +9,7 @@ const TagButton = ({ showText = true, quoteId }) => {
   const addTagPopover = (
     <Popover className="choose-label-popover">
       <div>Tag quote</div>
-      <TagSelect />
+      <TagSelect quoteId={quoteId} />
     </Popover>
   );
 

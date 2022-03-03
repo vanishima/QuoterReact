@@ -5,7 +5,10 @@ import {
   updateMemo,
   setEditingQuote,
 } from "reducers/quotes/actions";
-import { updateQuoteMemoById } from "reducers/quotes/quoteActions";
+import {
+  updateQuoteMemoById,
+  removeMemoFromQuote,
+} from "reducers/quotes/quoteActions";
 import { Dropdown } from "react-bootstrap";
 import EditMemo from "./EditMemo";
 
@@ -32,13 +35,20 @@ const Memo = ({ memo, quoteId }) => {
   };
 
   const handleDelete = () => {
-    dispatch(removeMemo(memo._id));
+    console.log("handleDelete");
+    if (activeQuoteId) {
+      console.log("removeMemoFromQuote");
+      dispatch(removeMemoFromQuote(activeQuoteId, memo));
+    } else {
+      console.log("removeMemo");
+      dispatch(removeMemo(memo._id));
+    }
   };
 
   const handleSave = () => {
     console.log("Memo activeQuoteId", activeQuoteId);
     const newMemo = { ...memo, text: text };
-    if (memo._id) {
+    if (activeQuoteId) {
       console.log("inside active quote", memo._id);
       dispatch(updateQuoteMemoById(activeQuoteId, newMemo));
     } else {

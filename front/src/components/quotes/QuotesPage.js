@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { connect, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import Layout from "components/common/Layout";
 import QuotesInfiniteScroll from "components/quotes/QuotesInfiniteScroll/QuotesInfiniteScroll";
@@ -31,17 +31,9 @@ const QuotesPage = props => {
         <section className="middle">
           <QuotesInfiniteScroll />
         </section>
-        {/* Filter bar */}
       </div>
     </Layout>
   );
 };
 
-const mapStateToProps = state => ({
-  quotes: state.quotes.quotes,
-  loading: state.quotes.loading,
-  hasErrors: state.quotes.hasErrors,
-  token: state.user.token,
-});
-
-export default connect(mapStateToProps)(QuotesPage);
+export default QuotesPage;
