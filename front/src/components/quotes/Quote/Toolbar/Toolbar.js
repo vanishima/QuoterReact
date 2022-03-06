@@ -1,5 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Dropdown } from "react-bootstrap";
 import useClickInside from "hooks/useClickInside";
 import { setEditingQuote, cancelEditingQuote } from "reducers/quotes/actions";
 
@@ -17,11 +18,11 @@ const Toolbar = ({
   handleDelete,
   showText,
   quoteId,
+  isCreating,
   isEditing,
 }) => {
   const dispatch = useDispatch();
   const activeQuoteId = useSelector(state => selectActiveQuoteId(state));
-  const editing = activeQuoteId === quoteId;
 
   // const toolbarRef = useClickInside(() => {
   //   if (!isEditing && quoteId) {
@@ -30,46 +31,59 @@ const Toolbar = ({
   //   }
   // });
 
+  const handleEdit = () => {
+    console.log("handleEdit");
+    dispatch(setEditingQuote(quoteId));
+  };
+
   const handleCancel = () => {
     console.log("cancel");
     dispatch(cancelEditingQuote());
   };
 
-  const renderButtons = () => {
-    if (isEditing) {
-      return (
-        <button className={`btn quote-option-button}`} onClick={handleSubmit}>
-          Save
-        </button>
-      );
-    } else {
-      return (
-        <>
-          <button className={`btn quote-option-button}`} onClick={handleSubmit}>
-            Save
-          </button>
-          <button className={`btn quote-option-button}`} onClick={handleCancel}>
-            Cancel
-          </button>
-          <button className={`btn quote-option-button}`} onClick={handleDelete}>
-            Delete
-          </button>
-        </>
-      );
-    }
-  };
   //ref={toolbarRef}
   return (
     <div className="option-bar">
       <div className="quote-options">
         <TagButton showText={showText} quoteId={quoteId} />
-        {/* <LabelButton showText={showText} quoteId={quoteId} /> */}
         <MemoButton showText={showText} quoteId={quoteId} />
         <DateButton showText={showText} quoteId={quoteId} />
         <PrivacyButton quoteId={quoteId} />
       </div>
 
-      <div className="quote-options-button">{renderButtons()}</div>
+      {(isCreating || isEditing) && (
+        <button className="btn quote-option-button" onClick={handleSubmit}>
+          Save
+        </button>
+      )}
+      {!isCreating && (
+        <Dropdown>
+          <Dropdown.Toggle variant="light" className="memo-options-toggle">
+            &#8942;
+          </Dropdown.Toggle>
+
+          <Dropdown.Menu>
+            <Dropdown.Item
+              className="btn quote-options-item"
+              onClick={handleEdit}
+            >
+              Edit
+            </Dropdown.Item>
+            <Dropdown.Item
+              className="btn quote-options-item"
+              onClick={handleCancel}
+            >
+              Cancel
+            </Dropdown.Item>
+            <Dropdown.Item
+              className="quote-options-item delete-button"
+              onClick={handleDelete}
+            >
+              Delete
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+      )}
     </div>
   );
 };

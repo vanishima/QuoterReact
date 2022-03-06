@@ -1,20 +1,17 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { addMemo } from "reducers/quotes/actions";
 import { updateQuoteInputListById } from "reducers/quotes/quoteActions";
-import { selectActiveQuoteId } from "reducers/quotes/selectors";
 import { BsSticky } from "react-icons/bs";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import { Popover } from "react-bootstrap";
 
 import EditMemo from "../Memos/EditMemo";
 
-import { isoDateWithoutTimezone } from "api/utilsAPI";
 import "./styles/MemoButton.css";
 
-const MemoButton = ({ showText = true }) => {
+const MemoButton = ({ showText = true, quoteId }) => {
   const [text, setText] = useState("");
-  const activeQuoteId = useSelector(state => selectActiveQuoteId(state));
   const dispatch = useDispatch();
 
   const handleChange = e => {
@@ -29,18 +26,18 @@ const MemoButton = ({ showText = true }) => {
       _id: +new Date(),
       user: { _id: user.id, name: user.name },
       text: text,
-      date: isoDateWithoutTimezone(new Date()),
+      date: new Date(),
     };
     console.log("add memo to memo list", newMemo);
 
-    if (activeQuoteId) {
-      console.log("activeQuoteId", activeQuoteId);
-      dispatch(updateQuoteInputListById(activeQuoteId, "memos", newMemo));
+    if (quoteId) {
+      console.log("quoteId", quoteId);
+      dispatch(updateQuoteInputListById(quoteId, "memos", newMemo));
     } else {
       dispatch(addMemo(newMemo));
     }
     setText("");
-    // document.body.click();
+    document.body.click();
   };
 
   const AddMemoPopover = (

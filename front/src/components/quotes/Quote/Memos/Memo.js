@@ -1,10 +1,6 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  removeMemo,
-  updateMemo,
-  setEditingQuote,
-} from "reducers/quotes/actions";
+import { useDispatch } from "react-redux";
+import { removeMemo, updateMemo } from "reducers/quotes/actions";
 import {
   updateQuoteMemoById,
   removeMemoFromQuote,
@@ -13,21 +9,19 @@ import { Dropdown } from "react-bootstrap";
 import EditMemo from "./EditMemo";
 
 import "./styles/Memo.css";
-import { selectActiveQuoteId } from "reducers/quotes/selectors";
 
 const Memo = ({ memo, quoteId }) => {
   const [editing, setEditing] = useState(false);
   const [text, setText] = useState(memo && memo.text);
-  const activeQuoteId = useSelector(state => selectActiveQuoteId(state));
   const dispatch = useDispatch();
 
   const handleEdit = () => {
     console.log("editing");
     setEditing(true);
-    if (quoteId) {
-      console.log("setEditing quote");
-      dispatch(setEditingQuote(quoteId));
-    }
+    // if (quoteId) {
+    //   console.log("setEditing quote");
+    //   dispatch(setEditingQuote(quoteId));
+    // }
   };
 
   const handleChange = e => {
@@ -36,9 +30,9 @@ const Memo = ({ memo, quoteId }) => {
 
   const handleDelete = () => {
     console.log("handleDelete");
-    if (activeQuoteId) {
+    if (quoteId) {
       console.log("removeMemoFromQuote");
-      dispatch(removeMemoFromQuote(activeQuoteId, memo));
+      dispatch(removeMemoFromQuote(quoteId, memo));
     } else {
       console.log("removeMemo");
       dispatch(removeMemo(memo._id));
@@ -46,11 +40,11 @@ const Memo = ({ memo, quoteId }) => {
   };
 
   const handleSave = () => {
-    console.log("Memo activeQuoteId", activeQuoteId);
+    console.log("Memo quoteId", quoteId);
     const newMemo = { ...memo, text: text };
-    if (activeQuoteId) {
+    if (quoteId) {
       console.log("inside active quote", memo._id);
-      dispatch(updateQuoteMemoById(activeQuoteId, newMemo));
+      dispatch(updateQuoteMemoById(quoteId, newMemo));
     } else {
       console.log("updating memo", text);
       console.log("newMemo", newMemo);
@@ -76,7 +70,10 @@ const Memo = ({ memo, quoteId }) => {
           <Dropdown.Item className="memo-options-item" onClick={handleEdit}>
             Edit
           </Dropdown.Item>
-          <Dropdown.Item className="memo-options-item" onClick={handleDelete}>
+          <Dropdown.Item
+            className="memo-options-item delete-button"
+            onClick={handleDelete}
+          >
             Delete
           </Dropdown.Item>
         </Dropdown.Menu>

@@ -6,7 +6,6 @@ import {
   updateQuoteInput,
   initializeQuote,
   createQuote,
-  toggleEditing,
 } from "reducers/quotes/actions";
 import {
   selectNewQuote,
@@ -69,7 +68,7 @@ const NewQuote = ({
       const activeQuote = {
         ...quote,
         date: isoDateWithoutTimezone(new Date()),
-        tags: currentTags.map(tag => tag.label),
+        tags: currentTags, //.map(tag => tag.label),
         author: { _id: currentAuthor._id, name: currentAuthor.name },
         book: { _id: currentBook._id, title: currentBook.title },
         user: { _id: user.id, name: user.name },
@@ -108,7 +107,7 @@ const NewQuote = ({
             <BookSelect className="half" />
           </div>
           <Memos memos={quote.memos} />
-          <Toolbar handleSubmit={handleSubmit} isEditing={true} />
+          <Toolbar handleSubmit={handleSubmit} isCreating={true} />
         </>
       ) : (
         <input

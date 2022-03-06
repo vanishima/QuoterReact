@@ -168,7 +168,6 @@ export default function quotesListReducer(state = initialState, action) {
     case SET_EDITING_QUOTE: {
       const { quoteId } = payload;
       const activeQuote = state.quotes[quoteId];
-      console.log("SET_EDITING_QUOTE", activeQuote);
       return {
         ...state,
         editing: false,
@@ -176,9 +175,8 @@ export default function quotesListReducer(state = initialState, action) {
         activeQuoteId: quoteId,
       };
     }
-    case QUOTE_ACTIONS.UPDATE_QUOTE_INPUT_BY_ID: {
+    case QUOTE_ACTIONS.UPDATE_LOCAL_QUOTE_INPUT: {
       const { quoteId, key, value } = payload;
-      console.log("UPDATE_QUOTE_INPUT_BY_ID", quoteId, key, value);
       return {
         ...state,
         quotes: {

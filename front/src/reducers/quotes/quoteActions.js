@@ -1,9 +1,10 @@
 import axiosInstance from "axiosconfig";
 import { selectQuoteById } from "reducers/quotes/selectors";
+import { updatedQuoteMapper } from "./mappers";
 
 export const QUOTE_ACTIONS = {
   SET_EDITING_QUOTE: "SET_EDITING_QUOTE",
-  UPDATE_QUOTE_INPUT_BY_ID: "UPDATE_QUOTE_INPUT_BY_ID",
+  UPDATE_LOCAL_QUOTE_INPUT: "UPDATE_LOCAL_QUOTE_INPUT",
   UPDATE_QUOTE_INPUT_LIST_BY_ID: "UPDATE_QUOTE_INPUT_LIST_BY_ID",
   UPDATE_QUOTE_LIST_INPUT: "UPDATE_QUOTE_LIST_INPUT",
 
@@ -27,17 +28,18 @@ export const setEditingQuote = quoteId => {
   return { type: QUOTE_ACTIONS.SET_EDITING_QUOTE, payload: { quote } };
 };
 
+export const updateLocalQuoteInput = (quoteId, key, value) => {
+  return {
+    type: QUOTE_ACTIONS.UPDATE_LOCAL_QUOTE_INPUT,
+    payload: { quoteId, key, value },
+  };
+};
+
 export const updateQuoteInputById = (quoteId, key, value) => {
   return async (dispatch, getState) => {
     console.group("updateQuoteInputById");
-    // dispatch({
-    //   type: QUOTE_ACTIONS.UPDATE_QUOTE_INPUT_BY_ID,
-    //   payload: { quoteId, key, value },
-    // });
-    let quote = selectQuoteById(getState(), quoteId);
-    quote[key] = [...quote.key, value];
-    console.log("quote", quote);
-    dispatch(updateQuote(quote));
+    dispatch(updateLocalQuoteInput(quoteId, key, value));
+    // dispatch(updateQuote(quoteId));
     console.groupEnd("finished");
   };
 };
@@ -66,16 +68,34 @@ export const updateQuoteBookById = (quoteId, author, book) => ({
 });
 
 export const updateQuoteMemoById = (quoteId, memo) => {
-  return {
-    type: QUOTE_ACTIONS.UPDATE_QUOTE_MEMO_BY_ID,
-    payload: { quoteId, memo },
+  return async (dispatch, getState) => {
+    dispatch({
+      type: QUOTE_ACTIONS.UPDATE_QUOTE_MEMO_BY_ID,
+      payload: { quoteId, memo },
+    });
+    const quote = selectQuoteById(getState(), quoteId);
+    console.log("updated quote should look like", quote);
+    dispatch(updateQuote(quote));
   };
 };
 
-export const removeMemoFromQuote = (quoteId, memo) => ({
-  type: QUOTE_ACTIONS.REMOVE_MEMO_FROM_QUOTE,
-  payload: { quoteId, memo },
-});
+export const removeMemoFromQuote = (quoteId, memo) => {
+  return async (dispatch, getState) => {
+    dispatch({
+      type: QUOTE_ACTIONS.REMOVE_MEMO_FROM_QUOTE,
+      payload: { quoteId, memo },
+    });
+    dispatch(updateQuoteById(quoteId));
+  };
+};
+
+export const updateQuoteById = quoteId => {
+  return async (dispatch, getState) => {
+    const quote = selectQuoteById(getState(), quoteId);
+    console.log("updated quote should look like", quote);
+    dispatch(updateQuote(quote));
+  };
+};
 
 export const removeTagFromQuote = (quoteId, tag) => {
   return async (dispatch, getState) => {
@@ -92,6 +112,8 @@ export const removeTagFromQuote = (quoteId, tag) => {
 
 export const updateQuote = quote => {
   return async dispatch => {
+    // map quote to desired structure
+    console.log("updateQuote", quote);
     dispatch({ type: QUOTE_ACTIONS.UPDATE_QUOTE_REQUEST, payload: { quote } });
     console.group("ready to update quote", quote);
     await axiosInstance

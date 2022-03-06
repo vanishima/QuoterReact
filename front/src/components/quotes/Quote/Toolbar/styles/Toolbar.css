@@ -34,3 +34,9 @@
 .quote-option-button:hover {
   background-color: var(--grey200);
 }
+
+.delete-button:hover,
+.delete-button:focus {
+  color: white;
+  background-color: var(--darkRed);
+}
