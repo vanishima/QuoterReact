@@ -1,7 +1,14 @@
 import React from "react";
 import Tag from "./Tag";
+import { useSelector } from "react-redux";
+import { selectShowTag } from "reducers/theme/selectors";
 
-const Tags = ({ tags = [] }) => {
+import "./styles/Tags.css";
+
+const Tags = ({ tags = [], quoteId }) => {
+  const showTag = useSelector(selectShowTag);
+  if (!showTag && quoteId) return null;
+
   return (
     <div className="tags mb-2">
       {tags

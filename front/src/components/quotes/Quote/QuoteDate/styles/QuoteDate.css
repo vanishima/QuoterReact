@@ -1,0 +1,5 @@
+.quote-date {
+  text-align: right;
+  color: var(--grey800);
+  font-size: 14px;
+}

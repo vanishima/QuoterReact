@@ -56,7 +56,7 @@ const QuotesInfiniteScroll = ({
     <div className="quotes-infinite-scroll">
       {quotes && (
         <Masonry
-          breakpointCols={3}
+          breakpointCols={2}
           className="quotes-grid"
           columnClassName="quotes-grid-column"
         >

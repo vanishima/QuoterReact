@@ -9,7 +9,6 @@ import Toolbar from "./Toolbar/Toolbar";
 import Textarea from "components/inputs/Textarea";
 
 // API
-import { getRelativeTime } from "api/utilsAPI";
 import Memos from "./Memos/Memos";
 import Tags from "./Tags/Tags";
 
@@ -21,12 +20,16 @@ import {
 import { selectActiveQuoteId } from "reducers/quotes/selectors";
 
 import "./styles/Quote.css";
+import QuoteDate from "./QuoteDate/QuoteDate";
+import QuoteHeader from "./QuoteHeader/QuoteHeader";
+import QuoteFooter from "./QuoteFooter/QuoteFooter";
+import { selectDisplay } from "reducers/theme/selectors";
 
 const Quote = props => {
   const dispatch = useDispatch();
 
   const { quote, display, activeQuoteId } = props;
-  const { showDate, showTag, showMemo, showTitle } = display;
+  const { showDate, showTag, showMemo } = display;
   const isEditing = activeQuoteId === quote?._id;
   // console.log("activeQuote", quote?._id, isEditing);
 
@@ -52,10 +55,8 @@ const Quote = props => {
   };
 
   return (
-    <div className="quote card mb-3">
-      {showTitle && quote.title && (
-        <div className="card-header">{quote.title}</div>
-      )}
+    <div className={`quote card mb-3 ${isEditing ? "quote-editing" : ""}`}>
+      <QuoteHeader quoteId={quote._id} title={quote.title} />
       <div className="quote-card-body card-body">
         <div className="quoteDetails">
           <blockquote>
@@ -72,38 +73,16 @@ const Quote = props => {
               <TextIndentation className="quote-text" rawText={quote.text} />
             )}
           </blockquote>
-          <br />
-          {(!quote.author || !quote.book) && (
-            <footer className="blockquote-footer text-end">
-              {!quote.author && (
-                <span>
-                  <a
-                    className="non-link"
-                    href={`/author?id=${quote.author._id}`}
-                  >
-                    {quote.author.name}
-                  </a>
-                  ,{" "}
-                </span>
-              )}
-              {!quote.book && (
-                <cite title="Source Title">
-                  <a className="non-link" href={`/book?id=${quote.book._id}`}>
-                    {quote.book.title}
-                  </a>
-                </cite>
-              )}
-            </footer>
-          )}
-          {showTag && <Tags tags={quote.tags} />}
-          {showDate && (
-            <small className="text-muted right quote-date">
-              {getRelativeTime(quote.date)}
-            </small>
-          )}
-          {showMemo && <Memos memos={quote.memos} quoteId={quote._id} />}
+          <QuoteFooter author={quote.author} book={quote.book} />
         </div>
       </div>
+      {(showDate || showTag || showMemo) && (
+        <div className="card-footer">
+          <QuoteDate date={quote.date} />
+          <Tags tags={quote.tags} quoteId={quote._id} />
+          <Memos memos={quote.memos} quoteId={quote._id} />
+        </div>
+      )}
       <Toolbar
         handleSubmit={handleSubmit}
         handleDelete={handleDelete}
@@ -121,12 +100,11 @@ Quote.propTypes = {
   props: PropTypes.shape({
     quote: PropTypes.object.isRequired,
     activeQuoteId: PropTypes.string,
-    display: PropTypes.object,
   }),
 };
 
 const mapStateToProps = (state, ownProps) => ({
-  display: state.display,
+  display: selectDisplay(state),
   activeQuoteId: selectActiveQuoteId(state),
   ...ownProps,
 });

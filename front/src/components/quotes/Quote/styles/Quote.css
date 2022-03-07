@@ -10,7 +10,7 @@
 }
 
 .quote:hover,
-.quote:focus {
+.quote-editing {
   /* box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 14px; */
   transition: 0.4s;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
@@ -52,6 +52,9 @@
   color: white;
 } */
 
-.quote-date {
-  font-size: 14px;
+/* Quote Footer */
+.card-footer {
+  background-color: transparent;
+  border: transparent;
+  height: fit-content;
 }

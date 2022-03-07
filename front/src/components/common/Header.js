@@ -3,6 +3,8 @@ import { useDispatch } from "react-redux";
 import { Navbar, Container, Nav, Button } from "react-bootstrap";
 import { logout } from "reducers/user/actions";
 
+import DisplayControl from "./DisplayControl/DisplayControl"
+
 import "components/common/styles/header.css";
 
 const Header = props => {
@@ -59,6 +61,10 @@ const Header = props => {
                 </Button>
               </div>
             )}
+          </Navbar.Collapse>
+
+          <Navbar.Collapse>
+            <DisplayControl/>
           </Navbar.Collapse>
         </Container>
       </Navbar>

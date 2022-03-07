@@ -19,7 +19,7 @@ const PrivacyButton = ({ loading, privacy }) => {
         onClick={togglePrivacy}
         disabled={loading}
       >
-        {privacy ? <BsLock size="1.2rem" /> : <BsUnlock size="1.2rem" />}
+        {privacy === 1 ? <BsLock size="1.2rem" /> : <BsUnlock size="1.2rem" />}
       </button>
     </div>
   );
