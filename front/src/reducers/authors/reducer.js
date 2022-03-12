@@ -32,6 +32,12 @@ export default function authorsReducer(state = initialState, action) {
         loading: false,
       };
     }
+    case ACTIONS.MOVE_AUTHOR_TO_FRONT: {
+      const { author } = payload;
+      const updatedAuthors = state.authors.filter(a => a._id !== author._id);
+      updatedAuthors.unshift(author);
+      return { ...state, authors: updatedAuthors };
+    }
     case ACTIONS.FAILURE:
       return {
         ...state,

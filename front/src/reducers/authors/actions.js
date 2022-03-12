@@ -10,6 +10,7 @@ export const ACTIONS = {
   FETCH_AUTHORS_SUCCESS: "FETCH_AUTHORS_SUCCESS",
   SET_AUTHOR: "SET_AUTHOR",
   CREATE_AUTHOR_SUCCESS: "CREATE_AUTHOR_SUCCESS",
+  MOVE_AUTHOR_TO_FRONT: "MOVE_AUTHOR_TO_FRONT",
 };
 
 const FETCH_AUTHOR_URL = "/authors";
@@ -70,3 +71,8 @@ export const createAuthor = author => {
       });
   };
 };
+
+export const moveAuthorToFront = author => ({
+  type: ACTIONS.MOVE_AUTHOR_TO_FRONT,
+  payload: { author },
+});

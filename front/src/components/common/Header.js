@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { Navbar, Container, Nav, Button } from "react-bootstrap";
 import { logout } from "reducers/user/actions";
 
-import DisplayControl from "./DisplayControl/DisplayControl"
+import DisplayControl from "./DisplayControl/DisplayControl";
 
 import "components/common/styles/header.css";
 
@@ -23,7 +23,7 @@ const Header = props => {
 
   return (
     <header className="header">
-      <Navbar bg="light" expand="lg">
+      <Navbar bg="light" expand="lg" fixed="top">
         <Container>
           <Navbar.Brand>
             <h1 className="nav-title">Quoter</h1>
@@ -32,7 +32,7 @@ const Header = props => {
 
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link href="/">Quotes</Nav.Link>
+              <Nav.Link href="/quotes">Quotes</Nav.Link>
               <Nav.Link href="/authors">Authors</Nav.Link>
               <Nav.Link href="/books">Books</Nav.Link>
               <Nav.Link href="/comments">Comments</Nav.Link>
@@ -64,7 +64,7 @@ const Header = props => {
           </Navbar.Collapse>
 
           <Navbar.Collapse>
-            <DisplayControl/>
+            <DisplayControl />
           </Navbar.Collapse>
         </Container>
       </Navbar>

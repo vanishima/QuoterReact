@@ -10,8 +10,12 @@
   --darkRed: #a03d50;
   --darkBlue: #193478;
   --lightGrey: #dadadc;
-  --grey200: rgba(240, 240, 240, 0.5);
-  --grey800: rgba(82, 73, 73, 0.863);
+  /* --grey200: #d3d3d3; */
+  --grey200: #e9e9e9;
+  --grey300: #bdbdbd;
+  --grey400: #9e9e9e;
+  --grey500: #7d7d7d;
+  --grey800: #696969;
   --lightPurple: #e1dded;
 }
 

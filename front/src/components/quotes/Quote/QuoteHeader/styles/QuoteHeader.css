@@ -1,0 +1,12 @@
+.quote-header {
+  background-color: transparent;
+  border: none;
+}
+
+.quote-title {
+  text-decoration: underline;
+  text-decoration-color: var(--purple);
+  text-decoration-thickness: 7px;
+  text-decoration-style: dotted;
+  /* font-family: "Georgia"; */
+}

@@ -27,6 +27,7 @@ export const processItems = (items, key) => {
 };
 
 export const processItem = (item, key) => {
+  if (!item) return null;
   if (typeof item[key] === "string") {
     return createSelectItem(item, key);
   }

@@ -1,34 +1,32 @@
 import React from "react";
 import { connect, useDispatch } from "react-redux";
 import CreatableSelect from "components/inputs/CreatableSelect/CreatableSelect";
-import { isoDateWithoutTimezone } from "api/utilsAPI";
 
-import { addTag, removeTag, createTag, resetTags } from "reducers/tags/actions";
-import { selectTags, selectCurrentTags } from "reducers/tags/selectors";
-import { selectLoading, selectQuoteById } from "reducers/quotes/selectors";
-import { updateQuote } from "reducers/quotes/quoteActions";
+import { createTag } from "reducers/tags/actions";
+import { selectTags } from "reducers/tags/selectors";
+import {
+  selectActiveQuoteId,
+  selectLoading,
+  selectTagsSelected,
+} from "reducers/quotes/selectors";
+import {
+  addTagToQuote,
+  removeTagFromQuote,
+  setQuoteInput,
+} from "reducers/quotes/quoteActions";
 import {
   tagsStringToObjectMapper,
   tagStringToObjectMapper,
 } from "reducers/tags/mappers";
 
-const TagSelect = ({
-  className,
-  submitting,
-  tags,
-  currentTags,
-  quote,
-  quoteId,
-}) => {
+const TagSelect = ({ submitting, tags, selectedTags, quoteId }) => {
   const dispatch = useDispatch();
-  const selectedTags = quote
-    ? tagsStringToObjectMapper(quote.tags)
-    : currentTags;
   //   console.group("TagSelect");
   //   console.log("default", submitting, isFetching, tags);
   //   console.log("tags", tags);
   // console.groupEnd();
   // console.log("selectedTags", quote?.tags, quoteId, selectedTags);
+  console.log("selectedTags", selectedTags);
 
   const handleCreate = tag => {
     // console.log("handleCreate", tag);
@@ -39,55 +37,28 @@ const TagSelect = ({
 
   const handleChange = tagOption => {
     console.log("handleChange", tagOption);
-    if (quoteId) {
-      dispatch(
-        updateQuote({
-          ...quote,
-          tags: quote.tags
-            ? [...quote.tags, tagOption.label]
-            : [tagOption.label],
-        })
-      );
-      // dispatch(updateQuoteInputListById(quoteId, "tags", tag));
-    } else {
-      dispatch(addTag(tagOption));
-    }
+    dispatch(addTagToQuote(tagOption, quoteId));
   };
 
   const handleRemove = tagOption => {
     console.log("remove tag", tagOption);
-    if (quoteId) {
-      dispatch(
-        updateQuote({
-          ...quote,
-          tags: quote.tags.filter(t => t !== tagOption.label),
-        })
-      );
-      // dispatch(removeTagFromQuote(quoteId, tag));
-    } else {
-      dispatch(removeTag(tagOption));
-    }
+    dispatch(removeTagFromQuote(tagOption, quoteId));
   };
 
   const handleClear = () => {
     console.log("TagSelect handleClear");
-    if (quoteId) {
-      dispatch(updateQuote({ ...quote, tags: [] }));
-      // dispatch(updateQuoteInputById(quoteId, "tags", []));
-    } else {
-      dispatch(resetTags);
-    }
+    dispatch(setQuoteInput("tags", [], quoteId));
   };
 
   return (
     <CreatableSelect
-      className={`tag-select ${className}`}
+      className="tag-select"
       placeholder="Select Tags..."
       isClearable={true}
       isMulti={true}
       autoFocus={true}
       options={tags}
-      value={selectedTags}
+      value={quoteId ? tagsStringToObjectMapper(selectedTags) : selectedTags}
       createOption={handleCreate}
       changeOption={handleChange}
       removeOption={handleRemove}
@@ -101,8 +72,8 @@ const TagSelect = ({
 const mapStateToProps = (state, ownProps) => ({
   submitting: selectLoading(state),
   tags: selectTags(state),
-  currentTags: selectCurrentTags(state),
-  quote: selectQuoteById(state, ownProps?.quoteId),
+  selectedTags: selectTagsSelected(state),
+  quoteId: selectActiveQuoteId(state),
   ...ownProps,
 });
 

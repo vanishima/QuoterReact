@@ -1,6 +1,7 @@
 import axiosInstance from "axiosconfig";
 import { processItem } from "components/inputs/CreatableSelect/util";
 import { booksMapper } from "./mappers";
+import { setQuoteChapter } from "reducers/quotes/quoteActions";
 
 export const ACTIONS = {
   LOADING: "LOADING",
@@ -9,12 +10,12 @@ export const ACTIONS = {
   SET_BOOK: "SET_BOOK",
   CREATE_BOOK_SUCCESS: "CREATE_BOOK_SUCCESS",
   UPDATE_BOOK_SUCCESS: "UPDATE_BOOK_SUCCESS",
+  UPDATE_BOOK_FAILURE: "UPDATE_BOOK_FAILURE",
   CREATE_CHAPTER_SUCCESS: "CREATE_CHAPTER_SUCCESS",
-  CREATE_CHAPTER_FAILURE: "CREATE_CHAPTER_FAILURE",
-  ADD_CHAPTER: "ADD_CHAPTER",
   RESET_CHAPTER: "RESET_CHAPTER",
   SET_CHAPTER: "SET_CHAPTER",
   RESET_BOOK: "RESET_BOOK",
+  MOVE_BOOK_TO_FRONT: "MOVE_BOOK_TO_FRONT",
 };
 
 const FETCH_QUOTED_BOOKS_URL = "/books";
@@ -106,7 +107,7 @@ export const updateBook = book => {
       .catch(err => {
         console.log("failure", err);
         console.groupEnd();
-        dispatch({ type: ACTIONS.FAILURE });
+        dispatch({ type: ACTIONS.UPDATE_BOOK_FAILURE });
       });
   };
 };
@@ -121,7 +122,7 @@ export const resetChapter = () => ({
   type: ACTIONS.RESET_CHAPTER,
 });
 
-export const createChapter = (chapter, book) => {
+export const createChapter = (chapter, book, quoteId) => {
   return async dispatch => {
     console.group("createChapter", chapter);
     chapter = processItem(chapter, "title");
@@ -130,11 +131,11 @@ export const createChapter = (chapter, book) => {
       type: ACTIONS.SET_CHAPTER,
       payload: { chapter },
     });
+
+    // append chapter to book.chapters
     book.chapters = book.chapters ? [...book.chapters, chapter] : [chapter];
 
-    console.log("book", book);
-    console.log("ready to update book");
-
+    // update book
     await axiosInstance
       .post(UPDATE_BOOK_URL, book, {
         headers: {
@@ -146,12 +147,19 @@ export const createChapter = (chapter, book) => {
         console.groupEnd();
         dispatch({
           type: ACTIONS.CREATE_CHAPTER_SUCCESS,
+          payload: { book },
         });
+        dispatch(setQuoteChapter(chapter, quoteId));
       })
       .catch(err => {
         console.log("failure", err);
         console.groupEnd();
-        dispatch({ type: ACTIONS.CREATE_CHAPTER_FAILURE });
+        dispatch({ type: ACTIONS.UPDATE_BOOK_FAILURE });
       });
   };
 };
+
+export const moveBookToFront = book => ({
+  type: ACTIONS.MOVE_BOOK_TO_FRONT,
+  payload: { book },
+});

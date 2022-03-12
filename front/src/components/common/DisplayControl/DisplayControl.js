@@ -4,6 +4,7 @@ import {
   toggleShowDate,
   toggleShowMemo,
   toggleShowTag,
+  toggleShowTitle,
 } from "reducers/theme/actions";
 import {
   selectShowDate,
@@ -81,6 +82,22 @@ const DisplayControl = () => {
             />
             <label className="form-check-label" for="ShowTagCheckbox">
               Show Tag
+            </label>
+          </div>
+        </li>
+        <li>
+          <div className="form-check form-switch">
+            <input
+              className="form-check-input"
+              type="checkbox"
+              id="ShowTitleCheckbox"
+              checked={showTitle}
+              onChange={() => {
+                dispatch(toggleShowTitle());
+              }}
+            />
+            <label className="form-check-label" for="ShowTitleCheckbox">
+              Show Title
             </label>
           </div>
         </li>

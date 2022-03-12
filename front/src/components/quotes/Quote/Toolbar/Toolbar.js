@@ -1,7 +1,6 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Dropdown } from "react-bootstrap";
-import useClickInside from "hooks/useClickInside";
 import { setEditingQuote, cancelEditingQuote } from "reducers/quotes/actions";
 
 import DateButton from "./DateButton";
@@ -11,23 +10,19 @@ import PrivacyButton from "./PrivacyButton";
 import TagButton from "./TagButton";
 
 import "./styles/Toolbar.css";
-import { selectActiveQuoteId } from "reducers/quotes/selectors";
 
 const Toolbar = ({
   handleSubmit,
   handleDelete,
   showText,
   quoteId,
-  isCreating,
   isEditing,
 }) => {
   const dispatch = useDispatch();
-  const activeQuoteId = useSelector(state => selectActiveQuoteId(state));
 
   // const toolbarRef = useClickInside(() => {
   //   if (!isEditing && quoteId) {
   //     console.log("not editing", quoteId);
-  //     dispatch(setEditingQuote(quoteId));
   //   }
   // });
 
@@ -51,12 +46,12 @@ const Toolbar = ({
         <PrivacyButton quoteId={quoteId} />
       </div>
 
-      {(isCreating || isEditing) && (
+      {(!quoteId || isEditing) && (
         <button className="btn quote-option-button" onClick={handleSubmit}>
           Save
         </button>
       )}
-      {!isCreating && (
+      {quoteId && (
         <Dropdown>
           <Dropdown.Toggle variant="light" className="memo-options-toggle">
             &#8942;

@@ -33,44 +33,34 @@ export default function booksReducer(state = initialState, action) {
       };
     }
     case ACTIONS.UPDATE_BOOK_SUCCESS: {
-      const { newBook } = payload;
+      const { book } = payload;
       return {
         ...state,
-        books: state.books.map(book => {
-          if (book._id === newBook._id) {
-            return newBook;
+        books: state.books.map(b => {
+          if (b._id === book._id) {
+            return book;
           }
-          return book;
+          return b;
         }),
-        currentBook: newBook,
+        currentBook: book,
         loading: false,
       };
     }
-    case ACTIONS.ADD_CHAPTER:
-      console.log("ADD_CHAPTER", payload);
-      const { chapter } = payload;
-      return {
-        ...state,
-        currentChapter: chapter,
-      };
     case ACTIONS.CREATE_CHAPTER_SUCCESS: {
-      const newBook = {
-        ...state.currentBook,
-        chapters: state.currentBook.chapters
-          ? [...state.currentBook.chapters, state.currentChapter]
-          : [state.currentChapter],
-      };
+      const { book, chapter } = payload;
       return {
         ...state,
-        books: state.books.map(book => {
-          if (book._id === newBook._id) {
-            return newBook;
+        books: state.books.map(b => {
+          if (b._id === book._id) {
+            return book;
           }
-          return book;
+          return b;
         }),
+        currentChapter: chapter,
+        loading: false,
       };
     }
-    case ACTIONS.FAILURE:
+    case ACTIONS.UPDATE_BOOK_FAILURE:
       return {
         ...state,
         loading: false,
@@ -87,11 +77,16 @@ export default function booksReducer(state = initialState, action) {
         ...state,
         currentChapter: undefined,
       };
-    case ACTIONS.CREATE_CHAPTER_FAILURE:
-      return { ...state, currentChapter: undefined };
     case ACTIONS.RESET_BOOK:
       console.log("RESET_BOOK");
       return { ...state, currentBook: undefined, currentChapter: undefined };
+    case ACTIONS.MOVE_BOOK_TO_FRONT: {
+      const { book } = payload;
+      const updatedBooks = state.books.filter(b => b._id !== book._id);
+      updatedBooks.unshift(book);
+      return { ...state, books: updatedBooks };
+    }
+
     default:
       return state;
   }

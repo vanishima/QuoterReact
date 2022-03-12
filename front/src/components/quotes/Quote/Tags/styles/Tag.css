@@ -1,8 +1,21 @@
 .tag {
+  color: #3c4043;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
   width: fit-content;
-  background-color: var(--lightGrey);
+  background-color: var(--grey200);
   border-radius: 20px;
   font-size: 14px;
   padding: 5px 10px;
   margin: 0px 5px;
+}
+
+.remove-tag-button {
+  display: none;
+}
+
+.tag:hover > .remove-tag-button {
+  transition: 0.4s;
+  cursor: pointer;
+  display: inline;
 }

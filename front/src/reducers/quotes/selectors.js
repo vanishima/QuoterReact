@@ -4,9 +4,9 @@ import { selectCurrentTags } from "reducers/tags/selectors";
 
 export const pageSizeSelector = state => state.quotes.searchParams.pageSize;
 export const pageSelector = state => state.quotes.searchParams.page;
-export const newQuoteSelector = state => state.quotes.activeQuote;
-export const dateSelector = state => state.quotes.activeQuote.date;
-export const selectPrivacy = state => state.quotes.activeQuote?.privacy_level;
+export const newQuoteSelector = state => state.quotes.newQuote;
+export const dateSelector = state => state.quotes.newQuote.date;
+export const selectPrivacy = state => state.quotes.newQuote?.privacy_level;
 
 export const selectQuotes = state => state.quotes.quotes;
 export const selectSortedQuotes = createSelector(selectQuotes, quotes => {
@@ -18,13 +18,17 @@ export const selectSortedQuotes = createSelector(selectQuotes, quotes => {
 export const selectEditing = state => state.quotes.editing;
 export const selectLoading = state => state.quotes.loading;
 
-export const selectNewQuote = state => state.quotes.activeQuote;
+export const selectNewQuote = state => state.quotes.newQuote;
 export const selectActiveQuoteId = state => state.quotes.activeQuoteId;
 export const selectActiveQuote = createSelector(
+  selectNewQuote,
   selectQuotes,
   selectActiveQuoteId,
-  (quotes, quoteId) => {
-    return quotes[quoteId];
+  (newQuote, quotes, quoteId) => {
+    if (quoteId) {
+      return quotes[quoteId];
+    }
+    return newQuote;
   }
 );
 export const selectActiveQuoteText = createSelector(
@@ -33,11 +37,11 @@ export const selectActiveQuoteText = createSelector(
 );
 
 export const selectTagsSelected = createSelector(
-  selectCurrentTags,
   selectActiveQuote,
-  (currentTags, activeQuote) => {
+  selectNewQuote,
+  (activeQuote, newQuote) => {
     if (activeQuote) return activeQuote.tags;
-    return currentTags;
+    return newQuote.tags;
   }
 );
 

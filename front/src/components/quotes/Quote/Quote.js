@@ -4,7 +4,6 @@ import _ from "lodash";
 
 // Elements
 import TextIndentation from "components/utils/TextIndentation";
-import QuoteImageModal from "components/quotes/Quoteimage/QuoteImageModal";
 import Toolbar from "./Toolbar/Toolbar";
 import Textarea from "components/inputs/Textarea";
 
@@ -24,6 +23,7 @@ import QuoteDate from "./QuoteDate/QuoteDate";
 import QuoteHeader from "./QuoteHeader/QuoteHeader";
 import QuoteFooter from "./QuoteFooter/QuoteFooter";
 import { selectDisplay } from "reducers/theme/selectors";
+import NewQuote from "./NewQuote";
 
 const Quote = props => {
   const dispatch = useDispatch();
@@ -54,24 +54,17 @@ const Quote = props => {
     dispatch(updateLocalQuoteInput(quote._id, e.target.name, e.target.value));
   };
 
+  if (isEditing) {
+    return <NewQuote />;
+  }
+
   return (
     <div className={`quote card mb-3 ${isEditing ? "quote-editing" : ""}`}>
       <QuoteHeader quoteId={quote._id} title={quote.title} />
       <div className="quote-card-body card-body">
         <div className="quoteDetails">
           <blockquote>
-            {isEditing ? (
-              <Textarea
-                name="text"
-                className="inline-edit quote-text"
-                onChange={handleInputChange}
-                required={true}
-                dependency={quote}
-                value={quote.text}
-              />
-            ) : (
-              <TextIndentation className="quote-text" rawText={quote.text} />
-            )}
+            <TextIndentation className="quote-text" rawText={quote.text} />
           </blockquote>
           <QuoteFooter author={quote.author} book={quote.book} />
         </div>
@@ -90,8 +83,6 @@ const Quote = props => {
         isEditing={isEditing}
         quoteId={quote._id}
       />
-
-      <QuoteImageModal quote={quote} />
     </div>
   );
 };

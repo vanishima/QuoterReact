@@ -1,13 +1,20 @@
 import React from "react";
 import Tag from "./Tag";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { selectShowTag } from "reducers/theme/selectors";
 
 import "./styles/Tags.css";
+import { removeTagFromQuote } from "reducers/quotes/quoteActions";
 
 const Tags = ({ tags = [], quoteId }) => {
+  const dispatch = useDispatch();
   const showTag = useSelector(selectShowTag);
-  if (!showTag && quoteId) return null;
+  if (!showTag || tags.length === 0) return null;
+
+  const handleRemove = tag => {
+    console.log("remove tag", tag);
+    dispatch(removeTagFromQuote(tag, quoteId));
+  };
 
   return (
     <div className="tags mb-2">
@@ -15,7 +22,7 @@ const Tags = ({ tags = [], quoteId }) => {
         .filter(tag => tag && tag !== "")
         .map((tag, i) => (
           <div key={i}>
-            <Tag tag={tag} />
+            <Tag tag={tag} handleRemove={handleRemove} />
           </div>
         ))}
     </div>

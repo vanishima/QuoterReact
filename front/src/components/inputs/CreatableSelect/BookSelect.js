@@ -4,68 +4,53 @@ import { connect, useDispatch } from "react-redux";
 import CreatableSelect from "components/inputs/CreatableSelect/CreatableSelect";
 import { processItem } from "./util";
 
-import {
-  setBook,
-  createBook,
-  resetBook,
-  resetChapter,
-} from "reducers/books/actions";
-import { setAuthor } from "reducers/authors/actions";
+import { createBook } from "reducers/books/actions";
+import { setQuoteBookAuthor, setQuoteBook } from "reducers/quotes/quoteActions";
 
-const BookSelect = ({
-  className,
-  submitting,
-  isFetching,
-  books,
-  authors,
-  currentBook,
-  currentAuthor,
-}) => {
+import "./styles/BookSelect.css";
+
+const BookSelect = ({ submitting, quoteId, book, books, author, authors }) => {
   const dispatch = useDispatch();
   // console.group("BookSelect");
   // console.log("currentBook", currentBook);
-  // console.log("default", submitting, isFetching, currentBook, currentAuthor);
   // console.log("books", books);
   // console.groupEnd();
 
   const handleCreate = bookTitle => {
-    if (_.isEmpty(currentAuthor)) {
+    if (_.isEmpty(author)) {
       alert("Please select an author first");
     } else {
-      const newBook = { title: bookTitle, author: currentAuthor };
-      // console.log("createBook", newBook);
+      const newBook = { title: bookTitle, author: author };
       dispatch(createBook(newBook));
+      dispatch(setQuoteBook(processItem(newBook, "title"), quoteId));
     }
   };
 
   // set book to selected and choose author based on _id
   const handleChange = book => {
     console.log("handleChange", book);
-    const newAuthor = authors.filter(
+    const selectedAuthor = authors.filter(
       author => author._id === book.author._id
     )[0];
-    dispatch(setBook(book));
-    console.log("newauthor", newAuthor);
-    dispatch(setAuthor(newAuthor));
-    dispatch(resetChapter());
+    dispatch(setQuoteBookAuthor(book, selectedAuthor, quoteId));
   };
 
   const handleClear = () => {
-    dispatch(resetBook);
+    // dispatch(resetBook);
+    dispatch(setQuoteBook(undefined, quoteId));
   };
 
   return (
     <CreatableSelect
-      className={`${className}`}
+      className="book-select"
       placeholder="Select Book..."
       options={books}
-      value={currentBook && processItem(currentBook, "title")}
+      value={processItem(book, "title")}
       createOption={handleCreate}
       changeOption={handleChange}
       clearOption={handleClear}
       isDisabled={submitting}
       isClearable
-      // isLoading={isFetching}
     />
   );
 };
@@ -75,8 +60,6 @@ const mapStateToProps = (state, ownProps) => ({
   isFetching: state.books.loading,
   books: state.books.books,
   authors: state.authors.authors,
-  currentBook: state.books.currentBook,
-  currentAuthor: state.authors.currentAuthor,
   ...ownProps,
 });
 

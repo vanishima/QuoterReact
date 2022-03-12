@@ -3,10 +3,18 @@ import { connect, useDispatch } from "react-redux";
 import CreatableSelect from "components/inputs/CreatableSelect/CreatableSelect";
 import { processItem } from "./util";
 
-import { setAuthor, createAuthor } from "reducers/authors/actions";
-import { resetBook, setBook, setChapter } from "reducers/books/actions";
+import { createAuthor } from "reducers/authors/actions";
+import { setQuoteAuthor } from "reducers/quotes/quoteActions";
 
-const AuthorSelect = ({ className, submitting, authors, currentAuthor }) => {
+import "./styles/AuthorSelect.css";
+
+const AuthorSelect = ({
+  submitting,
+  authors,
+  author,
+  currentAuthor,
+  quoteId,
+}) => {
   const dispatch = useDispatch();
   // console.log("currentAuthor", currentAuthor);
   // console.group("AuthorSelect");
@@ -16,29 +24,28 @@ const AuthorSelect = ({ className, submitting, authors, currentAuthor }) => {
 
   const handleCreate = authorName => {
     // console.log("createAuthor", authorName);
-    dispatch(createAuthor({ name: authorName }));
+    const newAuthor = { name: authorName };
+    dispatch(createAuthor(newAuthor));
+    // by now current Author should be updated
+    dispatch(setQuoteAuthor(processItem(newAuthor, "name"), quoteId));
   };
 
   const handleChange = author => {
     // console.log("handleChange", author);
-    dispatch(setAuthor(author));
-    dispatch(resetBook());
+    dispatch(setQuoteAuthor(author, quoteId));
   };
 
   const handleClear = () => {
     console.log("handleClear in AuthorSelect");
-    dispatch(setAuthor(undefined));
-    // dispatch(resetBook());
-    dispatch(setBook(undefined));
-    dispatch(setChapter(undefined));
+    dispatch(setQuoteAuthor(undefined, quoteId));
   };
 
   return (
     <CreatableSelect
-      className={`${className}`}
+      className="author-select"
       placeholder="Select Author..."
       options={authors}
-      value={currentAuthor && processItem(currentAuthor, "name")}
+      value={processItem(author, "name")}
       createOption={handleCreate}
       changeOption={handleChange}
       clearOption={handleClear}

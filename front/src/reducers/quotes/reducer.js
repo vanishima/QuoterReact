@@ -22,7 +22,7 @@ export const initialState = {
   error: undefined,
   refresh: true,
   hasMore: true,
-  activeQuote: undefined,
+  newQuote: undefined,
   activeQuoteId: undefined,
   searchParams: {
     pageSize: 25,
@@ -87,7 +87,7 @@ export default function quotesListReducer(state = initialState, action) {
       return {
         ...state,
         editing: true,
-        activeQuote: _.cloneDeep(initialQuote),
+        newQuote: _.cloneDeep(initialQuote),
       };
 
     case ACTIONS.CREATE_QUOTE_REQUEST:
@@ -99,7 +99,7 @@ export default function quotesListReducer(state = initialState, action) {
         quotes: { [quote._id]: quote, ...state.quotes },
         loading: false,
         editing: false,
-        activeQuote: undefined,
+        newQuote: undefined,
       };
     case ACTIONS.CREATE_QUOTE_FAILURE:
       return {
@@ -111,24 +111,24 @@ export default function quotesListReducer(state = initialState, action) {
       const { key, value } = payload;
       return {
         ...state,
-        activeQuote: { ...state.activeQuote, [key]: value },
+        newQuote: { ...state.newQuote, [key]: value },
       };
     }
     case ACTIONS.UPDATE_QUOTE_LIST_INPUT: {
       const { key, value } = payload;
-      const updatedList = [...state.activeQuote[key], value];
+      const updatedList = [...state.newQuote[key], value];
       return {
         ...state,
-        activeQuote: { ...state.activeQuote, [key]: updatedList },
+        newQuote: { ...state.newQuote, [key]: updatedList },
       };
     }
     case ACTIONS.ADD_MEMO: {
       const { memo } = payload;
       return {
         ...state,
-        activeQuote: {
-          ...state.activeQuote,
-          memos: [...state.activeQuote.memos, memo],
+        newQuote: {
+          ...state.newQuote,
+          memos: [...state.newQuote.memos, memo],
         },
       };
     }
@@ -136,9 +136,9 @@ export default function quotesListReducer(state = initialState, action) {
       const { memoId } = payload;
       return {
         ...state,
-        activeQuote: {
-          ...state.activeQuote,
-          memos: state.activeQuote.memos.filter(memo => memo._id !== memoId),
+        newQuote: {
+          ...state.newQuote,
+          memos: state.newQuote.memos.filter(memo => memo._id !== memoId),
         },
       };
     }
@@ -146,9 +146,9 @@ export default function quotesListReducer(state = initialState, action) {
       const { _id, text } = payload;
       return {
         ...state,
-        activeQuote: {
-          ...state.activeQuote,
-          memos: state.activeQuote.memos.map(memo => {
+        newQuote: {
+          ...state.newQuote,
+          memos: state.newQuote.memos.map(memo => {
             if (memo._id === _id) {
               return { ...memo, text: text };
             } else {
@@ -165,16 +165,179 @@ export default function quotesListReducer(state = initialState, action) {
 
     case ACTIONS.CANCEL_EDITING_QUOTE:
       return { ...state, editing: false, activeQuoteId: undefined };
+
     case SET_EDITING_QUOTE: {
       const { quoteId } = payload;
-      const activeQuote = state.quotes[quoteId];
       return {
         ...state,
         editing: false,
-        activeQuote: activeQuote,
         activeQuoteId: quoteId,
       };
     }
+
+    /* SET QUOTE AUTHOR */
+    case QUOTE_ACTIONS.SET_QUOTE_AUTHOR_NEW: {
+      const { author } = payload;
+
+      return {
+        ...state,
+        newQuote: {
+          ...state.newQuote,
+          author: author,
+          book: undefined,
+          chapter: undefined,
+        },
+      };
+    }
+
+    case QUOTE_ACTIONS.SET_QUOTE_AUTHOR_LOCAL: {
+      const { author, quoteId } = payload;
+
+      return {
+        ...state,
+        quotes: {
+          ...state.quotes,
+          [quoteId]: {
+            ...state.quotes[quoteId],
+            author: author,
+            book: undefined,
+            chapter: undefined,
+          },
+        },
+      };
+    }
+
+    /* SET QUOTE BOOK */
+    case QUOTE_ACTIONS.SET_QUOTE_BOOK_AUTHOR_NEW: {
+      const { author, book } = payload;
+      return {
+        ...state,
+        newQuote: {
+          ...state.newQuote,
+          author: author,
+          book: book,
+          chapter: undefined,
+        },
+      };
+    }
+
+    case QUOTE_ACTIONS.SET_QUOTE_BOOK_AUTHOR_LOCAL: {
+      const { author, book, quoteId } = payload;
+
+      return {
+        ...state,
+        quotes: {
+          ...state.quotes,
+          [quoteId]: {
+            ...state.quotes[quoteId],
+            author: author,
+            book: book,
+            chapter: undefined,
+          },
+        },
+      };
+    }
+
+    case QUOTE_ACTIONS.SET_QUOTE_BOOK_NEW: {
+      const { book } = payload;
+      return {
+        ...state,
+        newQuote: {
+          ...state.newQuote,
+          book: book,
+          chapter: undefined,
+        },
+      };
+    }
+
+    case QUOTE_ACTIONS.SET_QUOTE_BOOK_LOCAL: {
+      const { book, quoteId } = payload;
+
+      return {
+        ...state,
+        quotes: {
+          ...state.quotes,
+          [quoteId]: {
+            ...state.quotes[quoteId],
+            book: book,
+            chapter: undefined,
+          },
+        },
+      };
+    }
+
+    /* SET QUOTE INPUT */
+    case QUOTE_ACTIONS.SET_QUOTE_INPUT_NEW: {
+      const { key, value } = payload;
+      return {
+        ...state,
+        newQuote: { ...state.newQuote, [key]: value },
+      };
+    }
+
+    case QUOTE_ACTIONS.SET_QUOTE_INPUT_LOCAL: {
+      const { key, value, quoteId } = payload;
+      return {
+        ...state,
+        quotes: {
+          ...state.quotes,
+          [quoteId]: { ...state.quotes[quoteId], [key]: value },
+        },
+      };
+    }
+
+    /* SET QUOTE TAG */
+    case QUOTE_ACTIONS.ADD_TAG_TO_QUOTE_NEW: {
+      const { tag } = payload;
+      let updatedTags = state.newQuote.tags;
+      updatedTags = updatedTags ? [...updatedTags, tag] : [tag];
+      return {
+        ...state,
+        newQuote: { ...state.newQuote, tags: updatedTags },
+      };
+    }
+
+    case QUOTE_ACTIONS.ADD_TAG_TO_QUOTE_LOCAL: {
+      const { tag, quoteId } = payload;
+      let updatedTags = state.quotes[quoteId].tags;
+      updatedTags = updatedTags ? [...updatedTags, tag.label] : [tag.label];
+      return {
+        ...state,
+        quotes: {
+          ...state.quotes,
+          [quoteId]: {
+            ...state.quotes[quoteId],
+            tags: updatedTags,
+          },
+        },
+      };
+    }
+
+    /* REMOVE TAG FROM QUOTE */
+    case QUOTE_ACTIONS.REMOVE_TAG_FROM_QUOTE_NEW: {
+      const { tag } = payload;
+      let updatedTags = state.newQuote.tags.filter(t => t.label !== tag.label);
+      return {
+        ...state,
+        newQuote: { ...state.newQuote, tags: updatedTags },
+      };
+    }
+
+    case QUOTE_ACTIONS.REMOVE_TAG_FROM_QUOTE_LOCAL: {
+      const { tag, quoteId } = payload;
+      let updatedTags = state.quotes[quoteId].tags.filter(t => t !== tag.label);
+      return {
+        ...state,
+        quotes: {
+          ...state.quotes,
+          [quoteId]: {
+            ...state.quotes[quoteId],
+            tags: updatedTags,
+          },
+        },
+      };
+    }
+
     case QUOTE_ACTIONS.UPDATE_LOCAL_QUOTE_INPUT: {
       const { quoteId, key, value } = payload;
       return {
@@ -311,7 +474,7 @@ export default function quotesListReducer(state = initialState, action) {
         ...state,
         loading: false,
         // quotes: { ...state.quotes, [quote._id]: quote },
-        activeQuote: undefined,
+        newQuote: undefined,
         activeQuoteId: undefined,
       };
     }
@@ -324,7 +487,7 @@ export default function quotesListReducer(state = initialState, action) {
       return {
         ...state,
         loading: false,
-        activeQuote: undefined,
+        newQuote: undefined,
         quotes: updatedQuotes,
       };
     }

@@ -1,9 +1,26 @@
 import axiosInstance from "axiosconfig";
 import { selectQuoteById } from "reducers/quotes/selectors";
-import { updatedQuoteMapper } from "./mappers";
 
 export const QUOTE_ACTIONS = {
   SET_EDITING_QUOTE: "SET_EDITING_QUOTE",
+
+  SET_QUOTE_AUTHOR_LOCAL: "SET_QUOTE_AUTHOR_LOCAL",
+  SET_QUOTE_AUTHOR_NEW: "SET_QUOTE_AUTHOR_NEW",
+
+  SET_QUOTE_BOOK_AUTHOR_LOCAL: "SET_QUOTE_BOOK_AUTHOR_LOCAL",
+  SET_QUOTE_BOOK_AUTHOR_NEW: "SET_QUOTE_BOO_AUTHORK_NEW",
+
+  SET_QUOTE_BOOK_LOCAL: "SET_QUOTE_BOOK_LOCAL",
+  SET_QUOTE_BOOK_NEW: "SET_QUOTE_BOOK_NEW",
+
+  SET_QUOTE_INPUT_LOCAL: "SET_QUOTE_INPUT_LOCAL",
+  SET_QUOTE_INPUT_NEW: "SET_QUOTE_INPUT_NEW",
+
+  ADD_TAG_TO_QUOTE_LOCAL: "ADD_TAG_TO_QUOTE_LOCAL",
+  ADD_TAG_TO_QUOTE_NEW: "ADD_TAG_TO_QUOTE_NEW",
+  REMOVE_TAG_FROM_QUOTE_LOCAL: "REMOVE_TAG_FROM_QUOTE_LOCAL",
+  REMOVE_TAG_FROM_QUOTE_NEW: "REMOVE_TAG_FROM_QUOTE_NEW",
+
   UPDATE_LOCAL_QUOTE_INPUT: "UPDATE_LOCAL_QUOTE_INPUT",
   UPDATE_QUOTE_INPUT_LIST_BY_ID: "UPDATE_QUOTE_INPUT_LIST_BY_ID",
   UPDATE_QUOTE_LIST_INPUT: "UPDATE_QUOTE_LIST_INPUT",
@@ -26,6 +43,69 @@ const DELETE_QUOTE_URL = "/quotes/delete/";
 export const setEditingQuote = quoteId => {
   const quote = {};
   return { type: QUOTE_ACTIONS.SET_EDITING_QUOTE, payload: { quote } };
+};
+
+/* SET QUOTE AUTHOR */
+export const setQuoteAuthor = (author, quoteId = null) => ({
+  type: quoteId
+    ? QUOTE_ACTIONS.SET_QUOTE_AUTHOR_LOCAL
+    : QUOTE_ACTIONS.SET_QUOTE_AUTHOR_NEW,
+  payload: { author, quoteId },
+});
+
+/* SET QUOTE BOOK AUTHOR*/
+export const setQuoteBookAuthor = (book, author, quoteId = null) => ({
+  type: quoteId
+    ? QUOTE_ACTIONS.SET_QUOTE_BOOK_AUTHOR_LOCAL
+    : QUOTE_ACTIONS.SET_QUOTE_BOOK_AUTHOR_NEW,
+  payload: { book, author, quoteId },
+});
+
+/* SET QUOTE BOOK */
+export const setQuoteBook = (book, quoteId = null) => ({
+  type: quoteId
+    ? QUOTE_ACTIONS.SET_QUOTE_BOOK_LOCAL
+    : QUOTE_ACTIONS.SET_QUOTE_BOOK_NEW,
+  payload: { book, quoteId },
+});
+
+/* SET QUOTE CHAPTER */
+export const setQuoteChapter = (chapter, quoteId) => {
+  return setQuoteInput("chapter", chapter, quoteId);
+};
+
+/* SET QUOTE INPUT */
+export const setQuoteInput = (key, value, quoteId) => {
+  return {
+    type: quoteId
+      ? QUOTE_ACTIONS.SET_QUOTE_INPUT_LOCAL
+      : QUOTE_ACTIONS.SET_QUOTE_INPUT_NEW,
+    payload: {
+      key,
+      value,
+      quoteId,
+    },
+  };
+};
+
+/* SET QUOTE TAG */
+export const addTagToQuote = (tag, quoteId) => {
+  return {
+    type: quoteId
+      ? QUOTE_ACTIONS.ADD_TAG_TO_QUOTE_LOCAL
+      : QUOTE_ACTIONS.ADD_TAG_TO_QUOTE_NEW,
+    payload: { tag, quoteId },
+  };
+};
+
+/* REMOVE QUOTE TAG */
+export const removeTagFromQuote = (tag, quoteId) => {
+  return {
+    type: quoteId
+      ? QUOTE_ACTIONS.REMOVE_TAG_FROM_QUOTE_LOCAL
+      : QUOTE_ACTIONS.REMOVE_TAG_FROM_QUOTE_NEW,
+    payload: { tag, quoteId },
+  };
 };
 
 export const updateLocalQuoteInput = (quoteId, key, value) => {
@@ -97,18 +177,18 @@ export const updateQuoteById = quoteId => {
   };
 };
 
-export const removeTagFromQuote = (quoteId, tag) => {
-  return async (dispatch, getState) => {
-    console.group("removeTagFromQuote");
-    dispatch({
-      type: QUOTE_ACTIONS.REMOVE_TAG_FROM_QUOTE,
-      payload: { quoteId, tag },
-    });
-    const quote = selectQuoteById(getState(), quoteId);
-    dispatch(updateQuote(quote));
-    console.groupEnd("finished");
-  };
-};
+// export const removeTagFromQuote = (quoteId, tag) => {
+//   return async (dispatch, getState) => {
+//     console.group("removeTagFromQuote");
+//     dispatch({
+//       type: QUOTE_ACTIONS.REMOVE_TAG_FROM_QUOTE,
+//       payload: { quoteId, tag },
+//     });
+//     const quote = selectQuoteById(getState(), quoteId);
+//     dispatch(updateQuote(quote));
+//     console.groupEnd("finished");
+//   };
+// };
 
 export const updateQuote = quote => {
   return async dispatch => {
