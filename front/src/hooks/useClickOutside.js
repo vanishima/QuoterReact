@@ -15,12 +15,12 @@ const useClickOutside = handler => {
         !EXCLUDED_NODENAMES.includes(event.target.nodeName) &&
         !domNode.current.contains(event.target)
       ) {
-        console.log("event.target", event.target);
-        console.log(
-          "event.target.getAttribute('name')",
-          event.target.getAttribute("name")
-        );
-        console.log("event.target.nodeName", event.target.nodeName);
+        // console.log("event.target", event.target);
+        // console.log(
+        //   "event.target.getAttribute('name')",
+        //   event.target.getAttribute("name")
+        // );
+        // console.log("event.target.nodeName", event.target.nodeName);
         handler();
       }
     };

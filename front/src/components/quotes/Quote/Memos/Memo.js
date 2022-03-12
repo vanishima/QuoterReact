@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { removeMemo, updateMemo } from "reducers/quotes/actions";
 import {
-  updateQuoteMemoById,
   removeMemoFromQuote,
+  updateMemoInQuote,
 } from "reducers/quotes/quoteActions";
 import { Dropdown } from "react-bootstrap";
 import EditMemo from "./EditMemo";
@@ -29,27 +28,12 @@ const Memo = ({ memo, quoteId }) => {
   };
 
   const handleDelete = () => {
-    console.log("handleDelete");
-    if (quoteId) {
-      console.log("removeMemoFromQuote");
-      dispatch(removeMemoFromQuote(quoteId, memo));
-    } else {
-      console.log("removeMemo");
-      dispatch(removeMemo(memo._id));
-    }
+    dispatch(removeMemoFromQuote(memo, quoteId));
   };
 
   const handleSave = () => {
-    console.log("Memo quoteId", quoteId);
     const newMemo = { ...memo, text: text };
-    if (quoteId) {
-      console.log("inside active quote", memo._id);
-      dispatch(updateQuoteMemoById(quoteId, newMemo));
-    } else {
-      console.log("updating memo", text);
-      console.log("newMemo", newMemo);
-      dispatch(updateMemo(newMemo));
-    }
+    dispatch(updateMemoInQuote(newMemo, quoteId));
     setEditing(false);
   };
 

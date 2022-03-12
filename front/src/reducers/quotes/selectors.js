@@ -1,6 +1,5 @@
 import { createSelector } from "reselect";
 import _ from "lodash";
-import { selectCurrentTags } from "reducers/tags/selectors";
 
 export const pageSizeSelector = state => state.quotes.searchParams.pageSize;
 export const pageSelector = state => state.quotes.searchParams.page;
@@ -8,7 +7,7 @@ export const newQuoteSelector = state => state.quotes.newQuote;
 export const dateSelector = state => state.quotes.newQuote.date;
 export const selectPrivacy = state => state.quotes.newQuote?.privacy_level;
 
-export const selectQuotes = state => state.quotes.quotes;
+export const selectQuotes = state => state.quotes?.quotes;
 export const selectSortedQuotes = createSelector(selectQuotes, quotes => {
   return quotes
     ? _.orderBy(Object.values(quotes), quote => new Date(quote.date), "desc")
@@ -31,6 +30,7 @@ export const selectActiveQuote = createSelector(
     return newQuote;
   }
 );
+
 export const selectActiveQuoteText = createSelector(
   selectActiveQuote,
   quote => quote.text
@@ -49,8 +49,9 @@ export const selectQuoteById = createSelector(
   selectQuotes,
   (state, quoteId) => quoteId,
   (quotes, quoteId) => {
-    if (quoteId) {
+    if (quoteId && quotes) {
       return quotes[quoteId];
     }
+    return null;
   }
 );

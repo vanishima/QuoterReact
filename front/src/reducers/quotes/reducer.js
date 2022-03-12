@@ -122,44 +122,14 @@ export default function quotesListReducer(state = initialState, action) {
         newQuote: { ...state.newQuote, [key]: updatedList },
       };
     }
-    case ACTIONS.ADD_MEMO: {
-      const { memo } = payload;
-      return {
-        ...state,
-        newQuote: {
-          ...state.newQuote,
-          memos: [...state.newQuote.memos, memo],
-        },
-      };
-    }
-    case ACTIONS.REMOVE_MEMO: {
-      const { memoId } = payload;
-      return {
-        ...state,
-        newQuote: {
-          ...state.newQuote,
-          memos: state.newQuote.memos.filter(memo => memo._id !== memoId),
-        },
-      };
-    }
-    case ACTIONS.UPDATE_MEMO: {
-      const { _id, text } = payload;
-      return {
-        ...state,
-        newQuote: {
-          ...state.newQuote,
-          memos: state.newQuote.memos.map(memo => {
-            if (memo._id === _id) {
-              return { ...memo, text: text };
-            } else {
-              return memo;
-            }
-          }),
-        },
-      };
-    }
+
     case TOGGLE_EDITING:
-      return { ...state, editing: false };
+      return {
+        ...state,
+        editing: !state.editing,
+        newQuote: state.newQuote ? state.newQuote : _.cloneDeep(initialQuote),
+        activeQuoteId: undefined,
+      };
 
     /* Update Quote */
 
@@ -277,6 +247,7 @@ export default function quotesListReducer(state = initialState, action) {
 
     case QUOTE_ACTIONS.SET_QUOTE_INPUT_LOCAL: {
       const { key, value, quoteId } = payload;
+      console.log("SET_QUOTE_INPUT", key, value, quoteId);
       return {
         ...state,
         quotes: {
@@ -333,6 +304,100 @@ export default function quotesListReducer(state = initialState, action) {
           [quoteId]: {
             ...state.quotes[quoteId],
             tags: updatedTags,
+          },
+        },
+      };
+    }
+
+    /* ADD QUOTE MEMO */
+    case QUOTE_ACTIONS.ADD_MEMO_TO_QUOTE_NEW: {
+      const { memo } = payload;
+      let updatedMemos = state.newQuote.memos;
+      updatedMemos = updatedMemos ? [...updatedMemos, memo] : [memo];
+      return {
+        ...state,
+        newQuote: { ...state.newQuote, memos: updatedMemos },
+      };
+    }
+
+    case QUOTE_ACTIONS.ADD_MEMO_TO_QUOTE_LOCAL: {
+      const { memo, quoteId } = payload;
+      let updatedMemos = state.quotes[quoteId].memos;
+      updatedMemos = updatedMemos ? [...updatedMemos, memo] : [memo];
+      return {
+        ...state,
+        quotes: {
+          ...state.quotes,
+          [quoteId]: {
+            ...state.quotes[quoteId],
+            memos: updatedMemos,
+          },
+        },
+      };
+    }
+
+    /* REMOVE QUOTE MEMO */
+    case QUOTE_ACTIONS.REMOVE_MEMO_FROM_QUOTE_NEW: {
+      const { memo } = payload;
+      return {
+        ...state,
+        newQuote: {
+          ...state.newQuote,
+          memos: state.newQuote.memos.filter(m => m._id !== memo._id),
+        },
+      };
+    }
+
+    case QUOTE_ACTIONS.REMOVE_MEMO_FROM_QUOTE_LOCAL: {
+      const { memo, quoteId } = payload;
+      let updatedMemos = state.quotes[quoteId].memos.filter(
+        m => m._id !== memo._id
+      );
+      return {
+        ...state,
+        quotes: {
+          ...state.quotes,
+          [quoteId]: {
+            ...state.quotes[quoteId],
+            memos: updatedMemos,
+          },
+        },
+      };
+    }
+
+    /* UPDATE QUOTE MEMO */
+    case QUOTE_ACTIONS.UPDATE_MEMO_IN_QUOTE_NEW: {
+      const { memo } = payload;
+      let updatedMemos = state.newQuote.memos.map(m => {
+        if (m._id === memo._id) {
+          return memo;
+        }
+        return m;
+      });
+      return {
+        ...state,
+        newQuote: {
+          ...state.newQuote,
+          memos: updatedMemos,
+        },
+      };
+    }
+
+    case QUOTE_ACTIONS.UPDATE_MEMO_IN_QUOTE_LOCAL: {
+      const { memo, quoteId } = payload;
+      let updatedMemos = state.quotes[quoteId].memos.map(m => {
+        if (m._id === memo._id) {
+          return memo;
+        }
+        return m;
+      });
+      return {
+        ...state,
+        quotes: {
+          ...state.quotes,
+          [quoteId]: {
+            ...state.quotes[quoteId],
+            memos: updatedMemos,
           },
         },
       };

@@ -5,17 +5,12 @@ import _ from "lodash";
 // Elements
 import TextIndentation from "components/utils/TextIndentation";
 import Toolbar from "./Toolbar/Toolbar";
-import Textarea from "components/inputs/Textarea";
 
 // API
 import Memos from "./Memos/Memos";
 import Tags from "./Tags/Tags";
 
-import {
-  updateLocalQuoteInput,
-  updateQuoteById,
-  deleteQuote,
-} from "reducers/quotes/quoteActions";
+import { updateQuoteById, deleteQuote } from "reducers/quotes/quoteActions";
 import { selectActiveQuoteId } from "reducers/quotes/selectors";
 
 import "./styles/Quote.css";
@@ -31,7 +26,6 @@ const Quote = props => {
   const { quote, display, activeQuoteId } = props;
   const { showDate, showTag, showMemo } = display;
   const isEditing = activeQuoteId === quote?._id;
-  // console.log("activeQuote", quote?._id, isEditing);
 
   const handleSubmit = () => {
     console.log("handleSubmit");
@@ -50,39 +44,37 @@ const Quote = props => {
     dispatch(deleteQuote(quote._id));
   };
 
-  const handleInputChange = e => {
-    dispatch(updateLocalQuoteInput(quote._id, e.target.name, e.target.value));
-  };
-
-  if (isEditing) {
-    return <NewQuote />;
-  }
-
   return (
     <div className={`quote card mb-3 ${isEditing ? "quote-editing" : ""}`}>
-      <QuoteHeader quoteId={quote._id} title={quote.title} />
-      <div className="quote-card-body card-body">
-        <div className="quoteDetails">
-          <blockquote>
-            <TextIndentation className="quote-text" rawText={quote.text} />
-          </blockquote>
-          <QuoteFooter author={quote.author} book={quote.book} />
-        </div>
-      </div>
-      {(showDate || showTag || showMemo) && (
-        <div className="card-footer">
-          <QuoteDate date={quote.date} />
-          <Tags tags={quote.tags} quoteId={quote._id} />
-          <Memos memos={quote.memos} quoteId={quote._id} />
-        </div>
+      {isEditing ? (
+        <NewQuote quoteId={quote._id} />
+      ) : (
+        <>
+          <QuoteHeader quoteId={quote._id} title={quote.title} />
+          <div className="quote-card-body card-body">
+            <div className="quoteDetails">
+              <blockquote>
+                <TextIndentation className="quote-text" rawText={quote.text} />
+              </blockquote>
+              <QuoteFooter author={quote.author} book={quote.book} />
+            </div>
+          </div>
+          {(showDate || showTag || showMemo) && (
+            <div className="card-footer">
+              <QuoteDate date={quote.date} />
+              <Tags tags={quote.tags} quoteId={quote._id} />
+              <Memos memos={quote.memos} quoteId={quote._id} />
+            </div>
+          )}
+          <Toolbar
+            handleSubmit={handleSubmit}
+            handleDelete={handleDelete}
+            showText={false}
+            isEditing={isEditing}
+            quoteId={quote._id}
+          />
+        </>
       )}
-      <Toolbar
-        handleSubmit={handleSubmit}
-        handleDelete={handleDelete}
-        showText={false}
-        isEditing={isEditing}
-        quoteId={quote._id}
-      />
     </div>
   );
 };

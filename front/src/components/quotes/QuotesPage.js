@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 
 import Layout from "components/common/Layout";
 import QuotesInfiniteScroll from "components/quotes/QuotesInfiniteScroll/QuotesInfiniteScroll";
-import NewQuote from "components/quotes/Quote/NewQuote";
+import NewQuoteBar from "components/quotes/Quote/NewQuoteBar";
 
 import { fetchBooks } from "reducers/books/actions";
 import { fetchAuthors } from "reducers/authors/actions";
@@ -26,7 +26,7 @@ const QuotesPage = props => {
     <Layout>
       <div className="quotes-page">
         <section className="top">
-          <NewQuote />
+          <NewQuoteBar />
         </section>
         <section className="middle">
           <QuotesInfiniteScroll />

@@ -21,7 +21,7 @@ const ChapterSelect = ({
   // console.groupEnd();
   // console.log("currentChapter", currentChapter);
 
-  console.log("chapters", book?.chapters);
+  // console.log("chapters", book?.chapters);
 
   const handleCreate = chapterTitle => {
     const newChapter = { title: chapterTitle, order: 0 };

@@ -21,6 +21,13 @@ export const QUOTE_ACTIONS = {
   REMOVE_TAG_FROM_QUOTE_LOCAL: "REMOVE_TAG_FROM_QUOTE_LOCAL",
   REMOVE_TAG_FROM_QUOTE_NEW: "REMOVE_TAG_FROM_QUOTE_NEW",
 
+  ADD_MEMO_TO_QUOTE_LOCAL: "ADD_MEMO_TO_QUOTE_LOCAL",
+  ADD_MEMO_TO_QUOTE_NEW: "ADD_MEMO_TO_QUOTE_NEW",
+  REMOVE_MEMO_FROM_QUOTE_LOCAL: "REMOVE_MEMO_FROM_QUOTE_LOCAL",
+  REMOVE_MEMO_FROM_QUOTE_NEW: "REMOVE_MEMO_FROM_QUOTE_NEW",
+  UPDATE_MEMO_IN_QUOTE_LOCAL: "UPDATE_MEMO_IN_QUOTE_LOCAL",
+  UPDATE_MEMO_IN_QUOTE_NEW: "UPDATE_MEMO_IN_QUOTE_NEW",
+
   UPDATE_LOCAL_QUOTE_INPUT: "UPDATE_LOCAL_QUOTE_INPUT",
   UPDATE_QUOTE_INPUT_LIST_BY_ID: "UPDATE_QUOTE_INPUT_LIST_BY_ID",
   UPDATE_QUOTE_LIST_INPUT: "UPDATE_QUOTE_LIST_INPUT",
@@ -108,43 +115,39 @@ export const removeTagFromQuote = (tag, quoteId) => {
   };
 };
 
-export const updateLocalQuoteInput = (quoteId, key, value) => {
+/* ADD QUOTE MEMO */
+export const addMemoToQuote = (memo, quoteId) => {
   return {
-    type: QUOTE_ACTIONS.UPDATE_LOCAL_QUOTE_INPUT,
-    payload: { quoteId, key, value },
+    type: quoteId
+      ? QUOTE_ACTIONS.ADD_MEMO_TO_QUOTE_LOCAL
+      : QUOTE_ACTIONS.ADD_MEMO_TO_QUOTE_NEW,
+    payload: { memo, quoteId },
   };
 };
 
-export const updateQuoteInputById = (quoteId, key, value) => {
-  return async (dispatch, getState) => {
-    console.group("updateQuoteInputById");
-    dispatch(updateLocalQuoteInput(quoteId, key, value));
-    // dispatch(updateQuote(quoteId));
-    console.groupEnd("finished");
+/* REMOVE QUOTE MEMO */
+export const removeMemoFromQuote = (memo, quoteId) => {
+  return {
+    type: quoteId
+      ? QUOTE_ACTIONS.REMOVE_MEMO_FROM_QUOTE_LOCAL
+      : QUOTE_ACTIONS.REMOVE_MEMO_FROM_QUOTE_NEW,
+    payload: { memo, quoteId },
   };
 };
 
-export const updateQuoteInputListById = (quoteId, key, value) => {
-  return async (dispatch, getState) => {
-    console.group("updateQuoteInputById");
-    dispatch({
-      type: QUOTE_ACTIONS.UPDATE_QUOTE_INPUT_LIST_BY_ID,
-      payload: { quoteId, key, value },
-    });
-    const quote = selectQuoteById(getState(), quoteId);
-    dispatch(updateQuote(quote));
-    console.groupEnd("finished");
+/* REMOVE QUOTE MEMO */
+export const updateMemoInQuote = (memo, quoteId) => {
+  return {
+    type: quoteId
+      ? QUOTE_ACTIONS.UPDATE_MEMO_IN_QUOTE_LOCAL
+      : QUOTE_ACTIONS.UPDATE_MEMO_IN_QUOTE_NEW,
+    payload: { memo, quoteId },
   };
 };
 
-export const updateQuoteAuthorById = (quoteId, author) => ({
-  type: QUOTE_ACTIONS.UPDATE_QUOTE_AUTHOR_BY_ID,
-  payload: { quoteId, author },
-});
-
-export const updateQuoteBookById = (quoteId, author, book) => ({
-  type: QUOTE_ACTIONS.UPDATE_QUOTE_BOOK_BY_ID,
-  payload: { quoteId, author, book },
+export const updateQuoteInputListById = (quoteId, key, value) => ({
+  type: QUOTE_ACTIONS.UPDATE_QUOTE_INPUT_LIST_BY_ID,
+  payload: { quoteId, key, value },
 });
 
 export const updateQuoteMemoById = (quoteId, memo) => {
@@ -156,16 +159,6 @@ export const updateQuoteMemoById = (quoteId, memo) => {
     const quote = selectQuoteById(getState(), quoteId);
     console.log("updated quote should look like", quote);
     dispatch(updateQuote(quote));
-  };
-};
-
-export const removeMemoFromQuote = (quoteId, memo) => {
-  return async (dispatch, getState) => {
-    dispatch({
-      type: QUOTE_ACTIONS.REMOVE_MEMO_FROM_QUOTE,
-      payload: { quoteId, memo },
-    });
-    dispatch(updateQuoteById(quoteId));
   };
 };
 

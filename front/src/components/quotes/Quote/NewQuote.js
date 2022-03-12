@@ -2,17 +2,8 @@ import React from "react";
 import { connect } from "react-redux";
 import { useDispatch } from "react-redux";
 import _ from "lodash";
-import {
-  updateQuoteInput,
-  initializeQuote,
-  createQuote,
-  toggleEditing,
-} from "reducers/quotes/actions";
-import {
-  selectActiveQuote,
-  selectEditing,
-  selectLoading,
-} from "reducers/quotes/selectors";
+import { cancelEditingQuote, createQuote } from "reducers/quotes/actions";
+import { selectActiveQuote, selectLoading } from "reducers/quotes/selectors";
 import useClickOutside from "hooks/useClickOutside";
 
 import Textarea from "components/inputs/Textarea";
@@ -24,28 +15,23 @@ import Tags from "components/quotes/Quote/Tags/Tags";
 import Memos from "components/quotes/Quote/Memos/Memos";
 
 import "./styles/NewQuote.css";
-import { isoDateWithoutTimezone } from "api/utilsAPI";
 import { moveAuthorToFront } from "reducers/authors/actions";
 import { moveBookToFront } from "reducers/books/actions";
-import { updateQuote } from "reducers/quotes/quoteActions";
+import { setQuoteInput, updateQuote } from "reducers/quotes/quoteActions";
 
 const NEW_QUOTE = "Write a new quote...";
 const TITLE = "Title";
 const user = JSON.parse(localStorage.getItem("currentUser"));
 
-const NewQuote = ({ editing, quote }) => {
+const NewQuote = ({ quote }) => {
   const dispatch = useDispatch();
   const newQuoteRef = useClickOutside(() => {
-    console.log("clicked outside");
-    dispatch(toggleEditing());
+    console.log("NewQuote clicked outside");
+    dispatch(cancelEditingQuote());
   });
 
-  const toggleEdit = () => {
-    dispatch(initializeQuote());
-  };
-
   const handleInputChange = e => {
-    dispatch(updateQuoteInput(e.target.name, e.target.value));
+    dispatch(setQuoteInput(e.target.name, e.target.value, quote._id));
   };
 
   const handleSubmit = () => {
@@ -59,7 +45,6 @@ const NewQuote = ({ editing, quote }) => {
     } else {
       const newQuote = {
         ...quote,
-        date: quote.date ? quote.date : isoDateWithoutTimezone(new Date()),
         author: { _id: quote.author._id, name: quote.author.name },
         book: { _id: quote.book._id, title: quote.book.title },
         user: { _id: user.id, name: user.name },
@@ -76,56 +61,46 @@ const NewQuote = ({ editing, quote }) => {
   };
 
   // click outside to close or save
-  if (editing || quote?._id) {
-    return (
-      <div className="new-quote" ref={newQuoteRef}>
-        <input
-          name="title"
-          className="inline-edit"
-          type="text"
-          placeholder={TITLE}
-          onChange={handleInputChange}
-        />
-        <ChapterSelect book={quote.book} chapter={quote.chapter} />
-        <Textarea
-          name="text"
-          className="inline-edit quote-text"
-          placeholder={NEW_QUOTE}
-          onChange={handleInputChange}
-          required={true}
-          dependency={quote}
-          value={quote.text}
-        />
-        <Tags tags={quote.tags} quoteId={quote._id} />
-        <div className="author-book-bar mb-2">
-          <AuthorSelect quoteId={quote._id} author={quote.author} />
-          <BookSelect
-            quoteId={quote._id}
-            book={quote.book}
-            author={quote.author}
-          />
-        </div>
-        <Memos memos={quote.memos} quoteId={quote._id} />
-        <Toolbar handleSubmit={handleSubmit} />
-      </div>
-    );
-  } else {
-    return (
-      <div className="new-quote" ref={newQuoteRef}>
-        <input
-          className="inline-edit text"
-          type="text"
-          placeholder={NEW_QUOTE}
-          onClick={toggleEdit}
+  return (
+    <div className="new-quote" ref={newQuoteRef}>
+      <input
+        name="title"
+        className="inline-edit"
+        type="text"
+        placeholder={TITLE}
+        onChange={handleInputChange}
+      />
+      <ChapterSelect book={quote.book} chapter={quote.chapter} />
+      <Textarea
+        name="text"
+        className="inline-edit quote-text"
+        placeholder={NEW_QUOTE}
+        onChange={handleInputChange}
+        required={true}
+        dependency={quote}
+        value={quote.text}
+      />
+      <Tags tags={quote.tags} quoteId={quote._id} />
+      <div className="author-book-bar mb-2">
+        <AuthorSelect quoteId={quote._id} author={quote.author} />
+        <BookSelect
+          quoteId={quote._id}
+          book={quote.book}
+          author={quote.author}
         />
       </div>
-    );
-  }
+      <Memos memos={quote.memos} quoteId={quote._id} />
+      <Toolbar
+        handleSubmit={handleSubmit}
+        quoteId={quote._id}
+        isEditing={true}
+      />
+    </div>
+  );
 };
 
 const mapStateToProps = (state, ownProps) => ({
   loading: selectLoading(state),
-  editing: selectEditing(state),
   quote: selectActiveQuote(state),
   ...ownProps,
 });

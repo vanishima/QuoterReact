@@ -1,9 +1,11 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleEditing, initializeQuote } from "reducers/quotes/actions";
+import { cancelEditingQuote, toggleEditing } from "reducers/quotes/actions";
 import useClickOutside from "hooks/useClickOutside";
 import { selectEditing } from "reducers/quotes/selectors";
 import NewQuote from "./NewQuote";
+
+import "./styles/NewQuoteBar.css";
 
 const NEW_QUOTE = "Write a new quote...";
 
@@ -12,26 +14,33 @@ const NewQuoteBar = () => {
   const editing = useSelector(selectEditing);
 
   const newQuoteRef = useClickOutside(() => {
-    console.log("clicked outside");
-    dispatch(toggleEditing());
+    if (editing) {
+      dispatch(cancelEditingQuote());
+    }
   });
 
   const toggleEdit = () => {
-    dispatch(initializeQuote());
+    dispatch(toggleEditing());
   };
 
   if (editing) {
-    return <NewQuote />;
+    return (
+      <div className="new-quote-container">
+        <NewQuote />
+      </div>
+    );
   }
 
   return (
-    <div className="new-quote" ref={newQuoteRef}>
-      <input
-        className="inline-edit text"
-        type="text"
-        placeholder={NEW_QUOTE}
-        onClick={toggleEdit}
-      />
+    <div className="new-quote-container">
+      <div className="new-quote" ref={newQuoteRef}>
+        <input
+          className="inline-edit text"
+          type="text"
+          placeholder={NEW_QUOTE}
+          onClick={toggleEdit}
+        />
+      </div>
     </div>
   );
 };
