@@ -3,6 +3,7 @@ import {
   processItem,
   processItems,
 } from "components/inputs/CreatableSelect/util";
+import { setQuoteAuthor } from "reducers/quotes/quoteActions";
 
 export const ACTIONS = {
   LOADING: "LOADING",
@@ -59,10 +60,12 @@ export const createAuthor = author => {
       .then(res => {
         console.log("got data", res.data);
         console.groupEnd();
+        const newAuthor = processItem(res.data, "name");
         dispatch({
           type: ACTIONS.CREATE_AUTHOR_SUCCESS,
-          payload: { author: processItem(res.data, "name") },
+          payload: { author: newAuthor },
         });
+        dispatch(setQuoteAuthor(newAuthor));
       })
       .catch(err => {
         console.log("failure", err);

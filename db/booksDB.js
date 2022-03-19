@@ -154,10 +154,7 @@ function BooksDB() {
       const col = client.db(DB_NAME).collection(COL_BOOKS);
 
       book._id = ObjectId();
-      book.author = {
-        _id: ObjectId(book.author._id),
-        name: book.author.name,
-      };
+      book.author._id = ObjectId(book.author._id);
 
       console.log(col, "Collection ready, update/create book:", book);
 

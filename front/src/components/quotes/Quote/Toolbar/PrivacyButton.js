@@ -1,15 +1,16 @@
 import React from "react";
 import { connect, useDispatch } from "react-redux";
 import { BsLock, BsUnlock } from "react-icons/bs";
-import { updateQuoteInput } from "reducers/quotes/actions";
+import { setQuoteInput } from "reducers/quotes/quoteActions";
 import "./styles/PrivacyButton.css";
 import { selectLoading, selectPrivacy } from "reducers/quotes/selectors";
 
-const PrivacyButton = ({ loading, privacy }) => {
+const PrivacyButton = ({ loading, privacy, quoteId, handleEdit }) => {
   const dispatch = useDispatch();
 
   const togglePrivacy = e => {
-    dispatch(updateQuoteInput("privacy_level", privacy === 1 ? 0 : 1));
+    handleEdit();
+    dispatch(setQuoteInput("privacy_level", privacy === 1 ? 0 : 1, quoteId));
   };
 
   return (

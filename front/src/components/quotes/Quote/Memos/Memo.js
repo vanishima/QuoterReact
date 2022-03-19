@@ -6,29 +6,30 @@ import {
 } from "reducers/quotes/quoteActions";
 import { Dropdown } from "react-bootstrap";
 import EditMemo from "./EditMemo";
+import { getRelativeTime } from "api/utilsAPI";
 
 import "./styles/Memo.css";
 
-const Memo = ({ memo, quoteId }) => {
+const Memo = ({ memo, quoteId, handleChange }) => {
+  const dispatch = useDispatch();
+
   const [editing, setEditing] = useState(false);
   const [text, setText] = useState(memo && memo.text);
-  const dispatch = useDispatch();
+  const [truncate, setTruncate] = useState(true);
 
   const handleEdit = () => {
     console.log("editing");
     setEditing(true);
-    // if (quoteId) {
-    //   console.log("setEditing quote");
-    //   dispatch(setEditingQuote(quoteId));
-    // }
+    handleChange();
   };
 
-  const handleChange = e => {
+  const handleInputChange = e => {
     setText(e.target.value);
   };
 
   const handleDelete = () => {
     dispatch(removeMemoFromQuote(memo, quoteId));
+    handleChange();
   };
 
   const handleSave = () => {
@@ -37,31 +38,72 @@ const Memo = ({ memo, quoteId }) => {
     setEditing(false);
   };
 
+  const handleCancel = () => {
+    setEditing(false);
+  };
+
+  const toggleTruncate = () => {
+    console.log("toggleTruncate", truncate);
+    setTruncate(truncate => !truncate);
+  };
+
   return (
-    <div className="memo">
+    <div className="memo-container">
       {editing ? (
-        <EditMemo text={text} onChange={handleChange} handleSave={handleSave} />
+        <EditMemo
+          text={text}
+          onChange={handleInputChange}
+          handleSave={handleSave}
+          handleCancel={handleCancel}
+        />
       ) : (
-        <div className="text text-truncate">{memo.text}</div>
+        <div className="memo">
+          <div className="memo-content">
+            <div className={`memo-text ${truncate ? "text-truncate" : ""}`}>
+              {memo.text}
+              <span className="memo-date">
+                {getRelativeTime(memo.date)}
+              </span>{" "}
+              {!truncate && (
+                <span
+                  role="button"
+                  onClick={toggleTruncate}
+                  className="show-less text-truncate"
+                >
+                  Show Less
+                </span>
+              )}
+            </div>
+            {truncate && (
+              <span
+                role="button"
+                onClick={toggleTruncate}
+                className="show-more"
+              >
+                Show More
+              </span>
+            )}
+          </div>
+
+          <Dropdown>
+            <Dropdown.Toggle variant="light" className="memo-options-toggle">
+              &#8942;
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu>
+              <Dropdown.Item className="memo-options-item" onClick={handleEdit}>
+                Edit
+              </Dropdown.Item>
+              <Dropdown.Item
+                className="memo-options-item delete-button"
+                onClick={handleDelete}
+              >
+                Delete
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
       )}
-
-      <Dropdown>
-        <Dropdown.Toggle variant="light" className="memo-options-toggle">
-          &#8942;
-        </Dropdown.Toggle>
-
-        <Dropdown.Menu>
-          <Dropdown.Item className="memo-options-item" onClick={handleEdit}>
-            Edit
-          </Dropdown.Item>
-          <Dropdown.Item
-            className="memo-options-item delete-button"
-            onClick={handleDelete}
-          >
-            Delete
-          </Dropdown.Item>
-        </Dropdown.Menu>
-      </Dropdown>
     </div>
   );
 };

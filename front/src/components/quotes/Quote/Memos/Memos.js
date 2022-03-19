@@ -5,7 +5,7 @@ import Memo from "./Memo";
 
 import "./styles/Memos.css";
 
-const Memos = ({ memos, quoteId }) => {
+const Memos = ({ memos, quoteId, handleChange }) => {
   const showMemo = useSelector(selectShowMemo);
   if (!showMemo && quoteId) return null;
 
@@ -13,7 +13,7 @@ const Memos = ({ memos, quoteId }) => {
     <div className="memos">
       {memos.map(memo => (
         <div key={memo._id}>
-          <Memo memo={memo} quoteId={quoteId} />
+          <Memo memo={memo} quoteId={quoteId} handleChange={handleChange} />
         </div>
       ))}
     </div>

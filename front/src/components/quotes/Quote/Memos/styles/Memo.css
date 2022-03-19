@@ -1,4 +1,4 @@
-.memo {
+.memo-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -9,20 +9,45 @@
   /* box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; */
 }
 
-.memo .text {
+.memo {
   width: 100%;
-  justify-content: center;
+  display: flex;
+}
+
+.memo-content {
+  width: 92%;
+  padding: 4px;
+  display: flex;
   align-items: center;
-  place-items: center;
+  justify-content: start;
+  white-space: pre-line;
+}
+
+.memo-date {
+  font-size: 14px;
+}
+
+.show-more,
+.show-less,
+.memo-show-more-button,
+.memo-show-more-button:focus {
+  color: var(--grey400);
+  white-space: nowrap;
+  text-align: start;
+  font-size: 14px;
+  border: none;
+  box-shadow: none;
 }
 
 /* Options Toggle */
 .memo-options-toggle {
   color: black;
   background-color: transparent;
+  margin: 0;
   border: 0;
   box-shadow: none;
   border-radius: 30px;
+  justify-self: end;
 }
 
 .memo-options-toggle:hover {

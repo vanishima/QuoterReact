@@ -5,7 +5,7 @@ import "./styles/EditMemo.css";
 
 const NEW_MEMO = "Write a memo...";
 
-const EditMemo = ({ text, onChange, handleSave }) => {
+const EditMemo = ({ text, onChange, handleSave, handleCancel }) => {
   return (
     <div className="edit-memo">
       <Textarea
@@ -18,8 +18,11 @@ const EditMemo = ({ text, onChange, handleSave }) => {
         value={text}
       />
       <div className="actions">
-        <button onClick={handleSave} className="btn save-memo-button">
+        <button onClick={handleSave} className="btn edit-memo-button">
           Save
+        </button>
+        <button onClick={handleCancel} className="btn edit-memo-button">
+          Cancel
         </button>
       </div>
     </div>

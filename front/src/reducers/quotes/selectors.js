@@ -16,6 +16,10 @@ export const selectSortedQuotes = createSelector(selectQuotes, quotes => {
 
 export const selectEditing = state => state.quotes.editing;
 export const selectLoading = state => state.quotes.loading;
+export const selectError = state => state.quotes.error;
+export const selectRefresh = state => state.quotes.refresh;
+export const selectHasMore = state => state.quotes.hasMore;
+export const selectSearchParams = state => state.quotes.searchParams;
 
 export const selectNewQuote = state => state.quotes.newQuote;
 export const selectActiveQuoteId = state => state.quotes.activeQuoteId;

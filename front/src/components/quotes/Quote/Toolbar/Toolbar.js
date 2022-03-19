@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Dropdown } from "react-bootstrap";
 import {
@@ -13,7 +13,7 @@ import PrivacyButton from "./PrivacyButton";
 import TagButton from "./TagButton";
 
 import "./styles/Toolbar.css";
-import { selectActiveQuote, selectQuoteById } from "reducers/quotes/selectors";
+import { selectQuoteById } from "reducers/quotes/selectors";
 
 const Toolbar = ({
   handleSubmit,
@@ -21,18 +21,24 @@ const Toolbar = ({
   showText,
   quoteId,
   isEditing,
+  isModified,
+  setIsModified,
 }) => {
   const dispatch = useDispatch();
+
   const quote = useSelector(state => selectQuoteById(state, quoteId));
 
   const handleEdit = () => {
     console.log("handleEdit");
-    dispatch(setEditingQuote(quoteId));
+    if (!isEditing) {
+      dispatch(setEditingQuote(quoteId));
+    }
   };
 
   const handleCancel = () => {
     console.log("cancel");
     dispatch(cancelEditingQuote());
+    if (setIsModified) setIsModified(false);
   };
 
   const handleClear = () => {
@@ -40,7 +46,7 @@ const Toolbar = ({
   };
 
   return (
-    <div className="option-bar">
+    <div className={`option-bar ${isModified ? "show" : ""}`}>
       <div className="quote-options">
         <TagButton
           showText={showText}
@@ -61,7 +67,7 @@ const Toolbar = ({
         <PrivacyButton quoteId={quoteId} handleEdit={handleEdit} />
       </div>
 
-      {isEditing && (
+      {(isEditing || isModified) && (
         <button className="btn quote-option-button" onClick={handleSubmit}>
           Save
         </button>

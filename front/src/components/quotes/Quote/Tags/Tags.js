@@ -6,7 +6,7 @@ import { selectShowTag } from "reducers/theme/selectors";
 import "./styles/Tags.css";
 import { removeTagFromQuote } from "reducers/quotes/quoteActions";
 
-const Tags = ({ tags = [], quoteId }) => {
+const Tags = ({ tags = [], quoteId, handleChange }) => {
   const dispatch = useDispatch();
   const showTag = useSelector(selectShowTag);
   if (!showTag || tags.length === 0) return null;
@@ -14,6 +14,7 @@ const Tags = ({ tags = [], quoteId }) => {
   const handleRemove = tag => {
     console.log("remove tag", tag);
     dispatch(removeTagFromQuote(tag, quoteId));
+    handleChange();
   };
 
   return (

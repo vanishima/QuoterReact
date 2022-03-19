@@ -10,7 +10,14 @@ import useInfiniteScroll from "hooks/useInfiniteScroll";
 // API
 import { fetchQuotes } from "reducers/quotes/actions";
 import "./styles/QuotesInfiniteScroll.css";
-import { selectSortedQuotes } from "reducers/quotes/selectors";
+import {
+  selectError,
+  selectHasMore,
+  selectLoading,
+  selectRefresh,
+  selectSearchParams,
+  selectSortedQuotes,
+} from "reducers/quotes/selectors";
 
 const QuotesInfiniteScroll = ({
   dispatch,
@@ -26,7 +33,7 @@ const QuotesInfiniteScroll = ({
   // console.log("QuotesInfiniteScroll", pageSize, page, hasMore);
 
   // console.log("quotes", quotes);
-  console.log("loading", loading);
+  // console.log("loading", loading);
 
   const loadMoreItems = () => {
     dispatch(fetchQuotes(pageSize, page, refresh));
@@ -80,11 +87,11 @@ const QuotesInfiniteScroll = ({
 
 const mapStateToProps = state => ({
   quotes: selectSortedQuotes(state),
-  loading: state.quotes.loading,
-  error: state.quotes.error,
-  refresh: state.quotes.refresh,
-  hasMore: state.quotes.hasMore,
-  searchParams: state.quotes.searchParams,
+  loading: selectLoading(state),
+  error: selectError(state),
+  refresh: selectRefresh(state),
+  hasMore: selectHasMore(state),
+  searchParams: selectSearchParams(state),
 });
 
 export default connect(mapStateToProps)(QuotesInfiniteScroll);

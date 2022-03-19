@@ -1,7 +1,7 @@
 import axiosInstance from "axiosconfig";
 import { processItem } from "components/inputs/CreatableSelect/util";
 import { booksMapper } from "./mappers";
-import { setQuoteChapter } from "reducers/quotes/quoteActions";
+import { setQuoteBook, setQuoteChapter } from "reducers/quotes/quoteActions";
 
 export const ACTIONS = {
   LOADING: "LOADING",
@@ -70,11 +70,13 @@ export const createBook = book => {
       })
       .then(res => {
         console.log("got data", res.data);
+        const newBook = processItem(res.data, "title");
         console.groupEnd();
         dispatch({
           type: ACTIONS.CREATE_BOOK_SUCCESS,
-          payload: { book: processItem(res.data, "title") },
+          payload: { book: newBook },
         });
+        dispatch(setQuoteBook(newBook));
       })
       .catch(err => {
         console.log("failure", err);

@@ -29,7 +29,7 @@ router.get("/", auth, async function (req, res) {
 
   try {
     const books = await BooksDB.getRecentBooks(userId);
-
+    console.log("last book", books[0]);
     res.status(200).json({ books });
   } catch (e) {
     res.status(400).json({ msg: e.message });

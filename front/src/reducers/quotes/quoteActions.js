@@ -1,9 +1,9 @@
 import axiosInstance from "axiosconfig";
+import { processItem } from "components/inputs/CreatableSelect/util";
+import { selectAuthors } from "reducers/authors/selectors";
 import { selectQuoteById } from "reducers/quotes/selectors";
 
 export const QUOTE_ACTIONS = {
-  SET_EDITING_QUOTE: "SET_EDITING_QUOTE",
-
   SET_QUOTE_AUTHOR_LOCAL: "SET_QUOTE_AUTHOR_LOCAL",
   SET_QUOTE_AUTHOR_NEW: "SET_QUOTE_AUTHOR_NEW",
 
@@ -23,34 +23,22 @@ export const QUOTE_ACTIONS = {
 
   ADD_MEMO_TO_QUOTE_LOCAL: "ADD_MEMO_TO_QUOTE_LOCAL",
   ADD_MEMO_TO_QUOTE_NEW: "ADD_MEMO_TO_QUOTE_NEW",
+
   REMOVE_MEMO_FROM_QUOTE_LOCAL: "REMOVE_MEMO_FROM_QUOTE_LOCAL",
   REMOVE_MEMO_FROM_QUOTE_NEW: "REMOVE_MEMO_FROM_QUOTE_NEW",
+
   UPDATE_MEMO_IN_QUOTE_LOCAL: "UPDATE_MEMO_IN_QUOTE_LOCAL",
   UPDATE_MEMO_IN_QUOTE_NEW: "UPDATE_MEMO_IN_QUOTE_NEW",
-
-  UPDATE_LOCAL_QUOTE_INPUT: "UPDATE_LOCAL_QUOTE_INPUT",
-  UPDATE_QUOTE_INPUT_LIST_BY_ID: "UPDATE_QUOTE_INPUT_LIST_BY_ID",
-  UPDATE_QUOTE_LIST_INPUT: "UPDATE_QUOTE_LIST_INPUT",
-
-  UPDATE_QUOTE_AUTHOR_BY_ID: "UPDATE_QUOTE_AUTHOR_BY_ID",
-  UPDATE_QUOTE_BOOK_BY_ID: "UPDATE_QUOTE_BOOK_BY_ID",
-  UPDATE_QUOTE_MEMO_BY_ID: "UPDATE_QUOTE_MEMO_BY_ID",
-  REMOVE_MEMO_FROM_QUOTE: "REMOVE_MEMO_FROM_QUOTE",
-  REMOVE_TAG_FROM_QUOTE: "REMOVE_TAG_FROM_QUOTE",
 
   UPDATE_QUOTE_REQUEST: "UPDATE_QUOTE_REQUEST",
   UPDATE_QUOTE_SUCCESS: "UPDATE_QUOTE_SUCCESS",
   UPDATE_QUOTE_FAILURE: "UPDATE_QUOTE_FAILURE",
+
   DELETE_QUOTE_SUCCESS: "DELETE_QUOTE_SUCCESS",
 };
 
 const CREATE_UPDATE_QUOTE_URL = "/quotes/update";
 const DELETE_QUOTE_URL = "/quotes/delete/";
-
-export const setEditingQuote = quoteId => {
-  const quote = {};
-  return { type: QUOTE_ACTIONS.SET_EDITING_QUOTE, payload: { quote } };
-};
 
 /* SET QUOTE AUTHOR */
 export const setQuoteAuthor = (author, quoteId = null) => ({
@@ -61,12 +49,17 @@ export const setQuoteAuthor = (author, quoteId = null) => ({
 });
 
 /* SET QUOTE BOOK AUTHOR*/
-export const setQuoteBookAuthor = (book, author, quoteId = null) => ({
-  type: quoteId
-    ? QUOTE_ACTIONS.SET_QUOTE_BOOK_AUTHOR_LOCAL
-    : QUOTE_ACTIONS.SET_QUOTE_BOOK_AUTHOR_NEW,
-  payload: { book, author, quoteId },
-});
+export const setQuoteBookAuthor = (book, quoteId = null) => {
+  return async dispatch => {
+    // find author of book from authors list
+    dispatch({
+      type: quoteId
+        ? QUOTE_ACTIONS.SET_QUOTE_BOOK_AUTHOR_LOCAL
+        : QUOTE_ACTIONS.SET_QUOTE_BOOK_AUTHOR_NEW,
+      payload: { book, author: processItem(book.author, "name"), quoteId },
+    });
+  };
+};
 
 /* SET QUOTE BOOK */
 export const setQuoteBook = (book, quoteId = null) => ({
@@ -145,23 +138,6 @@ export const updateMemoInQuote = (memo, quoteId) => {
   };
 };
 
-export const updateQuoteInputListById = (quoteId, key, value) => ({
-  type: QUOTE_ACTIONS.UPDATE_QUOTE_INPUT_LIST_BY_ID,
-  payload: { quoteId, key, value },
-});
-
-export const updateQuoteMemoById = (quoteId, memo) => {
-  return async (dispatch, getState) => {
-    dispatch({
-      type: QUOTE_ACTIONS.UPDATE_QUOTE_MEMO_BY_ID,
-      payload: { quoteId, memo },
-    });
-    const quote = selectQuoteById(getState(), quoteId);
-    console.log("updated quote should look like", quote);
-    dispatch(updateQuote(quote));
-  };
-};
-
 export const updateQuoteById = quoteId => {
   return async (dispatch, getState) => {
     const quote = selectQuoteById(getState(), quoteId);
@@ -169,19 +145,6 @@ export const updateQuoteById = quoteId => {
     dispatch(updateQuote(quote));
   };
 };
-
-// export const removeTagFromQuote = (quoteId, tag) => {
-//   return async (dispatch, getState) => {
-//     console.group("removeTagFromQuote");
-//     dispatch({
-//       type: QUOTE_ACTIONS.REMOVE_TAG_FROM_QUOTE,
-//       payload: { quoteId, tag },
-//     });
-//     const quote = selectQuoteById(getState(), quoteId);
-//     dispatch(updateQuote(quote));
-//     console.groupEnd("finished");
-//   };
-// };
 
 export const updateQuote = quote => {
   return async dispatch => {

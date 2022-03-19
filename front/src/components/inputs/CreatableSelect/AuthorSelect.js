@@ -27,7 +27,7 @@ const AuthorSelect = ({
     const newAuthor = { name: authorName };
     dispatch(createAuthor(newAuthor));
     // by now current Author should be updated
-    dispatch(setQuoteAuthor(processItem(newAuthor, "name"), quoteId));
+    dispatch(setQuoteAuthor(processItem(currentAuthor, "name"), quoteId));
   };
 
   const handleChange = author => {

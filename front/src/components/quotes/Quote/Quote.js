@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { connect, useDispatch } from "react-redux";
 import _ from "lodash";
@@ -26,6 +27,7 @@ const Quote = props => {
   const { quote, display, activeQuoteId } = props;
   const { showDate, showTag, showMemo } = display;
   const isEditing = activeQuoteId === quote?._id;
+  const [isModified, setIsModified] = useState();
 
   const handleSubmit = () => {
     console.log("handleSubmit");
@@ -42,6 +44,10 @@ const Quote = props => {
 
   const handleDelete = () => {
     dispatch(deleteQuote(quote._id));
+  };
+
+  const handleChange = () => {
+    setIsModified(true);
   };
 
   return (
@@ -61,9 +67,17 @@ const Quote = props => {
           </div>
           {(showDate || showTag || showMemo) && (
             <div className="card-footer">
-              <QuoteDate date={quote.date} />
-              <Tags tags={quote.tags} quoteId={quote._id} />
-              <Memos memos={quote.memos} quoteId={quote._id} />
+              <QuoteDate date={quote.date} handleChange={handleChange} />
+              <Tags
+                tags={quote.tags}
+                quoteId={quote._id}
+                handleChange={handleChange}
+              />
+              <Memos
+                memos={quote.memos}
+                quoteId={quote._id}
+                handleChange={handleChange}
+              />
             </div>
           )}
           <Toolbar
@@ -72,6 +86,8 @@ const Quote = props => {
             showText={false}
             isEditing={isEditing}
             quoteId={quote._id}
+            isModified={isModified}
+            setIsModified={setIsModified}
           />
         </>
       )}
