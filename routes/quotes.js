@@ -11,23 +11,25 @@ router.get("/", auth, async function (req, res) {
 
   const userId = req.user.id;
 
+  const { page, pageSize, authorId, bookId } = req.query;
+
   const userid_query = { "user._id": ObjectId(userId) };
-  const page = +req.query.page || 1;
-  const pageSize = +req.query.pagesize || 0;
-  const bookid_query =
-    req.query.bookid !== "undefined"
-      ? { "book._id": ObjectId(req.query.bookid) }
-      : null;
+  const pageVal = +page || 1;
+  const pageSizeVal = +req.query.pagesize || 0;
+  const authorId_query =
+    authorId !== "undefined" ? { "author._id": ObjectId(authorId) } : null;
+  const bookId_query =
+    bookId !== "undefined" ? { "book._id": ObjectId(bookId) } : null;
   const sortorder = req.query.sortorder || "latest";
-  console.log("sortoder", sortorder);
 
   try {
     const total = await QuotesDB.getQuotesCount(userid_query);
     const quotes = await QuotesDB.getQuotes(
       userid_query,
-      pageSize,
-      page,
-      bookid_query,
+      pageSizeVal,
+      pageVal,
+      authorId_query,
+      bookId_query,
       sortorder
     );
 

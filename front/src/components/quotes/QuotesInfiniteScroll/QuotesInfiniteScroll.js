@@ -18,6 +18,7 @@ import {
   selectSearchParams,
   selectSortedQuotes,
 } from "reducers/quotes/selectors";
+import QuotesFilter from "components/common/Navbar/QuotesFilter/QuotesFilter";
 
 const QuotesInfiniteScroll = ({
   dispatch,
@@ -28,7 +29,7 @@ const QuotesInfiniteScroll = ({
   hasMore,
   searchParams,
 }) => {
-  const { pageSize, page } = searchParams;
+  const { pageSize, page, author, book } = searchParams;
 
   // console.log("QuotesInfiniteScroll", pageSize, page, hasMore);
 
@@ -36,7 +37,15 @@ const QuotesInfiniteScroll = ({
   // console.log("loading", loading);
 
   const loadMoreItems = () => {
-    dispatch(fetchQuotes(pageSize, page, refresh));
+    dispatch(
+      fetchQuotes({
+        pageSize,
+        page,
+        refresh,
+        authorId: author?._id,
+        bookId: book?._id,
+      })
+    );
   };
 
   const [lastElementRef] = useInfiniteScroll(
@@ -47,13 +56,13 @@ const QuotesInfiniteScroll = ({
   useEffect(() => {
     console.log("### QuotesInfiniteScroll EFFECT ###");
     loadMoreItems();
-  }, []);
+  }, [author]);
 
   if (error) {
     return (
       <div className="quotes-infinite-scroll">{error && <p>{error}</p>}</div>
     );
-  } else if (quotes.length === 0 && loading) {
+  } else if (quotes.length === 0 || loading) {
     <div className="quotes-infinite-scroll">
       <p>Fetching items...</p>
     </div>;
@@ -61,7 +70,8 @@ const QuotesInfiniteScroll = ({
 
   return (
     <div className="quotes-infinite-scroll">
-      {quotes && (
+      <QuotesFilter />
+      {!refresh && quotes && (
         <Masonry
           breakpointCols={2}
           className="quotes-grid"

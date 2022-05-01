@@ -5,6 +5,7 @@ export const ACTIONS = {
   TOGGLE_SHOW_MEMO: "TOGGLE_SHOW_MEMO",
   TOGGLE_SHOW_TITLE: "TOGGLE_SHOW_TITLE",
   TOGGLE_SHOW_TILES: "TOGGLE_SHOW_TILES",
+  TOGGLE_DARKMODE: "TOGGLE_DARKMODE",
 };
 
 // create redux action creators that return an action
@@ -24,4 +25,7 @@ export const toggleShowTitle = () => ({
 });
 export const toggleShowTiles = () => ({
   type: ACTIONS.TOGGLE_SHOW_TILES,
+});
+export const toggleDarkMode = () => ({
+  type: ACTIONS.TOGGLE_DARKMODE,
 });

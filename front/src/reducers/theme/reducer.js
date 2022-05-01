@@ -6,6 +6,7 @@ export const initialState = {
   showMemo: true,
   showTitle: false,
   showTiles: true,
+  isDarkMode: false,
 };
 
 export default function themeReducer(state = initialState, action) {
@@ -21,6 +22,8 @@ export default function themeReducer(state = initialState, action) {
       return { ...state, showTitle: !state.showTitle };
     case ACTIONS.TOGGLE_SHOW_TILES:
       return { ...state, showTiles: !state.showTiles };
+    case ACTIONS.TOGGLE_DARKMODE:
+      return { ...state, isDarkMode: !state.isDarkMode };
     default:
       return state;
   }

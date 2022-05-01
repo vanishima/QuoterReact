@@ -22,7 +22,8 @@ function QuotesDB() {
     userid_query = {},
     pageSize,
     page = 1,
-    bookid_query = {},
+    authorId_query = {},
+    bookId_query = {},
     sortorder = "latest"
   ) => {
     const client = new MongoClient(uri, { useUnifiedTopology: true });
@@ -40,12 +41,23 @@ function QuotesDB() {
         userid_query,
         pageSize,
         page,
-        bookid_query
+        authorId_query,
+        bookId_query
       );
 
-      const match_query = bookid_query
-        ? { $and: [userid_query, bookid_query] }
-        : userid_query;
+      let match_query = userid_query;
+      if (authorId_query || bookId_query) {
+        let queryArr = [userid_query];
+        if (authorId_query) queryArr.push(authorId_query);
+        if (bookId_query) queryArr.push(bookId_query);
+        console.log("queryArr", queryArr);
+        match_query = { $and: queryArr };
+      }
+      console.log("match_query", match_query);
+
+      // const match_query = bookId_query
+      //   ? { $and: [userid_query, bookId_query] }
+      //   : userid_query;
 
       const sort_query = sort_dict_quotes[sortorder];
 
@@ -62,6 +74,8 @@ function QuotesDB() {
       if (pageSize > 0) {
         query_arr.push({ $limit: pageSize });
       }
+
+      console.log("query_arr", query_arr);
 
       const quotes = await quotesCol.aggregate(query_arr).toArray();
 

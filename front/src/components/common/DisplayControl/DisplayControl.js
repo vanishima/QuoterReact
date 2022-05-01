@@ -1,6 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  toggleDarkMode,
   toggleShowDate,
   toggleShowMemo,
   toggleShowTag,
@@ -11,6 +12,7 @@ import {
   selectShowTag,
   selectShowMemo,
   selectShowTitle,
+  selectIsDarkMode,
 } from "reducers/theme/selectors";
 
 import "./styles/DisplayControl.css";
@@ -21,6 +23,7 @@ const DisplayControl = () => {
   const showTag = useSelector(selectShowTag);
   const showMemo = useSelector(selectShowMemo);
   const showTitle = useSelector(selectShowTitle);
+  const isDarkMode = useSelector(selectIsDarkMode);
 
   return (
     <div className="dropdown">
@@ -98,6 +101,22 @@ const DisplayControl = () => {
             />
             <label className="form-check-label" for="ShowTitleCheckbox">
               Show Title
+            </label>
+          </div>
+        </li>
+        <li>
+          <div className="form-check form-switch">
+            <input
+              className="form-check-input"
+              type="checkbox"
+              id="DarkModeCheckbox"
+              checked={isDarkMode}
+              onChange={() => {
+                dispatch(toggleDarkMode());
+              }}
+            />
+            <label className="form-check-label" for="DarkModeCheckbox">
+              DarkMode
             </label>
           </div>
         </li>

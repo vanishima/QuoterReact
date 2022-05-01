@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, connect } from "react-redux";
 
 import Layout from "components/common/Layout";
 import QuotesInfiniteScroll from "components/quotes/QuotesInfiniteScroll/QuotesInfiniteScroll";
@@ -8,32 +8,39 @@ import NewQuoteBar from "components/quotes/Quote/NewQuoteBar";
 import { fetchBooks } from "reducers/books/actions";
 import { fetchAuthors } from "reducers/authors/actions";
 import { fetchTags } from "reducers/tags/actions";
-import { fetchLabels } from "reducers/labels/actions";
 
 import "./styles/QuotesPage.css";
+import { selectIsDarkMode } from "reducers/theme/selectors";
+// import QuotesSidebar from "./QuotesSidebar/QuotesSidebar";
 
-const QuotesPage = props => {
+const QuotesPage = ({ isDarkMode }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchBooks());
     dispatch(fetchAuthors());
     dispatch(fetchTags());
-    dispatch(fetchLabels());
   }, [dispatch]);
 
   return (
     <Layout>
       <div className="quotes-page">
-        <section className="top">
+        {/* <div className="side-bar">
+          <QuotesSidebar />
+        </div> */}
+        <div className="top">
           <NewQuoteBar />
-        </section>
-        <section className="middle">
+        </div>
+        <div className="middle">
           <QuotesInfiniteScroll />
-        </section>
+        </div>
       </div>
     </Layout>
   );
 };
 
-export default QuotesPage;
+const mapStateToProps = state => ({
+  isDarkMode: selectIsDarkMode(state),
+});
+
+export default connect(mapStateToProps)(QuotesPage);

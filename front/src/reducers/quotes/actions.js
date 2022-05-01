@@ -7,6 +7,7 @@ export const ACTIONS = {
   GET_QUOTES_SUCCESS: "GET_QUOTES_SUCCESS",
   GET_QUOTES_FAILURE: "GET_QUOTES_FAILURE",
   LOAD_MORE_QUOTES_SUCCESS: "LOAD_MORE_QUOTES_SUCCESS",
+  TOGGLE_REFRESH: "TOGGLE_REFRESH",
 
   INITIALIZE_QUOTE: "INITIALIZE_QUOTE",
   CREATE_QUOTE_REQUEST: "CREATE_QUOTE_REQUEST",
@@ -16,6 +17,8 @@ export const ACTIONS = {
   SET_EDITING_QUOTE: "SET_EDITING_QUOTE",
   TOGGLE_EDITING: "TOGGLE_EDITING",
   CANCEL_EDITING_QUOTE: "CANCEL_EDITING_QUOTE",
+
+  SET_SEARCH_AUTHOR: "SET_SEARCH_AUTHOR",
 };
 
 const FETCH_QUOTES_URL = "/quotes";
@@ -35,25 +38,29 @@ export const cancelEditingQuote = () => ({
 });
 
 // combine them all in an asynchronous thunk
-export function fetchQuotes(
-  pageSize,
-  page,
-  refresh,
-  sortorder = "latest",
-  bookid = "undefined"
-) {
+export const fetchQuotes = searchParams => {
   return async dispatch => {
     dispatch({
       type: ACTIONS.GET_QUOTES_REQUEST,
     });
-    console.log("fetchQuotes", pageSize, page, bookid, sortorder);
+    const {
+      pageSize,
+      page,
+      refresh,
+      sortorder = "latest",
+      authorId = "undefined",
+      bookId = "undefined",
+    } = searchParams;
+
+    console.log("fetchQuotes", pageSize, page, authorId, bookId, sortorder);
 
     await axiosInstance
       .get(FETCH_QUOTES_URL, {
         params: {
           pagesize: pageSize,
           page: page,
-          bookid: bookid,
+          authorId: authorId,
+          bookId: bookId,
           sortoder: sortorder,
         },
       })
@@ -81,7 +88,7 @@ export function fetchQuotes(
         });
       });
   };
-}
+};
 
 export const initializeQuote = () => {
   return { type: ACTIONS.INITIALIZE_QUOTE };
@@ -114,3 +121,8 @@ export const createQuote = quote => {
       });
   };
 };
+
+export const setSearchAuthor = author => ({
+  type: ACTIONS.SET_SEARCH_AUTHOR,
+  payload: { author },
+});

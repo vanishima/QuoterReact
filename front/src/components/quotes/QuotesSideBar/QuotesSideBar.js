@@ -1,25 +1,12 @@
 import React from "react";
-import BookList from "./BookList";
-import TagList from "./TagList";
+import classnames from "classnames/bind";
 
-import "./styles/quotesSideBar.css";
+import styles from "./styles/QuotesSidebar.scss";
 
-// https://www.youtube.com/watch?v=EalgZXjDR2Q
+const cx = classnames.bind(styles);
 
-const QuotesSideBar = () => {
-  return (
-    <div className="nav">
-      <input className="dropdown" type="checkbox" id="menu" />
-      <label htmlFor="menu" id="nav-icon">
-        &#9776;
-      </label>
-
-      <div className="multi-level">
-        <BookList />
-        <TagList />
-      </div>
-    </div>
-  );
+const QuotesSidebar = () => {
+  return <div className={cx("quotes-side-bar")}>Select Author</div>;
 };
 
-export default QuotesSideBar;
+export default QuotesSidebar;

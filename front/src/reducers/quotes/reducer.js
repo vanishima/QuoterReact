@@ -27,8 +27,8 @@ export const initialState = {
     pageSize: 25,
     page: 1,
     sortOrder: "recent",
-    // book: {},
-    // author: {},
+    book: {},
+    author: {},
     // bookTags: [],
     // quoteTags: [],
   },
@@ -42,16 +42,6 @@ export default function quotesListReducer(state = initialState, action) {
       return { ...state, loading: true, error: undefined };
     case ACTIONS.GET_QUOTES_SUCCESS: {
       const { quotes, lastPage } = payload;
-      // console.group("GET_QUOTES_SUCCESS");
-      // console.log("quotes", payload.quotes.length);
-      // console.log("lastPage", payload.lastPage);
-      // console.log(
-      //   "pageSize",
-      //   state.searchParams.pageSize,
-      //   "page",
-      //   state.searchParams.page
-      // );
-      // console.groupEnd();
       return {
         ...state,
         quotes: quotes,
@@ -80,6 +70,16 @@ export default function quotesListReducer(state = initialState, action) {
     }
     case ACTIONS.GET_QUOTES_FAILURE:
       return { ...state, loading: false, error: true };
+
+    /* Search */
+    case ACTIONS.SET_SEARCH_AUTHOR:
+      const { author } = payload;
+      return {
+        ...state,
+        refresh: true,
+        hasMore: true,
+        searchParams: { ...state.searchParams, author, page: 1 },
+      };
 
     /* Quote */
     case ACTIONS.INITIALIZE_QUOTE:
